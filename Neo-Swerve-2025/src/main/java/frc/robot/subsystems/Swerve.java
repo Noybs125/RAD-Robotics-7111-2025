@@ -49,7 +49,7 @@ public class Swerve extends SubsystemBase {
 
     swerveOdometry = new SwerveDriveOdometry(Constants.kSwerve.KINEMATICS, getYaw(), getPositions());
      
-    AutoBuilder.configureHolonomic(
+    AutoBuilder.configure(
             this::getPose, // Robot pose supplier
             this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getRelSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
