@@ -5,10 +5,13 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import edu.wpi.first.math.controller.PIDController;
 
 public class CTREMotor implements Motor {
-
-    TalonFX motor = new TalonFX(0);
+    private TalonFX motor;
     PositionVoltage setpos = new PositionVoltage(0);
     PIDController pid = new PIDController(0, 0, 0);
+    public CTREMotor(int id){
+        motor = new TalonFX(id);
+
+    }
 
     public void setSpeed(double speed){
         motor.set(speed);
