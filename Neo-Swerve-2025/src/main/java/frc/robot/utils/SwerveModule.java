@@ -2,10 +2,11 @@ package frc.robot.utils;
 
 
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.spark.config.ClosedLoopConfig;
+
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 //import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 
@@ -23,14 +24,14 @@ import frc.robot.Constants;
 public class SwerveModule {
   public final int moduleNumber;
 
-  private final CANSparkMax driveMotor;
+  private final SparkMax driveMotor;
   private final RelativeEncoder driveEncoder;
-  private final SparkPIDController drivePID;
+  private final ClosedLoopConfig drivePID;
   private final SimpleMotorFeedforward driveFeedforward;
 
-  private final CANSparkMax angleMotor;
+  private final SparkMax angleMotor;
   private final RelativeEncoder angleEncoder;
-  private final SparkPIDController anglePID;
+  private final ClosedLoopConfig anglePID;
   
   private final CANcoder canCoder;
   private final double canCoderOffsetDegrees;
@@ -41,12 +42,12 @@ public class SwerveModule {
   public SwerveModule(int moduleNumber, SwerveModuleConstants constants) {
     this.moduleNumber = moduleNumber;
     
-    driveMotor = new CANSparkMax(constants.driveMotorID, MotorType.kBrushless);
+    driveMotor = new SparkMax(constants.driveMotorID, MotorType.kBrushless);
     driveEncoder = driveMotor.getEncoder();
     drivePID = driveMotor.getPIDController();
     driveFeedforward = new SimpleMotorFeedforward(Constants.kSwerve.DRIVE_KS, Constants.kSwerve.DRIVE_KV, Constants.kSwerve.DRIVE_KA);
 
-    angleMotor = new CANSparkMax(constants.angleMotorID, MotorType.kBrushless);
+    angleMotor = new SparkMax(constants.angleMotorID, MotorType.kBrushless);
     angleEncoder = angleMotor.getEncoder();
     anglePID = angleMotor.getPIDController();
 
@@ -66,16 +67,16 @@ public class SwerveModule {
 
     if (isOpenLoop) {
       double speed = state.speedMetersPerSecond / Constants.kSwerve.MAX_VELOCITY_METERS_PER_SECOND;
-      drivePID.setReference(speed, CANSparkMax.ControlType.kDutyCycle);
+      drivePID.setReference(speed, SparkMax.ControlType.kDutyCycle);
     } else {
-      drivePID.setReference(state.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity, 0, driveFeedforward.calculate(state.speedMetersPerSecond));
+      drivePID.setReference(state.speedMetersPerSecond, SparkMax.ControlType.kVelocity, 0, driveFeedforward.calculate(state.speedMetersPerSecond));
     }
 
     double angle = Math.abs(state.speedMetersPerSecond) <= Constants.kSwerve.MAX_VELOCITY_METERS_PER_SECOND * 0.01
       ? lastAngle
       : state.angle.getRadians();
 
-    anglePID.setReference(angle, CANSparkMax.ControlType.kPosition);
+    anglePID.setReference(angle, SparkMax.ControlType.kPosition);
 
     lastAngle = angle;
   }
@@ -120,10 +121,11 @@ public class SwerveModule {
     driveMotor.setClosedLoopRampRate(Constants.kSwerve.CLOSED_LOOP_RAMP);
     driveMotor.setSmartCurrentLimit(Constants.kSwerve.DRIVE_CURRENT_LIMIT);
  
-    drivePID.setP(Constants.kSwerve.DRIVE_KP);
-    drivePID.setI(Constants.kSwerve.DRIVE_KI);
-    drivePID.setD(Constants.kSwerve.DRIVE_KD);
+    drivePID.p(Constants.kSwerve.DRIVE_KP);
+    drivePID.i(Constants.kSwerve.DRIVE_KI);
+    drivePID.d(Constants.kSwerve.DRIVE_KD);
     drivePID.setFF(Constants.kSwerve.DRIVE_KF);
+// drivePID.velocityFF(Constants.kSwerve.DRIVE_KF);
  
     driveEncoder.setPositionConversionFactor(Constants.kSwerve.DRIVE_ROTATIONS_TO_METERS);
     driveEncoder.setVelocityConversionFactor(Constants.kSwerve.DRIVE_RPM_TO_METERS_PER_SECOND);
@@ -135,14 +137,15 @@ public class SwerveModule {
     angleMotor.setIdleMode(Constants.kSwerve.ANGLE_IDLE_MODE);
     angleMotor.setSmartCurrentLimit(Constants.kSwerve.ANGLE_CURRENT_LIMIT);
 
-    anglePID.setP(Constants.kSwerve.ANGLE_KP);
-    anglePID.setI(Constants.kSwerve.ANGLE_KI);
-    anglePID.setD(Constants.kSwerve.ANGLE_KD);
+    anglePID.p(Constants.kSwerve.ANGLE_KP);
+    anglePID.i(Constants.kSwerve.ANGLE_KI);
+    anglePID.d(Constants.kSwerve.ANGLE_KD);
     anglePID.setFF(Constants.kSwerve.ANGLE_KF);
+// anglePID.velocityFF(Constants.kSwerve.ANGLE_KF);
 
-    anglePID.setPositionPIDWrappingEnabled(true);
-    anglePID.setPositionPIDWrappingMaxInput(2 * Math.PI);
-    anglePID.setPositionPIDWrappingMinInput(0);
+    anglePID.positionWrappingEnabled(true);
+    anglePID.positionWrappingMaxInput(2 * Math.PI);
+    anglePID.positionWrappingMinInput(0);
 
     angleEncoder.setPositionConversionFactor(Constants.kSwerve.ANGLE_ROTATIONS_TO_RADIANS);
     angleEncoder.setVelocityConversionFactor(Constants.kSwerve.ANGLE_RPM_TO_RADIANS_PER_SECOND);
