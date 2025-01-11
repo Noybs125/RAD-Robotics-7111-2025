@@ -8,6 +8,7 @@ public class CTREMotor implements Motor {
     private TalonFX motor;
     PositionVoltage setpos = new PositionVoltage(0);
     PIDController pid = new PIDController(0, 0, 0);
+    
     public CTREMotor(int id){
         motor = new TalonFX(id);
 
