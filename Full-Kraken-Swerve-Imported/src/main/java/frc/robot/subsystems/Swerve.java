@@ -3,11 +3,10 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 
 import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.DriveFeedforwards;
-import com.pathplanner.lib.config.HolonomicPathConfig;
 import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -45,7 +44,7 @@ public class Swerve extends SubsystemBase {
       .getStructArrayTopic("Calculated Swerve States", SwerveModuleState.struct).publish();
 
   public Swerve() {
-    gyro = new AHRS();
+    gyro = new AHRS(NavXComType.kMXP_SPI);
     zeroGyro();
 
     modules = new SwerveModule[] {
@@ -57,7 +56,7 @@ public class Swerve extends SubsystemBase {
 
     swerveOdometry = new SwerveDriveOdometry(Constants.kSwerve.KINEMATICS, getYaw(), getPositions());
     
-    RobotConfig config;
+    RobotConfig config = null;
     try{
       config = RobotConfig.fromGUISettings();
     } catch (Exception e) {
