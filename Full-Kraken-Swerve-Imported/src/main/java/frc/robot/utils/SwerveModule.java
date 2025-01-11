@@ -2,16 +2,16 @@ package frc.robot.utils;
 
 
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.spark.config.ClosedLoopConfig;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
+import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -119,7 +119,7 @@ public class SwerveModule {
   private void configureDevices() {
     // CanCoder configuration.
     CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
-    canCoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    canCoderConfiguration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
     canCoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
     
     canConfig.apply(canCoderConfiguration);
@@ -135,8 +135,6 @@ public class SwerveModule {
     driveMotorConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Constants.kSwerve.CLOSED_LOOP_RAMP;
 
     driveMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    driveMotorConfig.CurrentLimits.SupplyTimeThreshold = Constants.kSwerve.DRIVE_CURRENT_THRESHOLD;
-    driveMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
     driveMotorConfig.CurrentLimits.SupplyCurrentLimit = Constants.kSwerve.DRIVE_CURRENT_LIMIT; // change the constant
     driveMotorConfig.CurrentLimits.StatorCurrentLimit = Constants.kSwerve.DRIVE_CURRENT_LIMIT;
 
@@ -161,8 +159,6 @@ public class SwerveModule {
 
     angleMotorConfig.CurrentLimits.SupplyCurrentLimit = Constants.kSwerve.ANGLE_CURRENT_LIMIT;
     angleMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    angleMotorConfig.CurrentLimits.SupplyCurrentThreshold = Constants.kSwerve.ANGLE_CURRENT_THRESHOLD;
-    angleMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
     angleMotorConfig.ClosedLoopGeneral.ContinuousWrap = true;
     //angleMotorConfig.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
   
