@@ -2,11 +2,13 @@ package frc.robot.utils.motor;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import edu.wpi.first.math.controller.PIDController;
 
 public class CTREMotor implements Motor {
 
     TalonFX motor = new TalonFX(0);
     PositionVoltage setpos = new PositionVoltage(0);
+    PIDController pid = new PIDController(0, 0, 0);
 
     public void setSpeed(double speed){
         motor.set(speed);
@@ -29,6 +31,7 @@ public class CTREMotor implements Motor {
         
     
     public void setSetpoint(double setPoint){
+        pid.setSetpoint(setPoint);
         setpos.Position = setPoint;
         motor.setControl(setpos);
     }
