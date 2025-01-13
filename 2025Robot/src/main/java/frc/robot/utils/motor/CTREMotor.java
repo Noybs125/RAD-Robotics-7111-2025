@@ -45,6 +45,22 @@ public class CTREMotor implements Motor {
 
     }
 
+    public void setPID(double P, double I, double D){
+        pid.setPID(P, I, D);
+    }
+
+    public double getP(){
+        return pid.getP();
+    }
+
+    public double getI(){
+        return pid.getI();
+    }
+
+    public double getD(){
+        return pid.getD();
+    }
+
     
     
 }

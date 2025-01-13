@@ -40,5 +40,21 @@ public class REVMotor implements Motor {
 
     
     public void periodic(){}
+
+    public void setPID(double P, double I, double D){
+        pid.setPID(P, I, D);
+    }
+
+    public double getP(){
+        return pid.getP();
+    }
+
+    public double getI(){
+        return pid.getI();
+    }
+
+    public double getD(){
+        return pid.getD();
+    }
     
 }
