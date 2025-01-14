@@ -1,6 +1,8 @@
 package frc.robot;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.Nat;
@@ -14,6 +16,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.MassUnit;
+import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.utils.SwerveModuleConstants;
 import edu.wpi.first.wpilibj.Joystick;
@@ -171,5 +176,20 @@ public class Constants {
     /** Constraints. */
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 2.0;
     public static final double MAX_ACCEL_METERS_PER_SECOND_SQUARED = 5.0;
-  }
+
+    /** Pathplanner config */
+
+    public static final int numModules = 4;
+    public static final double massKgs = 42 * 0.45359237; //Converts lbs to kgs for weight of robot
+    public static final double MOI = Math.pow(massKgs, 2);
+    public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND, 0.7 , null, kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT ,2);
+    public static final Translation2d[] moduleLocations = new Translation2d[] {
+      new Translation2d(kSwerve.WHEEL_BASE / 2.0, kSwerve.TRACK_WIDTH / 2.0),
+      new Translation2d(kSwerve.WHEEL_BASE / 2.0, -kSwerve.TRACK_WIDTH / 2.0),
+      new Translation2d(-kSwerve.WHEEL_BASE / 2.0, kSwerve.TRACK_WIDTH / 2.0),
+      new Translation2d(-kSwerve.WHEEL_BASE / 2.0, -kSwerve.TRACK_WIDTH / 2.0)
+    };
+    
+}
+
 }
