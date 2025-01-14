@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.MassUnit;
 import edu.wpi.first.units.measure.Mass;
@@ -182,7 +183,8 @@ public class Constants {
     public static final int numModules = 4;
     public static final double massKgs = 42 * 0.45359237; //Converts lbs to kgs for weight of robot
     public static final double MOI = Math.pow(massKgs, 2);
-    public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND, 0.7 , null, kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT ,2);
+    public static final DCMotor krakenDcMotor = new DCMotor(24, 7.09 ,366 , 2, 628.32, 8);
+    public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND, 0.7 , krakenDcMotor, kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT ,2);
     public static final Translation2d[] moduleLocations = new Translation2d[] {
       new Translation2d(kSwerve.WHEEL_BASE / 2.0, kSwerve.TRACK_WIDTH / 2.0),
       new Translation2d(kSwerve.WHEEL_BASE / 2.0, -kSwerve.TRACK_WIDTH / 2.0),
