@@ -28,7 +28,7 @@ public class Vision extends SubsystemBase{
         new EstimatedRobotPose(estPose3d, 0.0, null, PoseStrategy.AVERAGE_BEST_TARGETS), 
         this
         );*/
-    public final Camera orangepi1 = new Camera(
+    /*public final Camera orangepi1 = new Camera(
         new PhotonCamera("OV9281_1"), 
         Constants.vision.cameraToRobotCenter2, 
         new EstimatedRobotPose(estPose3d, 0.0, null, PoseStrategy.AVERAGE_BEST_TARGETS), 
@@ -39,11 +39,11 @@ public class Vision extends SubsystemBase{
         Constants.vision.cameraToRobotCenter3, 
         new EstimatedRobotPose(estPose3d, 0.0, null, PoseStrategy.AVERAGE_BEST_TARGETS), 
         this
-        );
+        );*/
 
     public Camera[] cameraList = new Camera[] {
-        orangepi1,
-        orangepi2,
+        /*orangepi1,
+        orangepi2,*/
     };
 
     public Vision(AHRS gyro){
@@ -54,7 +54,7 @@ public class Vision extends SubsystemBase{
 
         Optional<EstimatedRobotPose> estPose;
 
-        for(Camera camera : cameraList){
+         /*for(Camera camera : cameraList){
             estPose = camera.getEstimatedGlobalPose(robotPose);
             robotPose = camera.estRobotPose.estimatedPose.transformBy(camera.getCameraToRobot()).toPose2d();
             if(estPose.isPresent()){
@@ -62,6 +62,6 @@ public class Vision extends SubsystemBase{
             }
 
             camera.periodic();
-        }
+        }*/
     }
 }

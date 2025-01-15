@@ -54,7 +54,7 @@ public class Swerve extends SubsystemBase {
       new SwerveModule(3, Constants.kSwerve.MOD_3_Constants),
     };
 
-    swerveOdometry = new SwerveDrivePoseEstimator(Constants.kSwerve.KINEMATICS, getYaw(), getPositions(),vision.orangepi1.getRobotPose());
+    swerveOdometry = new SwerveDrivePoseEstimator(Constants.kSwerve.KINEMATICS, getYaw(), getPositions(),vision.robotPose);
 
     RobotConfig config = new RobotConfig(Constants.kAuto.massKgs, Constants.kAuto.MOI, Constants.kAuto.moduleConfig, Constants.kAuto.moduleLocations);
     
@@ -62,10 +62,10 @@ public class Swerve extends SubsystemBase {
             this::getPose, // Robot pose supplier
             this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getRelSpeedsNonSuplier, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            (speeds, feedSpeed) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            (relSpeeds) -> driveRobotRelative(relSpeeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+                    new PIDConstants(40, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(40, 0.0, 0.0) // Rotation PID constants
             ),
             config,
             () -> {
@@ -167,6 +167,7 @@ public class Swerve extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose) { // not currently used, using addVisionMeasurements in periodic instead.
     swerveOdometry.resetPosition(getYaw(), getPositions(), pose);
+
   }
 
   public ChassisSpeeds getRelSpeedsNonSuplier() {
@@ -185,11 +186,11 @@ public class Swerve extends SubsystemBase {
   public void periodic() {
     swerveOdometry.update(getYaw(), getPositions());
 
-    for(Camera camera : vision.cameraList){
+    /*for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
         swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
       }
-    }
+    }*/
     
     for(SwerveModule mod : modules){
       SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderDegrees().getDegrees());
