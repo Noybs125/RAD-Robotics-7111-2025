@@ -38,6 +38,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    if (autoCommand != null)
+    System.out.println(autoCommand.isFinished());
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -71,12 +73,16 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    System.out.println(autoCommand.isFinished());
     
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    if (autoCommand != null)
+    autoCommand.end(true);
+  }
 
   /** This function is called periodically during operator control. */
   @Override
