@@ -167,8 +167,17 @@ public class Swerve extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose) { // not currently used, using addVisionMeasurements in periodic instead.
     swerveOdometry.resetPosition(getYaw(), getPositions(), pose);
-
+    StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+    System.out.println("Spacer");
+    printTrace(trace);
   }
+  private static void printTrace(StackTraceElement[] trace)
+    {
+        for (StackTraceElement t : trace)
+        {
+            System.out.println(t);
+        }
+    }
 
   public ChassisSpeeds getRelSpeedsNonSuplier() {
     ChassisSpeeds relSpeed = Constants.kSwerve.KINEMATICS.toChassisSpeeds(getStates());
