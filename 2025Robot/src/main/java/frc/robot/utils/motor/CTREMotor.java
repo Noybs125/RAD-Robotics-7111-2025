@@ -11,15 +11,27 @@ public class CTREMotor implements Motor {
     private TalonFX motor;
     PIDController pid = new PIDController(0, 0, 0);
     private Encoder encoder = null;
+    private double gearRatio;
     
     public CTREMotor(int id){
         motor = new TalonFX(id);
+    }
+
+    public CTREMotor(int id, double gearRatio){
+        motor = new TalonFX(id);
+        this.gearRatio = gearRatio;
     }
 
     public CTREMotor(int id, Encoder encoder){
         this.encoder = encoder;
 
         motor = new TalonFX(id);
+    }
+
+    public CTREMotor(int id, Encoder encoder, double gearRatio){
+        motor = new TalonFX(id);
+        this.encoder = encoder;
+        this.gearRatio = gearRatio;
     }
 
     public void setSpeed(double speed){
@@ -41,7 +53,7 @@ public class CTREMotor implements Motor {
     
     public double getPosition(){
         if(encoder == null){
-            return motor.getPosition().getValueAsDouble();
+            return motor.getPosition().getValueAsDouble() * gearRatio;
         } else{
             return encoder.getPosition().getDegrees();
         }
@@ -75,4 +87,23 @@ public class CTREMotor implements Motor {
     public Encoder getEncoder(){
         return encoder;
     }    
+
+    public void setGearRatio(double gearRatio){
+        if (encoder != null)
+            encoder.setGearRatio(gearRatio);
+        else
+            this.gearRatio = gearRatio;
+            
+    }
+
+    public double getGearRatio(){
+        if (encoder != null)
+            return encoder.getGearRatio();
+        else    
+            return gearRatio;
+    }
+
+    public double getVoltage(){
+        return motor.getMotorVoltage().getValueAsDouble();
+    }
 }
