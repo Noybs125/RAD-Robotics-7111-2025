@@ -9,9 +9,13 @@ public interface Encoder {
 
     public boolean isAbsolute();
 
-    public double getVelocity();
+    public void setGearRatio(double value);
 
-    public double getVoltage();
+    public double getGearRatio();
 
-    public void setGearRatio();
+    public void setDirection(boolean isCW);
+
+    public boolean getDirection();
+
+    public void periodic();
 }
