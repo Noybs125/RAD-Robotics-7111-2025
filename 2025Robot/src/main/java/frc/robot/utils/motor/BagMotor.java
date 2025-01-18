@@ -31,7 +31,7 @@ public class BagMotor implements Motor{
     public BagMotor(int id, Encoder encoder, double gearRatio){
         motor = new VictorSPX(id);
         this.encoder = encoder;
-        this. gearRatio = gearRatio;
+        this.gearRatio = gearRatio;
     }
 
     public void setSpeed(double speed){
@@ -99,6 +99,6 @@ public class BagMotor implements Motor{
     }
 
     public double getVoltage(){
-        return 0;
+        return motor.getBusVoltage();
     }
 }

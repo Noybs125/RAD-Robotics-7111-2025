@@ -46,7 +46,7 @@ public class CTREMotor implements Motor {
         if(encoder != null){
             encoder.setPosition(Rotation2d.fromDegrees(position));
         } else {
-            motor.setPosition(position);
+            motor.setPosition(position / gearRatio);
         }
     }
 

@@ -37,13 +37,13 @@ public class REVMotor implements Motor {
         if(encoder != null){
             encoder.setPosition(Rotation2d.fromDegrees(position));
         } else {
-            motor.getEncoder().setPosition(position * gearRatio);
+            motor.getEncoder().setPosition(position / gearRatio);
         }
     }
     
     public double getPosition(){
         if(encoder == null){
-            return motor.getEncoder().getPosition() / gearRatio;
+            return motor.getEncoder().getPosition() * gearRatio;
         } else{
             return encoder.getPosition().getDegrees();
         }

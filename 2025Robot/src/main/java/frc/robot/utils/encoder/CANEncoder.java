@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class CANEncoder implements Encoder {
     private final CANcoder encoder;
     private double gearRatio = 1;
-    private SensorDirectionValue isCW;
+    private SensorDirectionValue isCW = SensorDirectionValue.Clockwise_Positive;
 
     public CANEncoder(int id) {
         encoder = new CANcoder(id);
