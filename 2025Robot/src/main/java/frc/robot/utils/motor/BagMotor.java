@@ -4,12 +4,21 @@ import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.utils.encoder.Encoder;
 
 public class BagMotor implements Motor{
     private VictorSPX motor; 
     private PIDController pid = new PIDController(0,0,0);
+    private Encoder encoder = null;
 
     public BagMotor(int id){
+        motor = new VictorSPX(id);
+    }
+    
+    public BagMotor(int id, Encoder encoder){
+        this.encoder = encoder;
+
         motor = new VictorSPX(id);
     }
 
@@ -22,10 +31,17 @@ public class BagMotor implements Motor{
     }
 
     public void setPosition(double position){
+        if(encoder != null){
+            encoder.setPos(Rotation2d.fromDegrees(position));
+        }
     }
     
     public double getPosition(){
-        return 0;
+        if(encoder == null){
+            return 0;
+        } else{
+            return encoder.getPos().getDegrees();
+        }
     }        
     
     public void setSetpoint(double setPoint){
@@ -52,4 +68,7 @@ public class BagMotor implements Motor{
         return pid.getD();
     }
 
+    public Encoder getEncoder(){
+        return encoder;
+    }
 }

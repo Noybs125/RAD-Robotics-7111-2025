@@ -1,5 +1,7 @@
 package frc.robot.utils.motor;
 
+import frc.robot.utils.encoder.Encoder;
+
 public interface Motor {
 
     public void setSpeed(double speed);
@@ -25,6 +27,6 @@ public interface Motor {
     public double getI();
     public double getD();
 
-    
+    public Encoder getEncoder();
     
 }
