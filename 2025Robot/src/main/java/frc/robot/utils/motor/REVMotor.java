@@ -12,6 +12,7 @@ public class REVMotor implements Motor {
     private SparkMax motor;
     private PIDController pid;
     private Encoder encoder = null;
+    private double gearRatio = 1;
 
     public REVMotor (int id) {
         motor = new SparkMax(id,MotorType.kBrushless);
@@ -36,13 +37,13 @@ public class REVMotor implements Motor {
         if(encoder != null){
             encoder.setPosition(Rotation2d.fromDegrees(position));
         } else {
-            motor.getEncoder().setPosition(position);
+            motor.getEncoder().setPosition(position * gearRatio);
         }
     }
     
     public double getPosition(){
         if(encoder == null){
-            return motor.getEncoder().getPosition();
+            return motor.getEncoder().getPosition() / gearRatio;
         } else{
             return encoder.getPosition().getDegrees();
         }
@@ -73,5 +74,25 @@ public class REVMotor implements Motor {
     public Encoder getEncoder(){
         return encoder;
     }
+
+    public void setGearRatio(double gearRatio){
+        if(encoder != null) {
+            encoder.setGearRatio(gearRatio);
+        } else {
+            this.gearRatio = gearRatio;
+        }
+    };
+
+    public double getGearRatio(){
+        if(encoder != null){
+            return encoder.getGearRatio();
+        }else{
+            return gearRatio;
+        }
+    };
+
+    public double getVoltage(){
+        return motor.getBusVoltage();
+    };
     
 }
