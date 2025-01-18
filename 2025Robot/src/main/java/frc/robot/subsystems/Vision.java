@@ -57,8 +57,10 @@ public class Vision extends SubsystemBase{
                 estPose = camera.getEstimatedGlobalPose(robotPose);
             }
             robotPose = camera.estRobotPose.estimatedPose.transformBy(camera.getCameraToRobot()).toPose2d();
-            if(estPose.isPresent()){
-                camera.estRobotPose = estPose.get();
+            if(estPose != null){
+                if(estPose.isPresent()){
+                    camera.estRobotPose = estPose.get();
+                }
             }
 
             camera.periodic();

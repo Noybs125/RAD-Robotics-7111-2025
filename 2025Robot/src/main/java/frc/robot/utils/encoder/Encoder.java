@@ -3,9 +3,9 @@ package frc.robot.utils.encoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public interface Encoder {
-    public Rotation2d getPos();
+    public Rotation2d getPosition();
 
-    public void setPos(Rotation2d postion);
+    public void setPosition(Rotation2d position);
 
     public boolean isAbsolute();
 
