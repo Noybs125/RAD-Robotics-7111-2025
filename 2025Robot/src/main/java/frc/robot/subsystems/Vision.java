@@ -50,10 +50,12 @@ public class Vision extends SubsystemBase{
 
     public void periodic(){
 
-        Optional<EstimatedRobotPose> estPose;
+        Optional<EstimatedRobotPose> estPose = null;
 
          for(Camera camera : cameraList){
-            estPose = camera.getEstimatedGlobalPose(robotPose);
+            if(camera.getEstimatedGlobalPose(robotPose) != null){
+                estPose = camera.getEstimatedGlobalPose(robotPose);
+            }
             robotPose = camera.estRobotPose.estimatedPose.transformBy(camera.getCameraToRobot()).toPose2d();
             if(estPose.isPresent()){
                 camera.estRobotPose = estPose.get();
