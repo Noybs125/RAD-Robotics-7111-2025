@@ -28,5 +28,9 @@ public interface Motor {
     public double getD();
 
     public Encoder getEncoder();
+
+    public void setGearRatio();
+
+    public double getGearRatio();
     
 }

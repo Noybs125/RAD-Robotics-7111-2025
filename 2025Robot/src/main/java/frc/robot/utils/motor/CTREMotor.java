@@ -14,7 +14,6 @@ public class CTREMotor implements Motor {
     
     public CTREMotor(int id){
         motor = new TalonFX(id);
-
     }
 
     public CTREMotor(int id, Encoder encoder){

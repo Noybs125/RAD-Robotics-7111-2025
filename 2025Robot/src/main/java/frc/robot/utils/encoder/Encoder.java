@@ -13,9 +13,11 @@ public interface Encoder {
 
     public double getGearRatio();
 
+    /** true if CW, false if CCW */
     public void setDirection(boolean isCW);
 
     public boolean getDirection();
 
+    /** must be called in the periodic method of the subsystem */
     public void periodic();
 }

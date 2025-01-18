@@ -9,9 +9,17 @@ public class RevEncoder implements Encoder {
     private double position = 0;
     private double offset = 0;
     private boolean inverted = false;
+    private int id;
 
     public RevEncoder(int id){
         encoder = new DutyCycleEncoder(id);
+        this.id = id;
+    }
+
+    public RevEncoder(int id, double gearRatio){
+        encoder = new DutyCycleEncoder(id);
+        this.id = id;
+        this.gearRatio = gearRatio;
     }
 
     public Rotation2d getPosition(){
@@ -38,8 +46,14 @@ public class RevEncoder implements Encoder {
         return inverted;
     }
 
+    public void setDirection(boolean inverted){
+        this.inverted = inverted;
+    }
+
     public void periodic(){
         position = encoder.get() * gearRatio - offset;
         encoder.setInverted(inverted);
+
+        //Shuffleboard stuff goes here
     }
 }
