@@ -163,11 +163,11 @@ public class Swerve extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return odometry2.getPoseMeters();
+    return swerveOdometry.getEstimatedPosition();
   }
 
   public void resetOdometry(Pose2d pose) { // not currently used, using addVisionMeasurements in periodic instead.
-      odometry2.resetPose(pose);    
+      swerveOdometry.resetPose(pose);    
   }
   private static void printTrace(StackTraceElement[] trace)
     {
@@ -195,7 +195,7 @@ public class Swerve extends SubsystemBase {
   
   @Override 
   public void periodic() {
-      //odometry2.update(getYaw(), getPositions());
+      //swerveOdometry.update(getYaw(), getPositions());
     /*for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
         swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
