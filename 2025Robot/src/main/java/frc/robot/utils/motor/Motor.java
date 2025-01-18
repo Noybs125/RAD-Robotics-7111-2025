@@ -6,21 +6,16 @@ public interface Motor {
 
     public void setSpeed(double speed);
 
-
     public double getSpeed();
-    
 
     public void setPosition(double position);
-
     
     public double getPosition();
-        
     
     public void setSetpoint(double setPoint);
 
-    
+    /** Must be called by the subystems periodic method */
     public void periodic();
-
     
     public void setPID(double p, double i, double d);
     public double getP();
