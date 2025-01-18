@@ -28,12 +28,10 @@ public class REVMotor implements Motor {
         motor.set(speed);
     }
 
-
     public double getSpeed(){
         return motor.get();
     }
     
-
     public void setPosition(double position){
         if(encoder != null){
             encoder.setPosition(Rotation2d.fromDegrees(position));
@@ -41,7 +39,6 @@ public class REVMotor implements Motor {
             motor.getEncoder().setPosition(position);
         }
     }
-
     
     public double getPosition(){
         if(encoder == null){
@@ -49,18 +46,16 @@ public class REVMotor implements Motor {
         } else{
             return encoder.getPosition().getDegrees();
         }
-    }
-        
+    }  
     
     public void setSetpoint(double setPoint){
         motor.set(pid.calculate(getPosition(), setPoint));
     }
 
-    
     public void periodic(){}
 
-    public void setPID(double P, double I, double D){
-        pid.setPID(P, I, D);
+    public void setPID(double p, double i, double d){
+        pid.setPID(p, i, d);
     }
 
     public double getP(){

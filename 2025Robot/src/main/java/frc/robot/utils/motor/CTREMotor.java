@@ -26,12 +26,10 @@ public class CTREMotor implements Motor {
         motor.set(speed);
     }
 
-
     public double getSpeed(){
         return motor.get();
     }
     
-
     public void setPosition(double position){
         if(encoder != null){
             encoder.setPosition(Rotation2d.fromDegrees(position));
@@ -54,13 +52,12 @@ public class CTREMotor implements Motor {
         motor.set(pid.calculate(getPosition(), setPoint));
     }
 
-    
     public void periodic(){
 
     }
 
-    public void setPID(double P, double I, double D){
-        pid.setPID(P, I, D);
+    public void setPID(double p, double i, double d){
+        pid.setPID(p, i, d);
     }
 
     public double getP(){
@@ -78,5 +75,4 @@ public class CTREMotor implements Motor {
     public Encoder getEncoder(){
         return encoder;
     }    
-    
 }

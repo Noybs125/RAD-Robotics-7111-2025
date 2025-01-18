@@ -52,8 +52,8 @@ public class BagMotor implements Motor{
 
     }
 
-    public void setPID(double P, double I, double D){
-        pid.setPID(P, I, D);
+    public void setPID(double p, double i, double d){
+        pid.setPID(p, i, d);
     }
 
     public double getP(){

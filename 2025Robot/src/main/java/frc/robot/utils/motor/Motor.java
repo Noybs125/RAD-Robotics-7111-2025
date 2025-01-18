@@ -22,15 +22,17 @@ public interface Motor {
     public void periodic();
 
     
-    public void setPID(double P, double I, double D);
+    public void setPID(double p, double i, double d);
     public double getP();
     public double getI();
     public double getD();
 
     public Encoder getEncoder();
 
-    public void setGearRatio();
+    public void setGearRatio(double gearRatio);
 
     public double getGearRatio();
+
+    public double getVoltage();
     
 }
