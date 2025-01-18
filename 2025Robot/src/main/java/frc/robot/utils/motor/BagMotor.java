@@ -11,6 +11,7 @@ public class BagMotor implements Motor{
     private VictorSPX motor; 
     private PIDController pid = new PIDController(0,0,0);
     private Encoder encoder = null;
+    private double gearRatio;
 
     public BagMotor(int id){
         motor = new VictorSPX(id);
@@ -20,6 +21,17 @@ public class BagMotor implements Motor{
         this.encoder = encoder;
 
         motor = new VictorSPX(id);
+    }
+
+    public BagMotor(int id, double gearRatio){
+        motor = new VictorSPX(id);
+        this.gearRatio = gearRatio;
+    }
+
+    public BagMotor(int id, Encoder encoder, double gearRatio){
+        motor = new VictorSPX(id);
+        this.encoder = encoder;
+        this. gearRatio = gearRatio;
     }
 
     public void setSpeed(double speed){
@@ -70,5 +82,23 @@ public class BagMotor implements Motor{
 
     public Encoder getEncoder(){
         return encoder;
+    }
+
+    public void setGearRatio(double gearRatio){
+        if (encoder != null)
+            encoder.setGearRatio(gearRatio);
+        else 
+            this.gearRatio = gearRatio;
+    }
+
+    public double getGearRatio(){
+        if (encoder != null)
+            return encoder.getGearRatio();
+        else
+            return gearRatio;
+    }
+
+    public double getVoltage(){
+        return 0;
     }
 }
