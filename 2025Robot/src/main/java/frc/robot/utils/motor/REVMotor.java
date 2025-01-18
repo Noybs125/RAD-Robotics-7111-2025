@@ -1,17 +1,27 @@
 package frc.robot.utils.motor;
 
 import com.revrobotics.spark.SparkMax;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.utils.encoder.Encoder;
 
 
 public class REVMotor implements Motor {
     private SparkMax motor;
     private PIDController pid;
+    private Encoder encoder = null;
 
     public REVMotor (int id) {
         motor = new SparkMax(id,MotorType.kBrushless);
 
+    }
+    
+    public REVMotor(int id, Encoder encoder){
+        this.encoder = encoder;
+
+        motor = new SparkMax(id, MotorType.kBrushless);
     }
 
     public void setSpeed(double speed){
@@ -25,12 +35,20 @@ public class REVMotor implements Motor {
     
 
     public void setPosition(double position){
-        motor.getEncoder().setPosition(position);
+        if(encoder != null){
+            encoder.setPos(Rotation2d.fromDegrees(position));
+        } else {
+            motor.getEncoder().setPosition(position);
+        }
     }
 
     
     public double getPosition(){
-       return motor.getEncoder().getPosition();
+        if(encoder == null){
+            return motor.getEncoder().getPosition();
+        } else{
+            return encoder.getPos().getDegrees();
+        }
     }
         
     
@@ -55,6 +73,10 @@ public class REVMotor implements Motor {
 
     public double getD(){
         return pid.getD();
+    }
+
+    public Encoder getEncoder(){
+        return encoder;
     }
     
 }
