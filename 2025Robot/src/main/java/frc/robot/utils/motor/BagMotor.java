@@ -32,7 +32,7 @@ public class BagMotor implements Motor{
 
     public void setPosition(double position){
         if(encoder != null){
-            encoder.setPos(Rotation2d.fromDegrees(position));
+            encoder.setPosition(Rotation2d.fromDegrees(position));
         }
     }
     
@@ -40,7 +40,7 @@ public class BagMotor implements Motor{
         if(encoder == null){
             return 0;
         } else{
-            return encoder.getPos().getDegrees();
+            return encoder.getPosition().getDegrees();
         }
     }        
     

@@ -9,7 +9,6 @@ import frc.robot.utils.encoder.Encoder;
 
 public class CTREMotor implements Motor {
     private TalonFX motor;
-    PositionVoltage setpos = new PositionVoltage(0);
     PIDController pid = new PIDController(0, 0, 0);
     private Encoder encoder = null;
     
@@ -36,7 +35,7 @@ public class CTREMotor implements Motor {
 
     public void setPosition(double position){
         if(encoder != null){
-            encoder.setPos(Rotation2d.fromDegrees(position));
+            encoder.setPosition(Rotation2d.fromDegrees(position));
         } else {
             motor.setPosition(position);
         }
@@ -47,7 +46,7 @@ public class CTREMotor implements Motor {
         if(encoder == null){
             return motor.getPosition().getValueAsDouble();
         } else{
-            return encoder.getPos().getDegrees();
+            return encoder.getPosition().getDegrees();
         }
     }
         
