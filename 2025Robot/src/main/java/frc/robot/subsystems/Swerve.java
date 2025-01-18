@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -33,6 +34,8 @@ public class Swerve extends SubsystemBase {
   private final SwerveModule[] modules;
 
   public final SwerveDrivePoseEstimator swerveOdometry;
+
+  private SwerveDriveOdometry odometry2;
   private Field2d field = new Field2d();
 
   private final AHRS gyro;
@@ -53,7 +56,7 @@ public class Swerve extends SubsystemBase {
       new SwerveModule(2, Constants.kSwerve.MOD_2_Constants),
       new SwerveModule(3, Constants.kSwerve.MOD_3_Constants),
     };
-
+    odometry2 = new SwerveDriveOdometry(Constants.kSwerve.KINEMATICS, getYaw(), getPositions());
     swerveOdometry = new SwerveDrivePoseEstimator(Constants.kSwerve.KINEMATICS, getYaw(), getPositions(),vision.robotPose);
 
     RobotConfig config = new RobotConfig(Constants.kAuto.massKgs, Constants.kAuto.MOI, Constants.kAuto.moduleConfig, Constants.kAuto.moduleLocations);
@@ -62,10 +65,10 @@ public class Swerve extends SubsystemBase {
             this::getPose, // Robot pose supplier
             this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getRelSpeedsNonSuplier, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            (speeds) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(40, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(40, 0.0, 0.0) // Rotation PID constants
+                    new PIDConstants(5, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(5, 0.0, 0.0) // Rotation PID constants
             ),
             config,
             () -> {
@@ -162,14 +165,11 @@ public class Swerve extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return swerveOdometry.getEstimatedPosition();
+    return odometry2.getPoseMeters();
   }
 
   public void resetOdometry(Pose2d pose) { // not currently used, using addVisionMeasurements in periodic instead.
-    swerveOdometry.resetPosition(getYaw(), getPositions(), pose);
-    StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-    System.out.println("Spacer");
-    printTrace(trace);
+      odometry2.resetPose(pose);    
   }
   private static void printTrace(StackTraceElement[] trace)
     {
@@ -185,6 +185,9 @@ public class Swerve extends SubsystemBase {
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds){
+    StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+    System.out.println("Spacer!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    printTrace(trace);
     speeds.omegaRadiansPerSecond = -speeds.omegaRadiansPerSecond;
     speeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] states = Constants.kSwerve.KINEMATICS.toSwerveModuleStates(speeds);
@@ -194,8 +197,7 @@ public class Swerve extends SubsystemBase {
   
   @Override 
   public void periodic() {
-    swerveOdometry.update(getYaw(), getPositions());
-
+      odometry2.update(getYaw(), getPositions());
     /*for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
         swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
