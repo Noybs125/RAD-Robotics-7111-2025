@@ -65,10 +65,6 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
 
     SmartDashboard.putData(autoChooser);
-
-    
-
-
     
 
     // Configure button bindings
