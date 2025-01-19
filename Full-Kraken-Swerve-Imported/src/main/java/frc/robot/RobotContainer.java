@@ -27,6 +27,8 @@ public class RobotContainer {
   public final Joystick leftJoy;
   public final Joystick rightJoy;
 
+  private final SendableChooser<Command> autoChooser;
+
   public final XboxController xbox;
   public final CommandXboxController commXbox;
   public PathPlannerAuto auto1;
@@ -41,8 +43,12 @@ public class RobotContainer {
     
     swerve = new Swerve();
 
+    autoChooser = AutoBuilder.buildAutoChooser();
+
 
     NamedCommands.registerCommand("test command", auto1);
+
+    SmartDashboard.putData(autoChooser);
 
     // Configure button bindings
     configureButtonBindings();
@@ -50,7 +56,7 @@ public class RobotContainer {
   
   public Command getAutonomousCommand() {
 
-    return new PathPlannerAuto("FirstAuto");
+    return autoChooser.getSelected();
     
  
   }

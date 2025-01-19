@@ -1,5 +1,5 @@
 {
-  "version": 1.0,
+  "version": "2025.0",
   "waypoints": [
     {
       "anchor": {
@@ -20,7 +20,7 @@
         "y": 7.0
       },
       "prevControl": {
-        "x": 1.8798785178078776,
+        "x": 1.6539274198002745,
         "y": 7.0
       },
       "nextControl": null,
@@ -30,21 +30,21 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.3,
-      "rotationDegrees": 0,
-      "rotateFast": false
+      "waypointRelativePos": 0.0,
+      "rotationDegrees": -141.80348040969955
     },
     {
-      "waypointRelativePos": 0.0,
-      "rotationDegrees": -141.80348040969955,
-      "rotateFast": false
+      "waypointRelativePos": 0.3,
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Shoot",
       "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "sequential",
         "data": {
@@ -55,6 +55,7 @@
     {
       "name": "Deploy",
       "waypointRelativePos": 0.95,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "sequential",
         "data": {
@@ -67,18 +68,19 @@
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 1.0206912077253119,
-    "rotateFast": false
+    "rotation": 1.0206912077253119
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": {
-    "rotation": -116.75181979584715,
-    "velocity": 0
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

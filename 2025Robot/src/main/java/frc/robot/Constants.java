@@ -2,7 +2,9 @@ package frc.robot;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -75,6 +77,7 @@ public class Constants {
     /** Constants that apply to the whole drive train. */
     public static final double TRACK_WIDTH = Units.inchesToMeters(17.659); // Width of the drivetrain measured from the middle of the wheels.
     public static final double WHEEL_BASE = Units.inchesToMeters(17.659); // Length of the drivetrain measured from the middle of the wheels.
+    public static final double MODULE_TO_CENTER = Units.inchesToMeters(12.487); // Distance from the center of the module to the center of the robot
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
     public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
 
@@ -184,15 +187,19 @@ public class Constants {
 
     public static final int numModules = 4;
     public static final double massKgs = 42 * 0.45359237; //Converts lbs to kgs for weight of robot
-    public static final double MOI = Math.pow(massKgs, 2);
-    public static final DCMotor krakenDcMotor = new DCMotor(24, 7.09 ,366 , 2, 628.32, 8);
-    public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND, 0.7 , krakenDcMotor, kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT ,2);
+    public static final double MOI = massKgs * Math.pow(kSwerve.MODULE_TO_CENTER, 2);
+    public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND, 0.7 , DCMotor.getKrakenX60(1), kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT ,2);
     public static final Translation2d[] moduleLocations = new Translation2d[] {
       new Translation2d(kSwerve.WHEEL_BASE / 2.0, kSwerve.TRACK_WIDTH / 2.0),
       new Translation2d(kSwerve.WHEEL_BASE / 2.0, -kSwerve.TRACK_WIDTH / 2.0),
       new Translation2d(-kSwerve.WHEEL_BASE / 2.0, kSwerve.TRACK_WIDTH / 2.0),
       new Translation2d(-kSwerve.WHEEL_BASE / 2.0, -kSwerve.TRACK_WIDTH / 2.0)
     };
+    public static final PPHolonomicDriveController cont = new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                    new PIDConstants(5, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(5, 0.0, 0.0) // Rotation PID constants
+            );
+
     
 }
 

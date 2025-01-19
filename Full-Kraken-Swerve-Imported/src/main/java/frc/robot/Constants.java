@@ -1,11 +1,13 @@
 package frc.robot;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.config.ModuleConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,6 +46,7 @@ public class Constants {
     /** Constants that apply to the whole drive train. */
     public static final double TRACK_WIDTH = Units.inchesToMeters(17.659); // Width of the drivetrain measured from the middle of the wheels.
     public static final double WHEEL_BASE = Units.inchesToMeters(17.659); // Length of the drivetrain measured from the middle of the wheels.
+    public static final double MODULE_TO_CENTER = Units.inchesToMeters(12.487); // Distance from the center of the module to the center of the robot
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
     public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
 
@@ -152,5 +155,16 @@ public class Constants {
     /** Constraints. */
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 2.0;
     public static final double MAX_ACCEL_METERS_PER_SECOND_SQUARED = 5.0;
+
+    public static final int numModules = 4;
+    public static final double massKgs = 42 * 0.45359237; //Converts lbs to kgs for weight of robot
+    public static final double MOI = massKgs * Math.pow(kSwerve.MODULE_TO_CENTER, 2);
+    public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND, 0.7 , DCMotor.getKrakenX60(2), kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT ,1);
+    public static final Translation2d[] moduleLocations = new Translation2d[] {
+      new Translation2d(kSwerve.WHEEL_BASE / 2.0, kSwerve.TRACK_WIDTH / 2.0),
+      new Translation2d(kSwerve.WHEEL_BASE / 2.0, -kSwerve.TRACK_WIDTH / 2.0),
+      new Translation2d(-kSwerve.WHEEL_BASE / 2.0, kSwerve.TRACK_WIDTH / 2.0),
+      new Translation2d(-kSwerve.WHEEL_BASE / 2.0, -kSwerve.TRACK_WIDTH / 2.0)
+    };
   }
 }

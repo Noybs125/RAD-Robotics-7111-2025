@@ -75,7 +75,10 @@ public class Camera extends PhotonCamera{
     }
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
         photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-        return photonPoseEstimator.update(latestResult);
+        if (latestResult != null)
+            return photonPoseEstimator.update(latestResult);
+        else
+            return null;
     }
     public Pose2d getRobotPose(){
         newPose = estRobotPose.estimatedPose.transformBy(cameraToRobotCenter).toPose2d();
