@@ -32,9 +32,11 @@ public class Robot extends TimedRobot {
     
     if(controller.getAButton()){
       neoTestMotor.set(.75);
-    }
-    
-    else if(controller.getBButton()){
+    } else if(controller.getYButton()){
+      neoTestMotor.set(-.5);
+    }  else if(controller.getXButton()){
+      neoTestMotor.set(-.25);
+    } else if(controller.getBButton()){
       neoTestMotor.set(-.75);
     }
     else{
