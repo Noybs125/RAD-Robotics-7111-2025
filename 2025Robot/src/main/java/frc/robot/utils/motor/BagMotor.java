@@ -20,11 +20,10 @@ public class BagMotor implements Motor{
         motor = new VictorSPX(id);
     }
     
-    public BagMotor(int id, Encoder encoder, double gearRatio, PIDController pid, double setPoint, SimpleMotorFeedforward feedForward){
+    public BagMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
-        this.setPoint = setPoint;
         this.feedForward = feedForward;
 
         motor = new VictorSPX(id);
