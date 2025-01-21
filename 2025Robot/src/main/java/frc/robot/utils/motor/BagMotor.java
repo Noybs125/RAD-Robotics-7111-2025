@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.utils.encoder.Encoder;
 
@@ -12,27 +13,24 @@ public class BagMotor implements Motor{
     private PIDController pid = new PIDController(0,0,0);
     private Encoder encoder = null;
     private double gearRatio;
+    private double setPoint;
+    private SimpleMotorFeedforward feedForward;
 
     public BagMotor(int id){
         motor = new VictorSPX(id);
     }
     
-    public BagMotor(int id, Encoder encoder){
-        this.encoder = encoder;
-
-        motor = new VictorSPX(id);
-    }
-
-    public BagMotor(int id, double gearRatio){
-        motor = new VictorSPX(id);
-        this.gearRatio = gearRatio;
-    }
-
-    public BagMotor(int id, Encoder encoder, double gearRatio){
-        motor = new VictorSPX(id);
+    public BagMotor(int id, Encoder encoder, double gearRatio, PIDController pid, double setPoint, SimpleMotorFeedforward feedForward){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
+        this.pid = pid;
+        this.setPoint = setPoint;
+        this.feedForward = feedForward;
+
+        motor = new VictorSPX(id);
     }
+
+    
 
     public void setSpeed(double speed){
         motor.set(VictorSPXControlMode.PercentOutput, speed);
@@ -58,6 +56,7 @@ public class BagMotor implements Motor{
     
     public void setSetpoint(double setPoint){
         motor.set(VictorSPXControlMode.PercentOutput, pid.calculate(getPosition(), setPoint));
+        this.setPoint = setPoint;
     }
     
     public void periodic(){
@@ -102,13 +101,17 @@ public class BagMotor implements Motor{
         return motor.getBusVoltage();
     }
     public boolean isAtSetpoint(double deadzone){
+        if (getPosition() >= setPoint + deadzone && getPosition() <= setPoint + deadzone)
+            return true;
+        else 
+            return false;
     }
         
-    public double getFeedFoward(){
-
+    public SimpleMotorFeedforward getFeedForward(){
+        return feedForward;
     }
 
     public void setFeedFoward(double kS, double kV, double kA){
-
+        feedForward = new SimpleMotorFeedforward(kS, kV, kA);
     }
 }
