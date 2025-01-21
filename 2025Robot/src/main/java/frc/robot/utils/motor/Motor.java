@@ -1,5 +1,6 @@
 package frc.robot.utils.motor;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.robot.utils.encoder.Encoder;
 
 public interface Motor {
@@ -32,7 +33,7 @@ public interface Motor {
 
     public boolean isAtSetpoint(double deadzone);
 
-    public double getFeedFoward();
+    public SimpleMotorFeedforward getFeedForward();
 
     public void setFeedFoward(double kS, double kV, double kA);
     
