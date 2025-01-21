@@ -20,7 +20,7 @@ public class ElevatorSimMotor implements Motor{
     private double kV;
     private double kA;
 
-    public ElevatorSimMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, double kV, double kA, DCMotor gearbox, double minheight, double maxheight, double startheight, double[] measureStdDevs){
+    public ElevatorSimMotor(Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, double kV, double kA, DCMotor gearbox, double minheight, double maxheight, double startheight, double[] measureStdDevs){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;

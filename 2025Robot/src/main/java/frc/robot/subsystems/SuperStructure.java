@@ -10,5 +10,13 @@ public class SuperStructure extends SubsystemBase {
         this.swerve = swerve;
         this.vision = vision;
     }
+
+    public enum RobotState {
+        CoralL1,
+        CoralL2,
+        CoralL3,
+        CoralL4,
+        CoralFeeder
+    }
     
 }
