@@ -1,70 +1,68 @@
 package frc.robot.utils.motor;
 
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.ctre.phoenix6.controls.PositionVoltage;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.utils.encoder.Encoder;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.Slot0Configs;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 
-public class CTREMotor implements Motor {
-    private TalonFX motor;
-    PIDController pid = new PIDController(0, 0, 0);
-    private TalonFXConfiguration config;
+public class ElevatorSimMotor implements Motor{
+    private ElevatorSim motor; 
+    private PIDController pid = new PIDController(0,0,0);
     private Encoder encoder = null;
     private double gearRatio;
-    private double currentSetpoint;
-    private SimpleMotorFeedforward feedforward;
+    private double setPoint;
+    private SimpleMotorFeedforward feedForward;
+    private double kV;
+    private double kA;
 
-    
-    
-    public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward){
+    public ElevatorSimMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, double kV, double kA, DCMotor gearbox, double minheight, double maxheight, double startheight, double[] measureStdDevs){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
-        this.feedforward = feedForward;
-        motor = new TalonFX(id);
+        this.feedForward = feedForward;
+        this.kV = kV;
+        this.kA = kA;
+        motor = new ElevatorSim(kV, kA, gearbox, minheight, maxheight, true, startheight, measureStdDevs);
+
     }
 
-    public CTREMotor(int id){
-        motor = new TalonFX(id);
-    }
+    
 
     public void setSpeed(double speed){
-        motor.set(speed);
+        motor.setInput(speed);
     }
 
     public double getSpeed(){
-        return motor.get();
+        return motor.getOutput(0);
     }
-    
+
     public void setPosition(double position){
         if(encoder != null){
             encoder.setPosition(Rotation2d.fromDegrees(position));
-        } else {
-            motor.setPosition(position / gearRatio);
+        }
+        else {
+            motor.setState(position,0);
         }
     }
-
     
     public double getPosition(){
         if(encoder == null){
-            return motor.getPosition().getValueAsDouble() * gearRatio;
+            return motor.getPositionMeters();
         } else{
             return encoder.getPosition().getDegrees();
         }
-    }
-        
+    }        
     
     public void setSetpoint(double setPoint){
-        motor.set(pid.calculate(getPosition(), setPoint));
-        currentSetpoint = setPoint;
+        motor.setInput(pid.calculate(getPosition(), setPoint));
+        this.setPoint = setPoint;
     }
-
+    
     public void periodic(){
 
     }
@@ -87,42 +85,37 @@ public class CTREMotor implements Motor {
 
     public Encoder getEncoder(){
         return encoder;
-    }    
+    }
 
     public void setGearRatio(double gearRatio){
         if (encoder != null)
             encoder.setGearRatio(gearRatio);
-        else
+        else 
             this.gearRatio = gearRatio;
-            
     }
 
     public double getGearRatio(){
         if (encoder != null)
             return encoder.getGearRatio();
-        else    
+        else
             return gearRatio;
     }
 
     public double getVoltage(){
-        return motor.getMotorVoltage().getValueAsDouble();
+        return motor.getCurrentDrawAmps();
     }
     public boolean isAtSetpoint(double deadzone){
-        if(getPosition() >= currentSetpoint - deadzone && getPosition() <= currentSetpoint + deadzone){
+        if (getPosition() >= setPoint + deadzone && getPosition() <= setPoint + deadzone)
             return true;
-        }
-        return false;
+        else 
+            return false;
     }
         
     public SimpleMotorFeedforward getFeedForward(){
-        return feedforward;
+        return feedForward;
     }
 
     public void setFeedFoward(double kS, double kV, double kA){
-        config.Slot0.kS = kS;
-        config.Slot0.kV = kV;
-        config.Slot0.kA = kA;
-        motor.getConfigurator().apply(config);
-        feedforward = new SimpleMotorFeedforward(kS, kV, kA);
+        feedForward = new SimpleMotorFeedforward(kS, kV, kA);
     }
 }
