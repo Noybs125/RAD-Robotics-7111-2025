@@ -101,4 +101,14 @@ public class BagMotor implements Motor{
     public double getVoltage(){
         return motor.getBusVoltage();
     }
+    public boolean isAtSetpoint(double deadzone){
+    }
+        
+    public double getFeedFoward(){
+
+    }
+
+    public void setFeedFoward(double kS, double kV, double kA){
+
+    }
 }

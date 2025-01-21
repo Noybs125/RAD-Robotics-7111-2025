@@ -12,6 +12,7 @@ public class CTREMotor implements Motor {
     PIDController pid = new PIDController(0, 0, 0);
     private Encoder encoder = null;
     private double gearRatio;
+    private double currentSetpoint;
     
     public CTREMotor(int id){
         motor = new TalonFX(id);
@@ -62,6 +63,7 @@ public class CTREMotor implements Motor {
     
     public void setSetpoint(double setPoint){
         motor.set(pid.calculate(getPosition(), setPoint));
+        currentSetpoint = setPoint;
     }
 
     public void periodic(){
@@ -105,5 +107,19 @@ public class CTREMotor implements Motor {
 
     public double getVoltage(){
         return motor.getMotorVoltage().getValueAsDouble();
+    }
+    public boolean isAtSetpoint(double deadzone){
+        if(getPosition() >= currentSetpoint - deadzone && getPosition() <= currentSetpoint + deadzone){
+            return true;
+        }
+        return false;
+    }
+        
+    public double getFeedFoward(){
+        return motor.getClosedLoopFeedForward().getValueAsDouble();
+    }
+
+    public void setFeedFoward(double kS, double kV, double kA){
+        motor.
     }
 }
