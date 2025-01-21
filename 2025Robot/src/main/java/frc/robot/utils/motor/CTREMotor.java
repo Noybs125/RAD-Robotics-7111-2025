@@ -22,7 +22,7 @@ public class CTREMotor implements Motor {
 
     
     
-    public CTREMotor(int id Encoder encoder, double gearRatio, PIDController pid, double setPoint, SimpleMotorFeedforward feedForward){
+    public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, double setPoint, SimpleMotorFeedforward feedForward){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
@@ -128,7 +128,7 @@ public class CTREMotor implements Motor {
         return false;
     }
         
-    public SimpleMotorFeedforward getFeedFoward(){
+    public SimpleMotorFeedforward getFeedForward(){
         return feedforward;
     }
 
