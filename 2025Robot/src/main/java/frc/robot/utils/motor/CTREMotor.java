@@ -22,30 +22,16 @@ public class CTREMotor implements Motor {
 
     
     
-    public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, double setPoint, SimpleMotorFeedforward feedForward){
+    public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
-        this.currentSetpoint = setPoint;
         this.feedforward = feedForward;
         motor = new TalonFX(id);
     }
 
-    public CTREMotor(int id, double gearRatio){
+    public CTREMotor(int id){
         motor = new TalonFX(id);
-        this.gearRatio = gearRatio;
-    }
-
-    public CTREMotor(int id, Encoder encoder){
-        this.encoder = encoder;
-
-        motor = new TalonFX(id);
-    }
-
-    public CTREMotor(int id, Encoder encoder, double gearRatio){
-        motor = new TalonFX(id);
-        this.encoder = encoder;
-        this.gearRatio = gearRatio;
     }
 
     public void setSpeed(double speed){
@@ -128,7 +114,7 @@ public class CTREMotor implements Motor {
         return false;
     }
         
-    public SimpleMotorFeedforward getFeedForward(){
+    public SimpleMotorFeedforward getFeedFoward(){
         return feedforward;
     }
 
