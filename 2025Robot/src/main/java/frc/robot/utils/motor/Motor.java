@@ -29,5 +29,11 @@ public interface Motor {
     public double getGearRatio();
 
     public double getVoltage();
+
+    public boolean isAtSetpoint(double deadzone);
+
+    public double getFeedFoward();
+
+    public void setFeedFoward(double kS, double kV, double kA);
     
 }
