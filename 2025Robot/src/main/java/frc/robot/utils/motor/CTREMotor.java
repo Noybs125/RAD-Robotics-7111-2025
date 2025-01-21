@@ -4,15 +4,22 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.utils.encoder.Encoder;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class CTREMotor implements Motor {
     private TalonFX motor;
     PIDController pid = new PIDController(0, 0, 0);
+    private TalonFXConfiguration config;
+
     private Encoder encoder = null;
     private double gearRatio;
     private double currentSetpoint;
+    private SimpleMotorFeedforward feedforward;
     
     public CTREMotor(int id){
         motor = new TalonFX(id);
@@ -115,11 +122,15 @@ public class CTREMotor implements Motor {
         return false;
     }
         
-    public double getFeedFoward(){
-        return motor.getClosedLoopFeedForward().getValueAsDouble();
+    public SimpleMotorFeedforward getFeedFoward(){
+        return feedforward;
     }
 
     public void setFeedFoward(double kS, double kV, double kA){
-        motor.
+        config.Slot0.kS = kS;
+        config.Slot0.kV = kV;
+        config.Slot0.kA = kA;
+        motor.getConfigurator().apply(config);
+        feedforward = new SimpleMotorFeedforward(kS, kV, kA);
     }
 }
