@@ -10,6 +10,8 @@ public class Mechanisms extends SubsystemBase {
     private double elevatorSetpoint = 0;
     private double wristSetpoint = 0;
     private boolean isManual = false;
+    private double lowerLimit;
+    private double upperLimit;
 
     public Mechanisms(Motor elevator, Motor elevator2, Motor wrist){
         this.elevator = elevator;
@@ -45,6 +47,7 @@ public class Mechanisms extends SubsystemBase {
     }
 
     public void periodic() {
+
 
         if (isManual) {
             
