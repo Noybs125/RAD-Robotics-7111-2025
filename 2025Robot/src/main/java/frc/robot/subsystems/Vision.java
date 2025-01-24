@@ -33,7 +33,7 @@ public class Vision extends SubsystemBase{
         this
         );
     public final Camera orangepi2 = new Camera(
-        new PhotonCamera("OV9281_2"), 
+        new PhotonCamera("OV9281_3"), 
         Constants.vision.cameraToRobotCenter3, 
         new EstimatedRobotPose(estPose3d, 0.0, null, PoseStrategy.AVERAGE_BEST_TARGETS), 
         this
