@@ -193,7 +193,7 @@ public class Swerve extends SubsystemBase {
     System.out.println("Spacer!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     printTrace(trace);
 
-    speeds = ChassisSpeeds.discretize(speeds, 0.02);
+    //speeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] states = Constants.kSwerve.KINEMATICS.toSwerveModuleStates(speeds);
     setModuleStates(states);
 
