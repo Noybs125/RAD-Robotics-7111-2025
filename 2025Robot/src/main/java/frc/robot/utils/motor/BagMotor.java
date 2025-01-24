@@ -59,7 +59,9 @@ public class BagMotor implements Motor{
     }
     
     public void periodic(){
-
+        if (encoder != null){
+            encoder.periodic();
+        }
     }
 
     public void setPID(double p, double i, double d){

@@ -61,7 +61,11 @@ public class REVMotor implements Motor {
         this.setPoint = setPoint;
     }
 
-    public void periodic(){}
+    public void periodic(){
+        if (encoder != null){
+            encoder.periodic();
+        }
+    }
 
     public void setPID(double p, double i, double d){
         pid.setPID(p, i, d);
