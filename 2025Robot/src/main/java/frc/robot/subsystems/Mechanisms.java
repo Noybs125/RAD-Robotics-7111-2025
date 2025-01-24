@@ -18,7 +18,7 @@ public class Mechanisms extends SubsystemBase {
         this.elevator2 = elevator2;
         this.wrist = wrist;
     }
-
+    
     public void setWristSetpoint(double setPoint) {
         wristSetpoint = setPoint;
         isManual = false;
