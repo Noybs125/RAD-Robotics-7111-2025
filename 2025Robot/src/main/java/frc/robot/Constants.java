@@ -186,15 +186,14 @@ public class Constants {
     /** Pathplanner config */
 
     public static final int numModules = 4;
-    public static final double massKgs = 42 * 0.45359237; //Converts lbs to kgs for weight of robot
+    public static final double massKgs = Units.lbsToKilograms(42);
     public static final double MOI = massKgs * Math.pow(kSwerve.MODULE_TO_CENTER, 2);
-    public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND, 0.7 , DCMotor.getKrakenX60(1), kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT ,1);
-    public static final Translation2d[] moduleLocations = new Translation2d[] {
-      new Translation2d(kSwerve.WHEEL_BASE / 2.0, kSwerve.TRACK_WIDTH / 2.0),
-      new Translation2d(kSwerve.WHEEL_BASE / 2.0, -kSwerve.TRACK_WIDTH / 2.0),
-      new Translation2d(-kSwerve.WHEEL_BASE / 2.0, kSwerve.TRACK_WIDTH / 2.0),
-      new Translation2d(-kSwerve.WHEEL_BASE / 2.0, -kSwerve.TRACK_WIDTH / 2.0)
-    };
+    public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND,
+     0.7 , DCMotor.getKrakenX60(1), kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT ,1);
+
+
+    public static final RobotConfig config = new RobotConfig(massKgs, MOI, moduleConfig, kSwerve.KINEMATICS.getModules());
+
     public static final PPHolonomicDriveController cont = new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                     new PIDConstants(5, 0.0, 0.0), // Translation PID constants
                     new PIDConstants(5, 0.0, 0.0) // Rotation PID constants

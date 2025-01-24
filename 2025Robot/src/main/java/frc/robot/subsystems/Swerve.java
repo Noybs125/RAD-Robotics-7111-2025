@@ -60,12 +60,13 @@ public class Swerve extends SubsystemBase {
     odometry2 = new SwerveDriveOdometry(Constants.kSwerve.KINEMATICS, getYaw(), getPositions());
     swerveOdometry = new SwerveDrivePoseEstimator(Constants.kSwerve.KINEMATICS, getYaw(), getPositions(),vision.robotPose);
 
-    try{
+    /*try{
       config = RobotConfig.fromGUISettings();
     } catch (Exception e) {
       
       e.printStackTrace();
-    }
+    }*/
+    
     
     AutoBuilder.configure(
             this::getPose, // Robot pose supplier
@@ -73,7 +74,7 @@ public class Swerve extends SubsystemBase {
             this::getRelSpeedsNonSuplier, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             (speeds, feeds) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             Constants.kAuto.cont,
-            config,
+            Constants.kAuto.config,
             () -> {
               if(DriverStation.getAlliance().isPresent()){
                 return DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
