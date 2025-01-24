@@ -60,7 +60,12 @@ public class Swerve extends SubsystemBase {
     odometry2 = new SwerveDriveOdometry(Constants.kSwerve.KINEMATICS, getYaw(), getPositions());
     swerveOdometry = new SwerveDrivePoseEstimator(Constants.kSwerve.KINEMATICS, getYaw(), getPositions(),vision.robotPose);
 
-    config = new RobotConfig(Constants.kAuto.massKgs, Constants.kAuto.MOI, Constants.kAuto.moduleConfig, Constants.kAuto.moduleLocations);
+    try{
+      config = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+      
+      e.printStackTrace();
+    }
     
     AutoBuilder.configure(
             this::getPose, // Robot pose supplier

@@ -31,7 +31,7 @@ public class Mechanisms extends SubsystemBase {
 
     public void setElevatorSpeed(double speed) {
         elevator.setSpeed(speed);
-        elevator2.setSpeed(speed);
+        elevator2.setSpeed(speed); 
         isManual = true;
     }
 
