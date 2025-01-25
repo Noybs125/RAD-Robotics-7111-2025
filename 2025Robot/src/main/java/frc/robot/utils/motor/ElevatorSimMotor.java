@@ -4,21 +4,42 @@ import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.Constants;
 import frc.robot.utils.encoder.Encoder;
+import frc.robot.utils.encoder.WpiEncoder;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.simulation.PWMSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.sim.TalonFXSimState;
 
 public class ElevatorSimMotor implements Motor{
     private ElevatorSim motor; 
     private PIDController pid = new PIDController(0,0,0);
-    private Encoder encoder = null;
+    private Encoder encoder;
     private double gearRatio;
     private double setPoint;
     private SimpleMotorFeedforward feedForward;
     private double kV;
     private double kA;
+    final Mechanism2d m_mech2d = new Mechanism2d(20, 50);
+        final MechanismRoot2d m_mech2dRoot = m_mech2d.getRoot("Elevator Root", 10, 0);
+        final MechanismLigament2d m_elevatorMech2d = m_mech2dRoot.append(
+        new MechanismLigament2d("Elevator", motor.getPositionMeters(), 90));
 
     public ElevatorSimMotor(Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, double kV, double kA, DCMotor gearbox, double minheight, double maxheight, double startheight, double[] measureStdDevs){
         this.encoder = encoder;
@@ -27,8 +48,9 @@ public class ElevatorSimMotor implements Motor{
         this.feedForward = feedForward;
         this.kV = kV;
         this.kA = kA;
+        encoder = new WpiEncoder(Constants.kSimulation.kEncoderAChannel, Constants.kSimulation.kEncoderBChannel);
         motor = new ElevatorSim(kV, kA, gearbox, minheight, maxheight, true, startheight, measureStdDevs);
-
+        SmartDashboard.putData("Elevator Sim", m_mech2d);
     }
 
     
@@ -59,7 +81,8 @@ public class ElevatorSimMotor implements Motor{
     }        
     
     public void setSetpoint(double setPoint){
-        motor.setInput(pid.calculate(getPosition(), setPoint));
+        var pos = pid.calculate(getPosition(), setPoint);
+        motor.setInput(pos);
         this.setPoint = setPoint;
     }
     
@@ -67,6 +90,13 @@ public class ElevatorSimMotor implements Motor{
         if (encoder != null){
             encoder.periodic();
         }
+        motor.update(0.020);
+        motor.setState(motor.getPositionMeters(), motor.getVelocityMetersPerSecond());
+
+        RoboRioSim.setVInVoltage(
+            BatterySim.calculateDefaultBatteryLoadedVoltage(motor.getCurrentDrawAmps()));
+
+        m_elevatorMech2d.setLength(encoder.getPosition().getRotations());
     }
 
     public void setPID(double p, double i, double d){

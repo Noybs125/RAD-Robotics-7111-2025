@@ -51,7 +51,19 @@ public class Constants {
     public static final int TAG_PRESENCE_WEIGHT = 10;
     public static final Matrix<N3, N1> VISION_MEASUREMENT_STANDARD_DEVIATIONS = MatBuilder.fill(Nat.N3(), Nat.N1(),1,1,1 * Math.PI);
   }
+  public static class kSimulation {
+    public static final double kP = 0.1;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
 
+    public static final double kElevatorDrumRadius = Units.inchesToMeters(2.0);
+    public static final double kElevatorEncoderDistPerPulse =
+      2.0 * Math.PI * kElevatorDrumRadius / 4096;
+      
+    public static final int kEncoderAChannel = 0;
+    public static final int kEncoderBChannel = 1;
+    
+  }
   /** All joystick, button, and axis IDs. */
   public static class kControls {
     public static final double AXIS_DEADZONE = 0.1;

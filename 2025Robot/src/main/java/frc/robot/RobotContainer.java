@@ -14,17 +14,26 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.auto.AutoBuilderException;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 //import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Mechanisms;
+import frc.robot.utils.encoder.WpiEncoder;
+import frc.robot.utils.motor.CTREMotor;
+import frc.robot.utils.motor.ElevatorSimMotor;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 //import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -42,8 +51,15 @@ public class RobotContainer {
   public final XboxController xbox;
   public final CommandXboxController commXbox;
 
+  WpiEncoder encoder = new WpiEncoder(0, 1);
+  PIDController pid = new PIDController(Constants.kSimulation.kP, Constants.kSimulation.kI, Constants.kSimulation.kD);
+  SimpleMotorFeedforward ff = new SimpleMotorFeedforward(0,0);
+  private final ElevatorSimMotor SimElevator = new ElevatorSimMotor(encoder, Constants.kSwerve.DRIVE_GEAR_RATIO, pid, ff, 0.0, 0.0, DCMotor.getKrakenX60(1), 0.0, Double.POSITIVE_INFINITY, 0.0, null);
+  private final ElevatorSimMotor SimElevator2 = new ElevatorSimMotor(encoder, Constants.kSwerve.DRIVE_GEAR_RATIO, pid, ff, 0.0, 0.0, DCMotor.getKrakenX60(1), 0.0, Double.POSITIVE_INFINITY, 0.0, null);
+  private final CTREMotor Talon = new CTREMotor(0);
 
   public final Swerve swerve;
+  public final Mechanisms mech = new Mechanisms(SimElevator, SimElevator2, Talon);
   public final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
   public final Vision vision;
 
@@ -94,5 +110,6 @@ public class RobotContainer {
       ));
 
     commXbox.y().onTrue(swerve.zeroGyroCommand());
+    commXbox.a().onTrue(new InstantCommand(() -> mech.setElevatorSetpoint(10))).onFalse(new InstantCommand(() -> mech.setElevatorSetpoint(0)));
+    }
   }
-}
