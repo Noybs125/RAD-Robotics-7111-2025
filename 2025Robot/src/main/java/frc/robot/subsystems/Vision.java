@@ -40,8 +40,8 @@ public class Vision extends SubsystemBase{
         );
 
     public Camera[] cameraList = new Camera[] {
-        orangepi1,
-        orangepi2,
+        //orangepi1,
+        //orangepi2,
     };
 
     public Vision(AHRS gyro){

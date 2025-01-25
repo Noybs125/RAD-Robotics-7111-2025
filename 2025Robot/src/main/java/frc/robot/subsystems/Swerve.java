@@ -189,10 +189,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds){
-    //StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-    //System.out.println("Spacer!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    //printTrace(trace);
-
+    speeds.omegaRadiansPerSecond *= -1;
     speeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] states = Constants.kSwerve.KINEMATICS.toSwerveModuleStates(speeds);
     setModuleStates(states);
@@ -214,10 +211,7 @@ public class Swerve extends SubsystemBase {
       SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
     }
     SmartDashboard.putNumber("Gyro Yaw", getYaw().getDegrees());
-    SmartDashboard.putNumber("Pose X", swerveOdometry.getEstimatedPosition().getX());
-    SmartDashboard.putNumber("Pose Y", getPose().getY());
-    SmartDashboard.putNumber("RobotRelSpeeds X", getRelSpeedsNonSuplier().vxMetersPerSecond);
-    SmartDashboard.putNumber("RobotRelSpeeds Y", getRelSpeedsNonSuplier().vyMetersPerSecond);
+    SmartDashboard.putNumber("Gyro X Vel", gyro.getVelocityX() + gyro.getVelocityY());
     field.setRobotPose(getPose());
   }
 
