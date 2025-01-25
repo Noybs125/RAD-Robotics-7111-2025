@@ -202,8 +202,8 @@ public class Constants {
     public static final RobotConfig config = new RobotConfig(massKgs, MOI, moduleConfig, moduleLocations);
 
     public static final PPHolonomicDriveController cont = new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(5, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5, 0.0, 0.0) // Rotation PID constants
+                    new PIDConstants(5, 3, 0.0), // Translation PID constants
+                    new PIDConstants(5, 3, 0.0) // Rotation PID constants
             );
 
     
