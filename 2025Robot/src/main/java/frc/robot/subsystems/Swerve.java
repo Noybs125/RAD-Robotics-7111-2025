@@ -202,11 +202,11 @@ public class Swerve extends SubsystemBase {
   @Override 
   public void periodic() {
       swerveOdometry.update(getYaw(), getPositions());
-    /*for(Camera camera : vision.cameraList){
+    for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
         swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
       }
-    }*/
+    }
     
     for(SwerveModule mod : modules){
       SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderDegrees().getDegrees());
