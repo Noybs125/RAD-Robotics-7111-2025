@@ -37,7 +37,7 @@ public class Camera extends PhotonCamera{
     private Pose2d newPose = new Pose2d();
     {
         try {
-            apriltagMap = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+            apriltagMap = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2025Reefscape.m_resourceFile);
         } catch (IOException e){
             throw new RuntimeException(e);
         }
