@@ -189,9 +189,9 @@ public class Swerve extends SubsystemBase {
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds){
-    StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-    System.out.println("Spacer!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    printTrace(trace);
+    //StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+    //System.out.println("Spacer!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    //printTrace(trace);
 
     //speeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] states = Constants.kSwerve.KINEMATICS.toSwerveModuleStates(speeds);
@@ -201,7 +201,7 @@ public class Swerve extends SubsystemBase {
   
   @Override 
   public void periodic() {
-      //swerveOdometry.update(getYaw(), getPositions());
+      swerveOdometry.update(getYaw(), getPositions());
     /*for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
         swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
