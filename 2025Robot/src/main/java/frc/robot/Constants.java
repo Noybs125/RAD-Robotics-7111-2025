@@ -180,8 +180,8 @@ public class Constants {
     public static final double THETA_CONTROLLER_KP = 1.0;
     
     /** Constraints. */
-    public static final double MAX_VELOCITY_METERS_PER_SECOND = 2.0;
-    public static final double MAX_ACCEL_METERS_PER_SECOND_SQUARED = 5.0;
+    public static final double MAX_VELOCITY_METERS_PER_SECOND = 5.0;
+    public static final double MAX_ACCEL_METERS_PER_SECOND_SQUARED = 8.0;
 
     /** Pathplanner config */
 
