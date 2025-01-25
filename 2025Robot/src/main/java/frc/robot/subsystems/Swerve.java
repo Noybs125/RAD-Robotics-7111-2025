@@ -60,21 +60,21 @@ public class Swerve extends SubsystemBase {
     odometry2 = new SwerveDriveOdometry(Constants.kSwerve.KINEMATICS, getYaw(), getPositions());
     swerveOdometry = new SwerveDrivePoseEstimator(Constants.kSwerve.KINEMATICS, getYaw(), getPositions(),vision.robotPose);
 
-    /*try{
+    try{
       config = RobotConfig.fromGUISettings();
     } catch (Exception e) {
       
       e.printStackTrace();
-    }*/
+    }
     
     
     AutoBuilder.configure(
             this::getPose, // Robot pose supplier
             this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getRelSpeedsNonSuplier, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            (speeds, feeds) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            this::driveRobotRelative,
             Constants.kAuto.cont,
-            Constants.kAuto.config,
+            config,
             () -> {
               if(DriverStation.getAlliance().isPresent()){
                 return DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
@@ -193,7 +193,7 @@ public class Swerve extends SubsystemBase {
     //System.out.println("Spacer!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     //printTrace(trace);
 
-    //speeds = ChassisSpeeds.discretize(speeds, 0.02);
+    speeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] states = Constants.kSwerve.KINEMATICS.toSwerveModuleStates(speeds);
     setModuleStates(states);
 
@@ -214,6 +214,10 @@ public class Swerve extends SubsystemBase {
       SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
     }
     SmartDashboard.putNumber("Gyro Yaw", getYaw().getDegrees());
+    SmartDashboard.putNumber("Pose X", swerveOdometry.getEstimatedPosition().getX());
+    SmartDashboard.putNumber("Pose Y", getPose().getY());
+    SmartDashboard.putNumber("RobotRelSpeeds X", getRelSpeedsNonSuplier().vxMetersPerSecond);
+    SmartDashboard.putNumber("RobotRelSpeeds Y", getRelSpeedsNonSuplier().vyMetersPerSecond);
     field.setRobotPose(getPose());
   }
 
