@@ -54,7 +54,7 @@ public class Constants {
 
   /** All joystick, button, and axis IDs. */
   public static class kControls {
-    public static final double AXIS_DEADZONE = 0.1;
+    public static final double AXIS_DEADZONE = 0.15;
 
     public static final int LEFT_JOY_ID = 0;
     public static final int RIGHT_JOY_ID = 1;
@@ -121,10 +121,10 @@ public class Constants {
     public static final double ANGLE_KI = 5;
     public static final double ANGLE_KD = 0;
     public static final double ANGLE_KF = 0.0;
-    
+  
     /** Swerve constraints. */
-    public static final double MAX_VELOCITY_METERS_PER_SECOND = 5.450;
-    public static final double MAX_ANGULAR_RADIANS_PER_SECOND = 7;
+    public static final double MAX_VELOCITY_METERS_PER_SECOND = 2;
+    public static final double MAX_ANGULAR_RADIANS_PER_SECOND = 4;
 
     /** Inversions. */
     public static final boolean DRIVE_MOTOR_INVERSION = true;

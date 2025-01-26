@@ -73,7 +73,7 @@ public class SwerveModule {
     // System.out.println("Angle: " + state.angle.getRadians() + "Mod #: " + moduleNumber);
 
    
-    state = SwerveModuleState.optimize(state, getState().angle);
+    state.optimize(getState().angle);
 
 
     if (isOpenLoop) {
@@ -82,19 +82,19 @@ public class SwerveModule {
       
     } else {
       driveVelocity.Velocity = state.speedMetersPerSecond / Constants.kSwerve.WHEEL_CIRCUMFERENCE;
-      driveVelocity.FeedForward = driveFeedforward.calculate(state.speedMetersPerSecond);
+      //driveVelocity.FeedForward = driveFeedforward.calculate(state.speedMetersPerSecond);
       driveMotor.setControl(driveVelocity);
     }
 
     angleMotor.setControl(anglePosition.withPosition(state.angle.getRotations()));
 
     SmartDashboard.putNumber("CalcVel " + moduleNumber , state.speedMetersPerSecond);
-    SmartDashboard.putNumber("TalonFX Vel", driveMotor.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("TalonFX Vel " + moduleNumber, driveMotor.getVelocity().getValueAsDouble() * 60 * Constants.kSwerve.DRIVE_RPM_TO_METERS_PER_SECOND); // Constants.kSwerve.DRIVE_GEAR_RATIO);
     
   }
 
   public SwerveModuleState getState() {
-    double velocity = driveMotor.getVelocity().getValueAsDouble() * Constants.kSwerve.DRIVE_RPM_TO_METERS_PER_SECOND;
+    double velocity = driveMotor.getVelocity().getValueAsDouble() * 60 * Constants.kSwerve.DRIVE_RPM_TO_METERS_PER_SECOND;
     Rotation2d rot = Rotation2d.fromRotations(angleMotor.getPosition().getValueAsDouble());
     return new SwerveModuleState(velocity, rot);
   }
@@ -144,7 +144,7 @@ public class SwerveModule {
     driveMotorConfig.Slot0.kA = Constants.kSwerve.DRIVE_KA;
 
     driveMotor.setInverted(driveMotorInversion);
-    //driveMotor.setNeutralMode(Constants.kSwerve.DRIVE_IDLE_MODE);
+
     driveMotorConfig.MotorOutput.NeutralMode = Constants.kSwerve.DRIVE_IDLE_MODE;
     
     driveMotorConfig.Slot0.kP = Constants.kSwerve.DRIVE_KP;
