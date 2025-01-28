@@ -47,8 +47,8 @@ public class Constants {
     public static final double cameraHeight = Units.inchesToMeters(0);
 
     public static final double APRILTAG_AMBIGUITY_THRESHOLD = 0.2;
-    public static final double POSE_AMBIGUITY_SHIFTER = 0.2;
-    public static final double POSE_AMBIGUITY_MULTIPLIER = 4;
+    public static final double POSE_AMBIGUITY_SHIFTER = 0;
+    public static final double POSE_AMBIGUITY_MULTIPLIER = 1;
     public static final double NOISY_DISTANCE_METERS = 2.5;
     public static final double DISTANCE_WEIGHT = 7;
     public static final int TAG_PRESENCE_WEIGHT = 10;
@@ -91,6 +91,7 @@ public class Constants {
     public static final int TRANSLATION_X_AXIS = Joystick.AxisType.kX.value;
     public static final int TRANSLATION_Y_AXIS = Joystick.AxisType.kY.value;
     public static final int ROTATION_AXIS = Joystick.AxisType.kX.value;
+    public static boolean isFieldRel;
 
     public static final int GYRO_RESET_BUTTON = XboxController.Button.kY.value;
 
