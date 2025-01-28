@@ -67,15 +67,15 @@ public class Mechanisms extends SubsystemBase {
 
     public void moveElevThenArm(double elevatorSetpoint, double wristSetpoint, double deadzone){
         this.elevatorSetpoint = elevatorSetpoint;
-        if(elevator.getPosition() < elevatorSetpoint + deadzone && elevator.getPosition() > elevatorSetpoint - deadzone){
+        if(elevator.isAtSetpoint(deadzone)){
             this.wristSetpoint = wristSetpoint;
         }
     }
 
     public void moveArmThenElev(double elevatorSetpoint, double wristSetpoint, double deadzone){
         this.wristSetpoint = wristSetpoint;
-        if(wrist.getPosition() < wristSetpoint + deadzone && wrist.getPosition() > wristSetpoint - deadzone){
-            this.wristSetpoint = wristSetpoint;
+        if(wrist.isAtSetpoint(deadzone)){
+            this.elevatorSetpoint = elevatorSetpoint;
         }
     } 
 
