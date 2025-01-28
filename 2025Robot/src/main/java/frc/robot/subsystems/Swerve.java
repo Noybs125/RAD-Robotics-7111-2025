@@ -173,7 +173,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public void resetOdometry(Pose2d pose) { // not currently used, using addVisionMeasurements in periodic instead.
-      swerveOdometry.resetPose(pose);    
+      swerveOdometry.resetPose(pose);
   }
 
   public ChassisSpeeds getRelSpeedsNonSuplier() {
@@ -205,6 +205,11 @@ public class Swerve extends SubsystemBase {
     }
     SmartDashboard.putNumber("Gyro Yaw", getYaw().getDegrees());
     SmartDashboard.putNumber("Gyro X Vel", gyro.getVelocityX() + gyro.getVelocityY());
+    SmartDashboard.putNumber("PoseOdo X", odometry2.getPoseMeters().getX());
+    SmartDashboard.putNumber("PoseOdo Y", odometry2.getPoseMeters().getY());
+    SmartDashboard.putNumber("PoseEst X", swerveOdometry.getEstimatedPosition().getX());
+    SmartDashboard.putNumber("PoseEst Y", swerveOdometry.getEstimatedPosition().getY());
+
     field.setRobotPose(getPose());
   }
 

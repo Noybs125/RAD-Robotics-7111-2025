@@ -90,7 +90,8 @@ public class SwerveModule {
 
     SmartDashboard.putNumber("CalcVel " + moduleNumber , state.speedMetersPerSecond);
     SmartDashboard.putNumber("TalonFX Vel " + moduleNumber, driveMotor.getVelocity().getValueAsDouble() * 60 * Constants.kSwerve.DRIVE_RPM_TO_METERS_PER_SECOND); // Constants.kSwerve.DRIVE_GEAR_RATIO);
-    
+    SmartDashboard.putNumber("drivePos " + moduleNumber, driveMotor.getPosition().getValueAsDouble());
+    SmartDashboard.putNumber("driveRotPos " + moduleNumber, driveMotor.getRotorPosition().getValueAsDouble());
   }
 
   public SwerveModuleState getState() {
@@ -108,7 +109,7 @@ public class SwerveModule {
   }
 
   public SwerveModulePosition getPosition() {
-    double distance = driveMotor.getPosition().getValueAsDouble() * Constants.kSwerve.DRIVE_ROTATIONS_TO_METERS;
+    double distance = driveMotor.getPosition().getValueAsDouble() * Constants.kSwerve.WHEEL_CIRCUMFERENCE;
     Rotation2d rot = new Rotation2d(angleMotor.getPosition().getValueAsDouble());
     return new SwerveModulePosition(distance, rot);
   }

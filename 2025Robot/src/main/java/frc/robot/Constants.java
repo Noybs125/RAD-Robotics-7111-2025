@@ -56,12 +56,15 @@ public class Constants {
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    public static final double kElevatorDrumRadius = Units.inchesToMeters(2.0);
-    public static final double kElevatorEncoderDistPerPulse =
-      2.0 * Math.PI * kElevatorDrumRadius / 4096;
+    public static final double kV = 0.0000001;
+    public static final double kA = 0.0000001;
+
+    public static final double elevatorDrumRadius = Units.inchesToMeters(2.0);
+    public static final double elevatorEncoderDistPerPulse =
+      2.0 * Math.PI * elevatorDrumRadius / 4096;
       
-    public static final int kEncoderAChannel = 0;
-    public static final int kEncoderBChannel = 1;
+    public static final int encoderAChannel = 0;
+    public static final int encoderBChannel = 1;
     
   }
   /** All joystick, button, and axis IDs. */

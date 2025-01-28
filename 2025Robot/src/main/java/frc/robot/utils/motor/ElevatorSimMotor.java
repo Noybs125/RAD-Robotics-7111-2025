@@ -36,10 +36,9 @@ public class ElevatorSimMotor implements Motor{
     private SimpleMotorFeedforward feedForward;
     private double kV;
     private double kA;
-    final Mechanism2d m_mech2d = new Mechanism2d(20, 50);
-        final MechanismRoot2d m_mech2dRoot = m_mech2d.getRoot("Elevator Root", 10, 0);
-        final MechanismLigament2d m_elevatorMech2d = m_mech2dRoot.append(
-        new MechanismLigament2d("Elevator", motor.getPositionMeters(), 90));
+    final Mechanism2d mech2d = new Mechanism2d(20, 50);
+    final MechanismRoot2d mech2dRoot = mech2d.getRoot("Elevator Root", 10, 0);
+    final MechanismLigament2d elevatorMech2d;
 
     public ElevatorSimMotor(Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, double kV, double kA, DCMotor gearbox, double minheight, double maxheight, double startheight, double[] measureStdDevs){
         this.encoder = encoder;
@@ -48,9 +47,13 @@ public class ElevatorSimMotor implements Motor{
         this.feedForward = feedForward;
         this.kV = kV;
         this.kA = kA;
-        encoder = new WpiEncoder(Constants.kSimulation.kEncoderAChannel, Constants.kSimulation.kEncoderBChannel);
-        motor = new ElevatorSim(kV, kA, gearbox, minheight, maxheight, true, startheight, measureStdDevs);
-        SmartDashboard.putData("Elevator Sim", m_mech2d);
+        //The line below may not be needed
+        //encoder = new WpiEncoder(Constants.kSimulation.kEncoderAChannel, Constants.kSimulation.kEncoderBChannel);
+        this.motor = new ElevatorSim(kV, kA, gearbox, minheight, maxheight, true, startheight, measureStdDevs);
+        elevatorMech2d = mech2dRoot.append(
+            new MechanismLigament2d("Elevator", motor.getPositionMeters(), 90));
+
+        SmartDashboard.putData("Elevator Sim", mech2d);
     }
 
     
@@ -96,7 +99,7 @@ public class ElevatorSimMotor implements Motor{
         RoboRioSim.setVInVoltage(
             BatterySim.calculateDefaultBatteryLoadedVoltage(motor.getCurrentDrawAmps()));
 
-        m_elevatorMech2d.setLength(encoder.getPosition().getRotations());
+        elevatorMech2d.setLength(encoder.getPosition().getRotations());
     }
 
     public void setPID(double p, double i, double d){
