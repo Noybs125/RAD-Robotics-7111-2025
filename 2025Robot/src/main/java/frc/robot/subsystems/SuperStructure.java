@@ -8,19 +8,23 @@ public class SuperStructure extends SubsystemBase {
     private Swerve swerve;
     private Vision vision;
     private Mechanisms mechanisms;
+    private Flywheels flywheels;
 
-    public SuperStructure(Swerve swerve, Vision vision, Mechanisms mechanisms){
+    public SuperStructure(Swerve swerve, Vision vision, Sensors sensors, Mechanisms mechanisms, Flywheels flywheels){
         this.swerve = swerve;
         this.vision = vision;
         this.mechanisms = mechanisms;
+        this.flywheels = flywheels;
     }
 
     public enum RobotState {
-        CoralL1,
-        CoralL2,
-        CoralL3,
-        CoralL4,
-        CoralFeeder
+        ReafL1Processor,
+        ReafL2,
+        ReafL3,
+        ReafL4Net,
+        ReafFeeder,
+        DeepClimb,
+        Default,
     }
 
     //private RobotState previousRobotState;
@@ -31,15 +35,27 @@ public class SuperStructure extends SubsystemBase {
     public void periodic() {
         //previousRobotState = currentRobotState;
         switch (robotState) {   
-            case CoralL1:
+            case ReafL1Processor:
+                //checks for whether it should align for reaf or processor
                 break;
-            case CoralL2:
+            case ReafL2:
+                //checks for whether it should score coral or intake algae
                 break;
-            case CoralL3:
+            case ReafL3:
+                //checks for whether it should score coral or intake algae
                 break;
-            case CoralL4:
+            case ReafL4Net:
+                //checks for whether it should score coral on L4 or score algae in net
                 break;
-            case CoralFeeder:
+            case ReafFeeder:
+                //
+                break;
+            case DeepClimb:
+                //
+                break;
+            case Default:
+            default:
+                //will contain the default state
                 break;
         }
     }
@@ -62,4 +78,5 @@ public class SuperStructure extends SubsystemBase {
     private void algaeL2(){}
     private void algaeL3(){}
     private void deepclimb(){}
+    private void defaultState(){}
 }
