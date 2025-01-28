@@ -157,7 +157,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public Rotation2d getYaw() {
-    return gyro.getRotation2d(); //Rotation2d.fromDegrees(gyro.getYaw());
+    return gyro.getRotation2d();
   }
 
   public Command zeroGyroCommand() {
@@ -169,7 +169,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return swerveOdometry.getEstimatedPosition();
+    return swerveOdometry.getEstimatedPosition(); //new Pose2d(swerveOdometry.getEstimatedPosition().getX(), -swerveOdometry.getEstimatedPosition().getY(), getYaw());
   }
 
   public void resetOdometry(Pose2d pose) { // not currently used, using addVisionMeasurements in periodic instead.

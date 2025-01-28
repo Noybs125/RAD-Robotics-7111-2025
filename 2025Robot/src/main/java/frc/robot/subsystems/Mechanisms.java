@@ -12,7 +12,7 @@ public class Mechanisms extends SubsystemBase {
     private boolean isManual = false;
     private double lowerLimit;
     private double upperLimit;
-    private MechanismsState state;
+    private MechanismsState state = MechanismsState.Store;
 
     private enum MechanismsState{
         ReefL1,
