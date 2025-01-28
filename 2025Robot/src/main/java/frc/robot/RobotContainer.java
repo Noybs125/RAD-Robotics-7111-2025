@@ -54,12 +54,14 @@ public class RobotContainer {
   WpiEncoder encoder = new WpiEncoder(0, 1);
   PIDController pid = new PIDController(Constants.kSimulation.kP, Constants.kSimulation.kI, Constants.kSimulation.kD);
   SimpleMotorFeedforward ff = new SimpleMotorFeedforward(0,0);
-  private final ElevatorSimMotor SimElevator = new ElevatorSimMotor(encoder, Constants.kSwerve.DRIVE_GEAR_RATIO, pid, ff, 0.0, 0.0, DCMotor.getKrakenX60(1), 0.0, Double.POSITIVE_INFINITY, 0.0, null);
-  private final ElevatorSimMotor SimElevator2 = new ElevatorSimMotor(encoder, Constants.kSwerve.DRIVE_GEAR_RATIO, pid, ff, 0.0, 0.0, DCMotor.getKrakenX60(1), 0.0, Double.POSITIVE_INFINITY, 0.0, null);
-  private final CTREMotor Talon = new CTREMotor(0);
+ 
 
   public final Swerve swerve;
-  public final Mechanisms mech = new Mechanisms(SimElevator, SimElevator2, Talon);
+  /*public final Mechanisms mech = new Mechanisms(
+    new ElevatorSimMotor(encoder, Constants.kSwerve.DRIVE_GEAR_RATIO, pid, ff, Constants.kSimulation.kV, Constants.kSimulation.kA, DCMotor.getKrakenX60(1), 0.0, Double.POSITIVE_INFINITY, 0.0, null), 
+    new ElevatorSimMotor(encoder, Constants.kSwerve.DRIVE_GEAR_RATIO, pid, ff, Constants.kSimulation.kV, Constants.kSimulation.kA, DCMotor.getKrakenX60(1), 0.0, Double.POSITIVE_INFINITY, 0.0, null),
+    new CTREMotor(0));*/
+
   public final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
   public final Vision vision;
 
@@ -110,6 +112,6 @@ public class RobotContainer {
       ));
 
     commXbox.y().onTrue(swerve.zeroGyroCommand());
-    commXbox.a().onTrue(new InstantCommand(() -> mech.setElevatorSetpoint(10))).onFalse(new InstantCommand(() -> mech.setElevatorSetpoint(0)));
+    //commXbox.a().onTrue(new InstantCommand(() -> mech.setElevatorSetpoint(10))).onFalse(new InstantCommand(() -> mech.setElevatorSetpoint(0)));
     }
   }

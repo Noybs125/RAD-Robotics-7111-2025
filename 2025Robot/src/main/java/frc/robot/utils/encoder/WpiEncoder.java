@@ -16,14 +16,14 @@ public class WpiEncoder implements frc.robot.utils.encoder.Encoder {
     public WpiEncoder(int id, int id2){
         encoder = new Encoder(id,id2);
         EncoderSim encoderSim = new EncoderSim(encoder);
-        encoder.setDistancePerPulse(Constants.kSimulation.kElevatorEncoderDistPerPulse);
+        encoder.setDistancePerPulse(Constants.kSimulation.elevatorEncoderDistPerPulse);
         this.id = id;
     }
 
     public WpiEncoder(int id, int id2, double gearRatio){
         encoder = new Encoder(id, id2);
         EncoderSim encoderSim = new EncoderSim(encoder);
-        encoder.setDistancePerPulse(Constants.kSimulation.kElevatorEncoderDistPerPulse);
+        encoder.setDistancePerPulse(Constants.kSimulation.elevatorEncoderDistPerPulse);
         this.id = id;
         this.gearRatio = gearRatio;
     }
