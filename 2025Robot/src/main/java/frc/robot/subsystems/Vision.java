@@ -7,6 +7,8 @@ import org.photonvision.PhotonCamera;
 import com.studica.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -18,6 +20,8 @@ public class Vision extends SubsystemBase{
     private final AHRS gyro;
     public Pose2d robotPose = new Pose2d();
     public Pose3d estPose3d = new Pose3d();
+    private Transform2d tagAllignment = new Transform2d();
+    private VisionState state;
 
     // TODO: change variable names on actual robot
     public final Camera limelight = new Camera(
@@ -44,8 +48,52 @@ public class Vision extends SubsystemBase{
         //orangepi2,
     };
 
+    public enum VisionState{
+        LeftReef,
+        RightReef,
+        ReefL1,
+        FeederStation,
+        Processor,
+        Climb,
+    }
+
     public Vision(AHRS gyro){
         this.gyro = gyro;
+    }
+
+    public void setState(VisionState state){
+        this.state = state;
+    }
+
+    private void handleState(){
+        switch (state) {
+            case LeftReef:
+                tagAllignment = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
+                break;
+
+            case RightReef:
+                tagAllignment = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
+                break;
+
+            case ReefL1:
+                tagAllignment = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
+                break;
+
+            case FeederStation:
+                tagAllignment = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
+                break;
+
+            case Processor:
+                tagAllignment = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
+                break;
+
+            case Climb:
+                tagAllignment = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
+                break;
+                
+            default:
+                break;
+        }
     }
 
     public void periodic(){
@@ -65,5 +113,6 @@ public class Vision extends SubsystemBase{
 
             camera.periodic();
         }
+        handleState();
     }
 }

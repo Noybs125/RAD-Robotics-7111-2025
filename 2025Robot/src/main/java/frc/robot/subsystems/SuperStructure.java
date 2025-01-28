@@ -8,14 +8,10 @@ public class SuperStructure extends SubsystemBase {
     private Swerve swerve;
     private Vision vision;
     private Mechanisms mechanisms;
-    private Flywheels flywheels;
-
-    public SuperStructure(Swerve swerve, Vision vision, Sensors sensors, Mechanisms mechanisms, Flywheels flywheels){
-        this.swerve = swerve;
-        this.vision = vision;
-        this.mechanisms = mechanisms;
-        this.flywheels = flywheels;
-    }
+    private Flywheels flywheels; 
+    //private RobotState previousRobotState;
+    private RobotState currentRobotState;
+    private RobotState robotState;
 
     public enum RobotState {
         ReafL1Processor,
@@ -27,9 +23,12 @@ public class SuperStructure extends SubsystemBase {
         Default,
     }
 
-    //private RobotState previousRobotState;
-    private RobotState currentRobotState;
-    private RobotState robotState;
+    public SuperStructure(Swerve swerve, Vision vision, Sensors sensors, Mechanisms mechanisms, Flywheels flywheels){
+        this.swerve = swerve;
+        this.vision = vision;
+        this.mechanisms = mechanisms;
+        this.flywheels = flywheels;
+    }
 
 
     public void periodic() {
@@ -77,6 +76,6 @@ public class SuperStructure extends SubsystemBase {
     private void algaeNet(){}
     private void algaeL2(){}
     private void algaeL3(){}
-    private void deepclimb(){}
+    private void deepClimb(){}
     private void defaultState(){}
 }
