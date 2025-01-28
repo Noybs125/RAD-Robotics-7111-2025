@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -17,6 +18,7 @@ public class Robot extends TimedRobot {
   private int divID = 21;
   private SparkMax neoTestMotor = new SparkMax(divID, MotorType.kBrushless);
   private Command m_autonomousCommand;
+ 
 
   private XboxController controller = new XboxController(2);
 
@@ -30,6 +32,8 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     
+    double neoVoltage = neoTestMotor.getBusVoltage();
+
     if(controller.getAButton()){
       neoTestMotor.set(.75);
     } else if(controller.getYButton()){
@@ -43,6 +47,7 @@ public class Robot extends TimedRobot {
       neoTestMotor.set(0);
     }
 
+    SmartDashboard.putNumber("Can Bus Voltage", neoVoltage);
   }
 
   @Override
