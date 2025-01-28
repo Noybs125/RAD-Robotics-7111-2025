@@ -9,6 +9,8 @@ import com.pathplanner.lib.util.DriveFeedforwards;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -25,6 +27,7 @@ import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.utils.SwerveModuleConstants;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -52,12 +55,11 @@ public class Constants {
     public static final Matrix<N3, N1> VISION_MEASUREMENT_STANDARD_DEVIATIONS = MatBuilder.fill(Nat.N3(), Nat.N1(),1,1,1 * Math.PI);
   }
   public static class kSimulation {
-    public static final double kP = 0.1;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
+    public static final PIDController pid = new PIDController(0.1, 0, 0);
 
-    public static final double kV = 0.0000001;
-    public static final double kA = 0.0000001;
+    public static final double elevatorSimGearRatio = 1;
+
+    public static final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(0.0001, 0.00001, 0.00001);
 
     public static final double elevatorDrumRadius = Units.inchesToMeters(2.0);
     public static final double elevatorEncoderDistPerPulse =
@@ -65,6 +67,17 @@ public class Constants {
       
     public static final int encoderAChannel = 0;
     public static final int encoderBChannel = 1;
+
+    // TODO Adjust these values below
+    public static final double minHeight = 1;
+    public static final double maxHeight = 2;
+    public static final double startingHeight = 1.5;
+
+    public static final double[] measurementStdDevs = {};
+
+    
+
+    public static final ElevatorSim elevatorSimConstants = new ElevatorSim(ff.getKv(), ff.getKa(), DCMotor.getKrakenX60(2), minHeight, maxHeight, true, startingHeight, measurementStdDevs);
     
   }
   /** All joystick, button, and axis IDs. */

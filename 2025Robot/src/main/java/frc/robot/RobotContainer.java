@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Mechanisms;
+import frc.robot.utils.encoder.Encoder;
 import frc.robot.utils.encoder.WpiEncoder;
 import frc.robot.utils.motor.CTREMotor;
 import frc.robot.utils.motor.ElevatorSimMotor;
@@ -50,17 +51,13 @@ public class RobotContainer {
 
   public final XboxController xbox;
   public final CommandXboxController commXbox;
-
-  WpiEncoder encoder = new WpiEncoder(0, 1);
-  PIDController pid = new PIDController(Constants.kSimulation.kP, Constants.kSimulation.kI, Constants.kSimulation.kD);
-  SimpleMotorFeedforward ff = new SimpleMotorFeedforward(0,0);
  
 
   public final Swerve swerve;
-  /*public final Mechanisms mech = new Mechanisms(
-    new ElevatorSimMotor(encoder, Constants.kSwerve.DRIVE_GEAR_RATIO, pid, ff, Constants.kSimulation.kV, Constants.kSimulation.kA, DCMotor.getKrakenX60(1), 0.0, Double.POSITIVE_INFINITY, 0.0, null), 
-    new ElevatorSimMotor(encoder, Constants.kSwerve.DRIVE_GEAR_RATIO, pid, ff, Constants.kSimulation.kV, Constants.kSimulation.kA, DCMotor.getKrakenX60(1), 0.0, Double.POSITIVE_INFINITY, 0.0, null),
-    new CTREMotor(0));*/
+  public final Mechanisms mech = new Mechanisms(
+    new ElevatorSimMotor(new WpiEncoder(0, 1), Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.pid, Constants.kSimulation.ff, Constants.kSimulation.elevatorSimConstants), 
+    new ElevatorSimMotor(new WpiEncoder(0, 1), Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.pid, Constants.kSimulation.ff, Constants.kSimulation.elevatorSimConstants),
+    new CTREMotor(0));
 
   public final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
   public final Vision vision;
