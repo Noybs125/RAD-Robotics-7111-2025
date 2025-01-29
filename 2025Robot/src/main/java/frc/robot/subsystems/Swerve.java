@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.studica.frc.AHRS;
@@ -96,7 +97,7 @@ public class Swerve extends SubsystemBase {
    * 
    * Double suppliers are just any function that returns a double.
    */
-  public Command drive(DoubleSupplier forwardBackAxis, DoubleSupplier leftRightAxis, DoubleSupplier rotationAxis, boolean isFieldRelative, boolean isOpenLoop) {
+  public Command drive(DoubleSupplier forwardBackAxis, DoubleSupplier leftRightAxis, DoubleSupplier rotationAxis, BooleanSupplier isFieldRelative, boolean isOpenLoop) {
     return run(() -> {
       // Grabbing input from suppliers.
       double forwardBack = forwardBackAxis.getAsDouble();
@@ -114,7 +115,7 @@ public class Swerve extends SubsystemBase {
       rotation *= Constants.kSwerve.MAX_ANGULAR_RADIANS_PER_SECOND;
 
       // Get desired module states.
-      ChassisSpeeds chassisSpeeds = isFieldRelative
+      ChassisSpeeds chassisSpeeds = isFieldRelative.getAsBoolean()
         ? ChassisSpeeds.fromFieldRelativeSpeeds(forwardBack, leftRight, rotation, getYaw().unaryMinus())
         : new ChassisSpeeds(forwardBack, leftRight, rotation);
 
@@ -157,7 +158,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public Rotation2d getYaw() {
-    return gyro.getRotation2d();
+    return Rotation2d.fromDegrees(gyro.getYaw());
   }
 
   public Command zeroGyroCommand() {
