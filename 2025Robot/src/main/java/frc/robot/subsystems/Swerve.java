@@ -59,7 +59,7 @@ public class Swerve extends SubsystemBase {
       new SwerveModule(3, Constants.kSwerve.MOD_3_Constants),
     };
     odometry2 = new SwerveDriveOdometry(Constants.kSwerve.KINEMATICS, getYaw(), getPositions());
-    swerveOdometry = new SwerveDrivePoseEstimator(Constants.kSwerve.KINEMATICS, getYaw().unaryMinus(), getPositions(),vision.robotPose);
+    swerveOdometry = new SwerveDrivePoseEstimator(Constants.kSwerve.KINEMATICS, getYaw(), getPositions(),vision.robotPose);
 
     /*try{
       config = RobotConfig.fromGUISettings();
@@ -114,9 +114,9 @@ public class Swerve extends SubsystemBase {
       leftRight *= Constants.kSwerve.MAX_VELOCITY_METERS_PER_SECOND;
       rotation *= Constants.kSwerve.MAX_ANGULAR_RADIANS_PER_SECOND;
 
-      // Get desired module states.
+      // Get desired module states
       ChassisSpeeds chassisSpeeds = isFieldRelative.getAsBoolean()
-        ? ChassisSpeeds.fromFieldRelativeSpeeds(forwardBack, leftRight, rotation, getYaw().unaryMinus())
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(forwardBack, leftRight, rotation, getYaw())
         : new ChassisSpeeds(forwardBack, leftRight, rotation);
 
       SwerveModuleState[] states = Constants.kSwerve.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
@@ -183,7 +183,6 @@ public class Swerve extends SubsystemBase {
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds){
-    speeds.omegaRadiansPerSecond *= -1;
     speeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] states = Constants.kSwerve.KINEMATICS.toSwerveModuleStates(speeds);
     setModuleStates(states);
@@ -192,7 +191,7 @@ public class Swerve extends SubsystemBase {
   
   @Override 
   public void periodic() {
-      swerveOdometry.update(getYaw().unaryMinus(), getPositions());
+      swerveOdometry.update(getYaw(), getPositions());
     for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
         swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
