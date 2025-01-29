@@ -43,7 +43,11 @@ public class Swerve extends SubsystemBase {
   private final AHRS gyro;
   private final Vision vision;
   private ComplexWidget fieldPublisher;
-  
+
+  public SwerveState state;
+  private double translateX;
+  private double translateY;
+  private double rotationZ;
 
   public Swerve(AHRS gyro, Vision vision) {
     this.gyro = gyro;
@@ -125,6 +129,40 @@ public class Swerve extends SubsystemBase {
     }).withName("SwerveDriveCommand");
   }
 
+  public enum SwerveState{
+    state1,
+    state2,
+    state3,
+  }
+
+  public void setState(){
+
+  }
+  private void handleStates()
+  {
+    switch (state) {
+      case state1:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        break;
+
+      case state2:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        break;
+
+      case state3:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        break;
+        
+      default:
+        break;
+    }
+  }
   /** To be used by auto. Use the drive method during teleop. */
   public void setModuleStates(SwerveModuleState[] states) {
     setModuleStates(states, false);
