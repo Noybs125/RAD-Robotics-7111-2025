@@ -58,7 +58,7 @@ public class Swerve extends SubsystemBase {
       new SwerveModule(3, Constants.kSwerve.MOD_3_Constants),
     };
     odometry2 = new SwerveDriveOdometry(Constants.kSwerve.KINEMATICS, getYaw(), getPositions());
-    swerveOdometry = new SwerveDrivePoseEstimator(Constants.kSwerve.KINEMATICS, getYaw(), getPositions(),vision.robotPose);
+    swerveOdometry = new SwerveDrivePoseEstimator(Constants.kSwerve.KINEMATICS, getYaw().unaryMinus(), getPositions(),vision.robotPose);
 
     /*try{
       config = RobotConfig.fromGUISettings();
@@ -191,7 +191,7 @@ public class Swerve extends SubsystemBase {
   
   @Override 
   public void periodic() {
-      swerveOdometry.update(getYaw(), getPositions());
+      swerveOdometry.update(getYaw().unaryMinus(), getPositions());
     for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
         swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
