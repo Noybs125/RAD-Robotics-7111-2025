@@ -49,6 +49,8 @@ public class Swerve extends SubsystemBase {
   private double translateY;
   private double rotationZ;
 
+  private boolean isFieldRelative = true;
+
   public Swerve(AHRS gyro, Vision vision) {
     this.gyro = gyro;
     this.vision = vision;
@@ -135,9 +137,19 @@ public class Swerve extends SubsystemBase {
     state3,
   }
 
-  public void setState(){
-
+  public double getTransX(){
+    return translateX;
   }
+  public double getTransY(){
+    return translateY;
+  }
+  public double getRotationZ(){
+    return rotationZ;
+  }
+  public void setState(SwerveState State){
+    this.state = State;
+  }
+
   private void handleStates()
   {
     switch (state) {
@@ -145,20 +157,23 @@ public class Swerve extends SubsystemBase {
         translateX = 0;
         translateY = 0;
         rotationZ = 0;
+        isFieldRelative = true;
         break;
 
       case state2:
         translateX = 0;
         translateY = 0;
         rotationZ = 0;
+        isFieldRelative = true;
         break;
 
       case state3:
         translateX = 0;
         translateY = 0;
         rotationZ = 0;
+        isFieldRelative = true;
         break;
-        
+
       default:
         break;
     }
