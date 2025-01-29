@@ -54,10 +54,10 @@ public class RobotContainer {
  
 
   public final Swerve swerve;
-  public final Mechanisms mech = new Mechanisms(
+  /*public final Mechanisms mech = new Mechanisms(
     new ElevatorSimMotor(new WpiEncoder(0, 1), Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.pid, Constants.kSimulation.ff, Constants.kSimulation.elevatorSimConstants), 
-    new ElevatorSimMotor(new WpiEncoder(0, 1), Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.pid, Constants.kSimulation.ff, Constants.kSimulation.elevatorSimConstants),
-    new CTREMotor(0));
+    new ElevatorSimMotor(new WpiEncoder(2, 3), Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.pid, Constants.kSimulation.ff, Constants.kSimulation.elevatorSimConstants),
+    new CTREMotor(0));*/
 
   public final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
   public final Vision vision;
@@ -104,7 +104,7 @@ public class RobotContainer {
       () -> Constants.kControls.Y_DRIVE_LIMITER.calculate(-xbox.getLeftY()), 
       () -> Constants.kControls.X_DRIVE_LIMITER.calculate(xbox.getLeftX()),  
       () -> Constants.kControls.THETA_DRIVE_LIMITER.calculate(xbox.getRightX()),
-      true,
+      () -> true,
       false
       ));
 

@@ -21,7 +21,7 @@ public class Vision extends SubsystemBase{
     public Pose2d robotPose = new Pose2d();
     public Pose3d estPose3d = new Pose3d();
     private Transform2d tagAllignment = new Transform2d();
-    private VisionState state;
+    private VisionState state = VisionState.Climb;
 
     // TODO: change variable names on actual robot
     public final Camera limelight = new Camera(
