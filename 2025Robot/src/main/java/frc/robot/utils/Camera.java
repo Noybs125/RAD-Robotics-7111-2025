@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.photonvision.PhotonPoseEstimator;
@@ -85,7 +86,12 @@ public class Camera extends PhotonCamera{
         return newPose;
     }
     public double getTime(){
+        if(latestResult != null){
         return photonPoseEstimator.update(latestResult).get().timestampSeconds;
+        }
+        else{
+            return Timer.getFPGATimestamp();
+        }
     }
     public Matrix<N3, N1> getPoseAmbiguity(){
         double smallestDistance = Double.POSITIVE_INFINITY;
