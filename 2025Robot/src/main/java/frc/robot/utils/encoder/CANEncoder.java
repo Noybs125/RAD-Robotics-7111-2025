@@ -24,6 +24,10 @@ public class CANEncoder implements Encoder {
         return Rotation2d.fromRotations(encoder.getAbsolutePosition().getValueAsDouble() * gearRatio);
     }
 
+    public double getPositionAsDouble(){
+         return encoder.getAbsolutePosition().getValueAsDouble() * gearRatio;
+    }
+
     public void setPosition(Rotation2d postion){
         encoder.setPosition(postion.getRotations());
     }

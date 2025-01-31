@@ -104,11 +104,13 @@ public class RobotContainer {
       () -> Constants.kControls.Y_DRIVE_LIMITER.calculate(-xbox.getLeftY()), 
       () -> Constants.kControls.X_DRIVE_LIMITER.calculate(xbox.getLeftX()),  
       () -> Constants.kControls.THETA_DRIVE_LIMITER.calculate(xbox.getRightX()),
-      () -> true,
+      true,
       false
       ));
 
+      //elevatorMech2d.setLength(kElevatorMinimumLength + encoder.getPositionAsDouble());
+
     commXbox.y().onTrue(swerve.zeroGyroCommand());
-    //commXbox.a().onTrue(new InstantCommand(() -> mech.setElevatorSetpoint(10))).onFalse(new InstantCommand(() -> mech.setElevatorSetpoint(0)));
+    //commXbox.a().onTrue(new InstantCommand(() -> ElevatorSimMotor.mech2d.setElevatorSetpoint(10))).onFalse(new InstantCommand(() -> mech.setElevatorSetpoint(0)));
     }
   }

@@ -5,6 +5,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public interface Encoder {
     public Rotation2d getPosition();
 
+    public double getPositionAsDouble();
+
     public void setPosition(Rotation2d position);
 
     public boolean isAbsolute();
