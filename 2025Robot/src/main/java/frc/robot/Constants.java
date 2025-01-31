@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -41,7 +42,7 @@ public class Constants {
   public static class vision {
     // TODO: change variable names on actual robot
     public static final Transform3d cameraToRobotCenter1 = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
-    public static final Transform3d cameraToRobotCenter2 = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
+    public static final Transform3d cameraToRobotCenter2 = new Transform3d(12, 2, 0, new Rotation3d(0, 0.785, 0));
     public static final Transform3d cameraToRobotCenter3 = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
 
     public static final double cameraHeight = Units.inchesToMeters(0);
@@ -82,7 +83,7 @@ public class Constants {
   }
   /** All joystick, button, and axis IDs. */
   public static class kControls {
-    public static final double AXIS_DEADZONE = 0.15;
+    public static final double AXIS_DEADZONE = 0.1;
 
     public static final int LEFT_JOY_ID = 0;
     public static final int RIGHT_JOY_ID = 1;

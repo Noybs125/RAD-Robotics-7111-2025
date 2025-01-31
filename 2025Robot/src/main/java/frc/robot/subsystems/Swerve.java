@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.studica.frc.AHRS;
@@ -42,7 +43,13 @@ public class Swerve extends SubsystemBase {
   private final AHRS gyro;
   private final Vision vision;
   private ComplexWidget fieldPublisher;
-  
+
+  public SwerveState state;
+  private double translateX;
+  private double translateY;
+  private double rotationZ;
+
+  private boolean isFieldRelative = true;
 
   public Swerve(AHRS gyro, Vision vision) {
     this.gyro = gyro;
@@ -96,7 +103,7 @@ public class Swerve extends SubsystemBase {
    * 
    * Double suppliers are just any function that returns a double.
    */
-  public Command drive(DoubleSupplier forwardBackAxis, DoubleSupplier leftRightAxis, DoubleSupplier rotationAxis, boolean isFieldRelative, boolean isOpenLoop) {
+  public Command drive(DoubleSupplier forwardBackAxis, DoubleSupplier leftRightAxis, DoubleSupplier rotationAxis, BooleanSupplier isFieldRelative, boolean isOpenLoop) {
     return run(() -> {
       // Grabbing input from suppliers.
       double forwardBack = forwardBackAxis.getAsDouble();
@@ -113,9 +120,9 @@ public class Swerve extends SubsystemBase {
       leftRight *= Constants.kSwerve.MAX_VELOCITY_METERS_PER_SECOND;
       rotation *= Constants.kSwerve.MAX_ANGULAR_RADIANS_PER_SECOND;
 
-      // Get desired module states.
-      ChassisSpeeds chassisSpeeds = isFieldRelative
-        ? ChassisSpeeds.fromFieldRelativeSpeeds(forwardBack, leftRight, rotation, getYaw().unaryMinus())
+      // Get desired module states
+      ChassisSpeeds chassisSpeeds = isFieldRelative.getAsBoolean()
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(forwardBack, leftRight, rotation, getYaw())
         : new ChassisSpeeds(forwardBack, leftRight, rotation);
 
       SwerveModuleState[] states = Constants.kSwerve.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
@@ -124,6 +131,53 @@ public class Swerve extends SubsystemBase {
     }).withName("SwerveDriveCommand");
   }
 
+  public enum SwerveState{
+    state1,
+    state2,
+    state3,
+  }
+
+  public double getTransX(){
+    return translateX;
+  }
+  public double getTransY(){
+    return translateY;
+  }
+  public double getRotationZ(){
+    return rotationZ;
+  }
+  public void setState(SwerveState State){
+    this.state = State;
+  }
+
+  private void handleStates()
+  {
+    switch (state) {
+      case state1:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        isFieldRelative = true;
+        break;
+
+      case state2:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        isFieldRelative = true;
+        break;
+
+      case state3:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        isFieldRelative = true;
+        break;
+
+      default:
+        break;
+    }
+  }
   /** To be used by auto. Use the drive method during teleop. */
   public void setModuleStates(SwerveModuleState[] states) {
     setModuleStates(states, false);
@@ -182,7 +236,6 @@ public class Swerve extends SubsystemBase {
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds){
-    speeds.omegaRadiansPerSecond *= -1;
     speeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] states = Constants.kSwerve.KINEMATICS.toSwerveModuleStates(speeds);
     setModuleStates(states);
@@ -194,7 +247,7 @@ public class Swerve extends SubsystemBase {
       swerveOdometry.update(getYaw(), getPositions());
     for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
-        swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
+        swerveOdometry.addVisionMeasurement(camera.getRobotPose(), camera.getTime(), camera.getPoseAmbiguity());
       }
     }
     
