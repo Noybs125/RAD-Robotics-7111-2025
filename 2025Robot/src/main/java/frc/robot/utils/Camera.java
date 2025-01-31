@@ -84,6 +84,9 @@ public class Camera extends PhotonCamera{
         newPose = estRobotPose.estimatedPose.transformBy(cameraToRobotCenter).toPose2d();
         return newPose;
     }
+    public double getTime(){
+        return photonPoseEstimator.update(latestResult).get().timestampSeconds;
+    }
     public Matrix<N3, N1> getPoseAmbiguity(){
         double smallestDistance = Double.POSITIVE_INFINITY;
         double confidenceMultiplier = 0;
