@@ -32,6 +32,10 @@ public class WpiEncoder implements frc.robot.utils.encoder.Encoder {
         return Rotation2d.fromRotations(position);
     }
 
+    public double getPositionAsDouble(){
+        return position;
+    }
+
     public void setPosition(Rotation2d position){
         offset = position.getRotations();
     }

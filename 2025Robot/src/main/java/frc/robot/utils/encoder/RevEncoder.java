@@ -30,6 +30,10 @@ public class RevEncoder implements Encoder {
         offset = position.getRotations();
     }
 
+    public double getPositionAsDouble(){
+        return position;
+    }
+
     public boolean isAbsolute(){
         return false;
     }

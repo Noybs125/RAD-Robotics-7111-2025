@@ -23,6 +23,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
@@ -34,9 +36,14 @@ public class ElevatorSimMotor implements Motor{
     private double gearRatio;
     private double setPoint;
     private SimpleMotorFeedforward feedForward;
+    private double kElevatorMinimumLength = 0;
     final Mechanism2d mech2d = new Mechanism2d(20, 50);
     final MechanismRoot2d mech2dRoot = mech2d.getRoot("Elevator Root", 10, 0);
     final MechanismLigament2d elevatorMech2d;
+    
+    MechanismRoot2d root = mech2d.getRoot("climber", 2, 0); 
+    goofyMotor = root.append(new MechanismLigament2d("elevator", kElevatorMinimumLength, 90));
+    SmartDashboard.putData("Mech2d", mech2d);
 
     public ElevatorSimMotor(Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, ElevatorSim elevatorSim){
         this.encoder = encoder;
@@ -86,6 +93,8 @@ public class ElevatorSimMotor implements Motor{
     }
     
     public void periodic(){
+        MechanismLigament2d goofyMotor;
+
         if (encoder != null){
             encoder.periodic();
         }
