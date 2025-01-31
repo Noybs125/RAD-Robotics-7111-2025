@@ -41,9 +41,9 @@ public class ElevatorSimMotor implements Motor{
     final MechanismRoot2d mech2dRoot = mech2d.getRoot("Elevator Root", 10, 0);
     final MechanismLigament2d elevatorMech2d;
     
-    MechanismRoot2d root = mech2d.getRoot("climber", 2, 0); 
-    goofyMotor = root.append(new MechanismLigament2d("elevator", kElevatorMinimumLength, 90));
-    SmartDashboard.putData("Mech2d", mech2d);
+   // MechanismRoot2d root = mech2d.getRoot("climber", 2, 0); 
+   // goofyMotor = root.append(new MechanismLigament2d("elevator", kElevatorMinimumLength, 90));
+   // SmartDashboard.putData("Mech2d", mech2d);
 
     public ElevatorSimMotor(Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, ElevatorSim elevatorSim){
         this.encoder = encoder;
