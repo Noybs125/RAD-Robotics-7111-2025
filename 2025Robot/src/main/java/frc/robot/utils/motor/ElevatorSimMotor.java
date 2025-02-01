@@ -50,9 +50,12 @@ public class ElevatorSimMotor implements Motor{
     }        
     
     public void setSetpoint(double setPoint){
-        double pos = pid.calculate(getPosition(), setPoint) + feedForward.calculate(motor.getVelocityMetersPerSecond()); //Needs velocity for feedforward
+        double pidOutput = pid.calculate(encoder.getPositionAsDouble());
+        double feedforwardOutput = feedForward.calculate(pid.getErrorDerivative());
+        motor.setInput(pidOutput + feedforwardOutput); //Needs velocity for feedforward
         positionMeters = setPoint;
         this.setPoint = setPoint;
+        
     }
     
     public void periodic(){
