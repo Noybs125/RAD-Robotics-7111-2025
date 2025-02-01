@@ -20,8 +20,6 @@ public class CTREMotor implements Motor {
     private double gearRatio;
     private double currentSetpoint;
     private SimpleMotorFeedforward feedforward;
-
-    
     
     public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward){
         this.encoder = encoder;
@@ -62,7 +60,7 @@ public class CTREMotor implements Motor {
         
     
     public void setSetpoint(double setPoint){
-        motor.set(pid.calculate(getPosition(), setPoint));
+        motor.setVoltage(pid.calculate(getPosition(), setPoint) + feedforward.calculate(0)); //Needs velocity for feedforward
         currentSetpoint = setPoint;
     }
 
@@ -82,21 +80,6 @@ public class CTREMotor implements Motor {
 
     public Encoder getEncoder(){
         return encoder;
-    }    
-
-    public void setGearRatio(double gearRatio){
-        if (encoder != null)
-            encoder.setGearRatio(gearRatio);
-        else
-            this.gearRatio = gearRatio;
-            
-    }
-
-    public double getGearRatio(){
-        if (encoder != null)
-            return encoder.getGearRatio();
-        else    
-            return gearRatio;
     }
 
     public double getVoltage(){

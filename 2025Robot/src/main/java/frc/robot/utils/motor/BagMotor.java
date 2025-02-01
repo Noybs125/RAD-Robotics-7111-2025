@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Velocity;
 import frc.robot.utils.encoder.Encoder;
 
 public class BagMotor implements Motor{
@@ -28,8 +29,6 @@ public class BagMotor implements Motor{
 
         motor = new VictorSPX(id);
     }
-
-    
 
     public void setSpeed(double speed){
         motor.set(VictorSPXControlMode.PercentOutput, speed);
@@ -54,7 +53,8 @@ public class BagMotor implements Motor{
     }        
     
     public void setSetpoint(double setPoint){
-        motor.set(VictorSPXControlMode.PercentOutput, pid.calculate(getPosition(), setPoint));
+        motor.set(VictorSPXControlMode.Velocity, pid.calculate(getPosition(), setPoint) + feedForward.calculate(0));
+        //motor.setVoltage(VictorSPXControlMode.PercentOutput, pid.calculate(getPosition(), setPoint) + feedForward.calculate(0)); //Needs velocity for feedforward
         this.setPoint = setPoint;
     }
     
@@ -63,7 +63,7 @@ public class BagMotor implements Motor{
             encoder.periodic();
         }
     }
-    
+
     public void setPID(double p, double i, double d){
         pid.setPID(p, i, d);
     }
@@ -76,23 +76,10 @@ public class BagMotor implements Motor{
         return encoder;
     }
 
-    public void setGearRatio(double gearRatio){
-        if (encoder != null)
-            encoder.setGearRatio(gearRatio);
-        else 
-            this.gearRatio = gearRatio;
-    }
-
-    public double getGearRatio(){
-        if (encoder != null)
-            return encoder.getGearRatio();
-        else
-            return gearRatio;
-    }
-
     public double getVoltage(){
         return motor.getBusVoltage();
     }
+
     public boolean isAtSetpoint(double deadzone){
         if (getPosition() >= setPoint + deadzone && getPosition() <= setPoint + deadzone)
             return true;

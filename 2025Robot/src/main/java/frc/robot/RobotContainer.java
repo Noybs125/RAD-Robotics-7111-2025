@@ -54,10 +54,10 @@ public class RobotContainer {
  
 
   public final Swerve swerve;
-  /*public final Mechanisms mech = new Mechanisms(
+  public final Mechanisms mech = new Mechanisms(
     new ElevatorSimMotor(new WpiEncoder(0, 1), Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.pid, Constants.kSimulation.ff, Constants.kSimulation.elevatorSimConstants), 
     new ElevatorSimMotor(new WpiEncoder(2, 3), Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.pid, Constants.kSimulation.ff, Constants.kSimulation.elevatorSimConstants),
-    new CTREMotor(0));*/
+    new CTREMotor(0));
 
   public final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
   public final Vision vision;

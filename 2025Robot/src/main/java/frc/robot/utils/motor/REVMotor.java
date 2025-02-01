@@ -57,7 +57,7 @@ public class REVMotor implements Motor {
     }  
     
     public void setSetpoint(double setPoint){
-        motor.set(pid.calculate(getPosition(), setPoint));
+        motor.setVoltage(pid.calculate(getPosition(), setPoint) + feedForward.calculate(0)); //Needs velocity for feedforward
         this.setPoint = setPoint;
     }
 
@@ -77,22 +77,6 @@ public class REVMotor implements Motor {
     public Encoder getEncoder(){
         return encoder;
     }
-
-    public void setGearRatio(double gearRatio){
-        if(encoder != null) {
-            encoder.setGearRatio(gearRatio);
-        } else {
-            this.gearRatio = gearRatio;
-        }
-    };
-
-    public double getGearRatio(){
-        if(encoder != null){
-            return encoder.getGearRatio();
-        }else{
-            return gearRatio;
-        }
-    };
 
     public double getVoltage(){
         return motor.getBusVoltage();

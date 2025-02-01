@@ -45,10 +45,7 @@ public class ElevatorSimMotor implements Motor{
         this.feedForward = feedForward;
         //The line below may not be needed
         //encoder = new WpiEncoder(Constants.kSimulation.kEncoderAChannel, Constants.kSimulation.kEncoderBChannel);
-        this.motor = elevatorSim;
-        
-
-        
+        this.motor = elevatorSim;        
     }
 
     
@@ -79,7 +76,7 @@ public class ElevatorSimMotor implements Motor{
     }        
     
     public void setSetpoint(double setPoint){
-        var pos = pid.calculate(getPosition(), setPoint);
+        double pos = pid.calculate(getPosition(), setPoint) + feedForward.calculate(0); //Needs velocity for feedforward
         motor.setInput(pos);
         this.setPoint = setPoint;
     }
@@ -108,20 +105,6 @@ public class ElevatorSimMotor implements Motor{
 
     public Encoder getEncoder(){
         return encoder;
-    }
-
-    public void setGearRatio(double gearRatio){
-        if (encoder != null)
-            encoder.setGearRatio(gearRatio);
-        else 
-            this.gearRatio = gearRatio;
-    }
-
-    public double getGearRatio(){
-        if (encoder != null)
-            return encoder.getGearRatio();
-        else
-            return gearRatio;
     }
 
     public double getVoltage(){
