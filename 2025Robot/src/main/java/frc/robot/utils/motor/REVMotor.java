@@ -15,22 +15,23 @@ public class REVMotor implements Motor {
     private double gearRatio = 1;
     private SimpleMotorFeedforward feedForward;
     private double setPoint;
+    private Motor simType; 
 
     public REVMotor (int id) {
         motor = new SparkMax(id,MotorType.kBrushless);
 
     }
     
-    public REVMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedforward){
+    public REVMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedforward, Motor simType){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
         this.feedForward = feedforward;
 
         motor = new SparkMax(id, MotorType.kBrushless);
+        this.simType = simType;
     }
 
-    
 
     public void setSpeed(double speed){
         motor.set(speed);
@@ -57,7 +58,9 @@ public class REVMotor implements Motor {
     }  
     
     public void setSetpoint(double setPoint){
-        motor.setVoltage(pid.calculate(getPosition(), setPoint) + feedForward.calculate(0)); //Needs velocity for feedforward
+        double pidOutput = pid.calculate(encoder.getPositionAsDouble());
+        double feedforwardOutput = feedForward.calculate(pid.getErrorDerivative());
+        motor.setVoltage(pidOutput + feedforwardOutput); //Needs velocity for feedforward
         this.setPoint = setPoint;
     }
 
@@ -70,6 +73,7 @@ public class REVMotor implements Motor {
     public void setPID(double p, double i, double d){
         pid.setPID(p, i, d);
     }
+
     public PIDController getPID(){
         return pid;
     }
@@ -80,7 +84,7 @@ public class REVMotor implements Motor {
 
     public double getVoltage(){
         return motor.getBusVoltage();
-    };
+    }
 
     public boolean isAtSetpoint(double deadzone){
         if (getPosition() >= setPoint - deadzone && getPosition() <= setPoint + deadzone)

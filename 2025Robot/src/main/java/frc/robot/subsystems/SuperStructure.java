@@ -9,7 +9,6 @@ public class SuperStructure extends SubsystemBase {
     private Vision vision;
     private Mechanisms mechanisms;
     private Flywheels flywheels; 
-    //private RobotState previousRobotState;
     private RobotState currentRobotState;
     private RobotState robotState;
 
@@ -32,7 +31,6 @@ public class SuperStructure extends SubsystemBase {
 
 
     public void periodic() {
-        //previousRobotState = currentRobotState;
         switch (robotState) {   
             case ReafL1Processor:
                 //checks for whether it should align for reaf or processor

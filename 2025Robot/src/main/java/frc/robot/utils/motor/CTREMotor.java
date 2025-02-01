@@ -1,32 +1,29 @@
 package frc.robot.utils.motor;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.utils.encoder.Encoder;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.Slot0Configs;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class CTREMotor implements Motor {
     private TalonFX motor;
-    private TalonFX motor2;
     PIDController pid = new PIDController(0, 0, 0);
     private TalonFXConfiguration config;
     private Encoder encoder = null;
     private double gearRatio;
     private double currentSetpoint;
     private SimpleMotorFeedforward feedforward;
+    private Motor simType;
     
-    public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward){
+    public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, Motor simType){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
         this.feedforward = feedForward;
         motor = new TalonFX(id);
+        this.simType = simType;
     }
 
     public CTREMotor(int id){
@@ -60,7 +57,9 @@ public class CTREMotor implements Motor {
         
     
     public void setSetpoint(double setPoint){
-        motor.setVoltage(pid.calculate(getPosition(), setPoint) + feedforward.calculate(0)); //Needs velocity for feedforward
+        double pidOutput = pid.calculate(encoder.getPositionAsDouble());
+        double feedforwardOutput = feedforward.calculate(pid.getErrorDerivative());
+        motor.setVoltage(pidOutput + feedforwardOutput); //Needs velocity for feedforward
         currentSetpoint = setPoint;
     }
 
@@ -85,6 +84,7 @@ public class CTREMotor implements Motor {
     public double getVoltage(){
         return motor.getMotorVoltage().getValueAsDouble();
     }
+    
     public boolean isAtSetpoint(double deadzone){
         if(getPosition() >= currentSetpoint - deadzone && getPosition() <= currentSetpoint + deadzone){
             return true;
