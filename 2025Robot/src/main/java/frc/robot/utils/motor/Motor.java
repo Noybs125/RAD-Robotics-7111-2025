@@ -1,6 +1,8 @@
 package frc.robot.utils.motor;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.utils.encoder.Encoder;
 
 public interface Motor {
@@ -20,7 +22,7 @@ public interface Motor {
     
     public void setPID(double p, double i, double d);
     
-    public double getPID();
+    public PIDController getPID();
 
     public Encoder getEncoder();
 
