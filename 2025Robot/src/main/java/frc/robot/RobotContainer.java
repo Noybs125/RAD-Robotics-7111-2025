@@ -64,6 +64,8 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
 
+  
+
   public RobotContainer() {
     leftJoy = new Joystick(Constants.kControls.LEFT_JOY_ID);
     rightJoy = new Joystick(Constants.kControls.RIGHT_JOY_ID);
@@ -101,9 +103,9 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     swerve.setDefaultCommand(swerve.drive(
-      () -> Constants.kControls.Y_DRIVE_LIMITER.calculate(-xbox.getLeftY()), 
-      () -> Constants.kControls.X_DRIVE_LIMITER.calculate(xbox.getLeftX()),  
-      () -> Constants.kControls.THETA_DRIVE_LIMITER.calculate(xbox.getRightX()),
+      () -> Constants.kControls.Y_DRIVE_LIMITER.calculate(0.25), 
+      () -> Constants.kControls.X_DRIVE_LIMITER.calculate(-xbox.getLeftX()),  
+      () -> Constants.kControls.THETA_DRIVE_LIMITER.calculate(-xbox.getRightX()),
       () -> true, 
       false
       ));

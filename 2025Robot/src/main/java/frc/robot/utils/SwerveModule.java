@@ -89,10 +89,7 @@ public class SwerveModule {
 
     angleMotor.setControl(anglePosition.withPosition(state.angle.getRotations()));
 
-    SmartDashboard.putNumber("CalcVel " + moduleNumber , state.speedMetersPerSecond);
-    SmartDashboard.putNumber("TalonFX Vel " + moduleNumber, driveMotor.getVelocity().getValueAsDouble() * 60 * Constants.kSwerve.DRIVE_RPM_TO_METERS_PER_SECOND); // Constants.kSwerve.DRIVE_GEAR_RATIO);
-    SmartDashboard.putNumber("drivePos " + moduleNumber, driveMotor.getPosition().getValueAsDouble());
-    SmartDashboard.putNumber("driveRotPos " + moduleNumber, driveMotor.getRotorPosition().getValueAsDouble());
+    SmartDashboard.putNumber("Angle Pos", angleMotor.getPosition().getValueAsDouble());
   }
 
   public SwerveModuleState getState() {
@@ -168,9 +165,7 @@ public class SwerveModule {
     angleMotorConfig.ClosedLoopGeneral.ContinuousWrap = true;
     //angleMotorConfig.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
   
-    /*angleMotorConfig.MotorOutput.Inverted = driveMotorInversion 
-    ? InvertedValue.CounterClockwise_Positive 
-    : InvertedValue.Clockwise_Positive;*/
+    angleMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     angleMotorConfig.MotorOutput.NeutralMode = Constants.kSwerve.ANGLE_IDLE_MODE;    
     
