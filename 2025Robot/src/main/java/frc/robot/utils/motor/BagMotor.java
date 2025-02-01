@@ -30,8 +30,6 @@ public class BagMotor implements Motor{
         motor = new VictorSPX(id);
     }
 
-    
-
     public void setSpeed(double speed){
         motor.set(VictorSPXControlMode.PercentOutput, speed);
     }
@@ -69,39 +67,18 @@ public class BagMotor implements Motor{
         pid.setPID(p, i, d);
     }
 
-    public double getP(){
-        return pid.getP();
-    }
-
-    public double getI(){
-        return pid.getI();
-    }
-
-    public double getD(){
-        return pid.getD();
+    public PIDController getPID(){
+        return pid;
     }
 
     public Encoder getEncoder(){
         return encoder;
     }
 
-    public void setGearRatio(double gearRatio){
-        if (encoder != null)
-            encoder.setGearRatio(gearRatio);
-        else 
-            this.gearRatio = gearRatio;
-    }
-
-    public double getGearRatio(){
-        if (encoder != null)
-            return encoder.getGearRatio();
-        else
-            return gearRatio;
-    }
-
     public double getVoltage(){
         return motor.getBusVoltage();
     }
+
     public boolean isAtSetpoint(double deadzone){
         if (getPosition() >= setPoint + deadzone && getPosition() <= setPoint + deadzone)
             return true;
