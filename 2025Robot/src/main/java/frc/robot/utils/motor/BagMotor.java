@@ -16,16 +16,18 @@ public class BagMotor implements Motor{
     private double gearRatio;
     private double setPoint;
     private SimpleMotorFeedforward feedForward;
+    private Motor simType;
 
     public BagMotor(int id){
         motor = new VictorSPX(id);
     }
     
-    public BagMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward){
+    public BagMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, Motor simType){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
         this.feedForward = feedForward;
+        this.simType = simType;
 
         motor = new VictorSPX(id);
     }
@@ -56,10 +58,8 @@ public class BagMotor implements Motor{
         double pidOutput = pid.calculate(encoder.getPositionAsDouble());
         double feedforwardOutput = feedForward.calculate(pid.getErrorDerivative());
         motor.set(VictorSPXControlMode.Velocity, pidOutput + feedforwardOutput); //Needs velocity for feedforward
-        this.setPoint = setPoint;
-        motor.set(VictorSPXControlMode.Velocity, pid.calculate(getPosition(), setPoint) + feedForward.calculate(0));
         //motor.setVoltage(VictorSPXControlMode.PercentOutput, pid.calculate(getPosition(), setPoint) + feedForward.calculate(0)); //Needs velocity for feedforward
-        this.setPoint = setPoint;
+
     }
     
     public void periodic(){

@@ -15,13 +15,15 @@ public class CTREMotor implements Motor {
     private double gearRatio;
     private double currentSetpoint;
     private SimpleMotorFeedforward feedforward;
+    private Motor simType;
     
-    public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward){
+    public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, Motor simType){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
         this.feedforward = feedForward;
         motor = new TalonFX(id);
+        this.simType = simType;
     }
 
     public CTREMotor(int id){

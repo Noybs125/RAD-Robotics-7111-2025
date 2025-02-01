@@ -17,16 +17,18 @@ public class ElevatorSimMotor implements Motor{
     private double gearRatio;
     private double setPoint;
     private ElevatorFeedforward feedForward;
+    private Motor simType;
 
     private double velocityMPS = 0;
     private double positionMeters = 0;
 
-    public ElevatorSimMotor(Encoder encoder, double gearRatio, PIDController pid, ElevatorFeedforward feedForward, ElevatorSim elevatorSim){
+    public ElevatorSimMotor(Encoder encoder, double gearRatio, PIDController pid, ElevatorFeedforward feedForward, ElevatorSim elevatorSim, Motor simType){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
         this.feedForward = feedForward;
-        this.motor = elevatorSim;        
+        this.motor = elevatorSim;   
+        this.simType = simType;     
     }
 
     public void setSpeed(double speed){

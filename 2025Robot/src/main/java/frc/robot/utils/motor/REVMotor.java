@@ -15,19 +15,21 @@ public class REVMotor implements Motor {
     private double gearRatio = 1;
     private SimpleMotorFeedforward feedForward;
     private double setPoint;
+    private Motor simType; 
 
     public REVMotor (int id) {
         motor = new SparkMax(id,MotorType.kBrushless);
 
     }
     
-    public REVMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedforward){
+    public REVMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedforward, Motor simType){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
         this.feedForward = feedforward;
 
         motor = new SparkMax(id, MotorType.kBrushless);
+        this.simType = simType;
     }
 
 
