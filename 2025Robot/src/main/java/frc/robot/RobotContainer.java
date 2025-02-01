@@ -42,8 +42,6 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
 
-  
-
   public RobotContainer() {
     xbox = new XboxController(2);
     commXbox = new CommandXboxController(2);
@@ -52,8 +50,8 @@ public class RobotContainer {
     swerve = new Swerve(gyro, vision);
     mechanisms = new Mechanisms(
         new ElevatorSimMotor(
-            new RevEncoder(0), Constants.kSimulation.elevatorSimGearRatio, 
-            Constants.kSimulation.pid, Constants.kSimulation.ff, Constants.kSimulation.elevatorSimConstants
+            new RevEncoder(0), Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.pid,
+            Constants.kSimulation.ff, Constants.kSimulation.elevatorSimConstants
             ), 
         new CTREMotor(0));
     flywheels = new Flywheels(new REVMotor(0));

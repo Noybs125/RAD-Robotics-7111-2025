@@ -33,5 +33,4 @@ public interface Motor {
     public SimpleMotorFeedforward getFeedForward();
 
     public void setFeedFoward(double kS, double kV, double kA);
-    
 }

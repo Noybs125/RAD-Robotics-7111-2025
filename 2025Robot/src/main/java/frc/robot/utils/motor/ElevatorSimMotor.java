@@ -21,14 +21,14 @@ public class ElevatorSimMotor implements Motor{
 
     private double velocityMPS = 0;
     private double positionMeters = 0;
+    private double outputVoltage = 0;
 
-    public ElevatorSimMotor(Encoder encoder, double gearRatio, PIDController pid, ElevatorFeedforward feedForward, ElevatorSim elevatorSim, Motor simType){
+    public ElevatorSimMotor(Encoder encoder, double gearRatio, PIDController pid, ElevatorFeedforward feedForward, ElevatorSim elevatorSim){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
         this.feedForward = feedForward;
-        this.motor = elevatorSim;   
-        this.simType = simType;     
+        this.motor = elevatorSim;       
     }
 
     public void setSpeed(double speed){
@@ -40,7 +40,7 @@ public class ElevatorSimMotor implements Motor{
     }
 
     public void setPosition(double position){
-        positionMeters = position;
+        motor.setState(position, 0);
     }
     
     public double getPosition(){
@@ -52,12 +52,13 @@ public class ElevatorSimMotor implements Motor{
     }        
     
     public void setSetpoint(double setPoint){
-        double pidOutput = pid.calculate(encoder.getPositionAsDouble());
+        double pidOutput = pid.calculate(encoder.getPositionAsDouble(), setPoint);
         double feedforwardOutput = feedForward.calculate(pid.getErrorDerivative());
-        motor.setInput(pidOutput + feedforwardOutput); //Needs velocity for feedforward
-        positionMeters = setPoint;
+
+        outputVoltage = pidOutput + feedforwardOutput;
+
+        motor.setInputVoltage(outputVoltage);
         this.setPoint = setPoint;
-        
     }
     
     public void periodic(){
@@ -84,7 +85,7 @@ public class ElevatorSimMotor implements Motor{
     }
 
     public double getVoltage(){
-        return motor.getCurrentDrawAmps();
+        return outputVoltage;
     }
     public boolean isAtSetpoint(double deadzone){
         if (getPosition() >= setPoint - deadzone && getPosition() <= setPoint + deadzone)

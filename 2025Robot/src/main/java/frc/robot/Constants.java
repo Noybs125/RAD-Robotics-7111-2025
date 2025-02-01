@@ -49,6 +49,7 @@ public class Constants {
     public static final int TAG_PRESENCE_WEIGHT = 10;
     public static final Matrix<N3, N1> VISION_MEASUREMENT_STANDARD_DEVIATIONS = MatBuilder.fill(Nat.N3(), Nat.N1(),1,1,1 * Math.PI);
   }
+  
   public static class kSimulation {
     public static final PIDController pid = new PIDController(0.1, 0, 0);
     public static final ElevatorFeedforward ff = new ElevatorFeedforward(0.0001, 0.00001, 0.00001);
@@ -228,6 +229,6 @@ public class Constants {
             );
 
     
-}
+  }
 
 }

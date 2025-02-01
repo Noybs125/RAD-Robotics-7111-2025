@@ -57,7 +57,7 @@ public class CTREMotor implements Motor {
         
     
     public void setSetpoint(double setPoint){
-        double pidOutput = pid.calculate(encoder.getPositionAsDouble());
+        double pidOutput = pid.calculate(getPosition(), setPoint);
         double feedforwardOutput = feedforward.calculate(pid.getErrorDerivative());
         motor.setVoltage(pidOutput + feedforwardOutput); //Needs velocity for feedforward
         currentSetpoint = setPoint;
