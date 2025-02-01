@@ -59,7 +59,7 @@ public class CTREMotor implements Motor {
         
     
     public void setSetpoint(double setPoint){
-        motor.setVoltage(pid.calculate(getPosition(), setPoint) + feedforward.calculate(Velocity)); //Needs velocity for feedforward
+        motor.setVoltage(pid.calculate(getPosition(), setPoint) + feedforward.calculate(0)); //Needs velocity for feedforward
         currentSetpoint = setPoint;
     }
 

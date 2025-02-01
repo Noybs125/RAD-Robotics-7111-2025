@@ -53,7 +53,8 @@ public class BagMotor implements Motor{
     }        
     
     public void setSetpoint(double setPoint){
-        motor.setVoltage(VictorSPXControlMode.PercentOutput, pid.calculate(getPosition(), setPoint) + feedForward.calculate(Velocity)); //Needs velocity for feedforward
+        motor.set(VictorSPXControlMode.Velocity, pid.calculate(getPosition(), setPoint) + feedForward.calculate(0));
+        //motor.setVoltage(VictorSPXControlMode.PercentOutput, pid.calculate(getPosition(), setPoint) + feedForward.calculate(0)); //Needs velocity for feedforward
         this.setPoint = setPoint;
     }
     

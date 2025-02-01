@@ -57,7 +57,7 @@ public class REVMotor implements Motor {
     }  
     
     public void setSetpoint(double setPoint){
-        motor.setVoltage(pid.calculate(getPosition(), setPoint) + feedForward.calculate(Velocity)); //Needs velocity for feedforward
+        motor.setVoltage(pid.calculate(getPosition(), setPoint) + feedForward.calculate(0)); //Needs velocity for feedforward
         this.setPoint = setPoint;
     }
 
