@@ -19,9 +19,8 @@ public interface Motor {
     public void periodic();
     
     public void setPID(double p, double i, double d);
-    public double getP();
-    public double getI();
-    public double getD();
+    
+    public double getPID();
 
     public Encoder getEncoder();
 
