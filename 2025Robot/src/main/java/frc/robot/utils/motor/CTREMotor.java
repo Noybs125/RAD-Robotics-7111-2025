@@ -79,21 +79,6 @@ public class CTREMotor implements Motor {
 
     public Encoder getEncoder(){
         return encoder;
-    }    
-
-    public void setGearRatio(double gearRatio){
-        if (encoder != null)
-            encoder.setGearRatio(gearRatio);
-        else
-            this.gearRatio = gearRatio;
-            
-    }
-
-    public double getGearRatio(){
-        if (encoder != null)
-            return encoder.getGearRatio();
-        else    
-            return gearRatio;
     }
 
     public double getVoltage(){
