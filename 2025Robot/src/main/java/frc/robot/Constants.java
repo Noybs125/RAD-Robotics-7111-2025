@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
@@ -42,8 +43,8 @@ public class Constants {
   public static class vision {
     // TODO: change variable names on actual robot
     public static final Transform3d cameraToRobotCenter1 = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
-    public static final Transform3d cameraToRobotCenter2 = new Transform3d(12, 2, 0, new Rotation3d(0, 0.785, 0));
-    public static final Transform3d cameraToRobotCenter3 = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
+    public static final Transform3d cameraToRobotCenter2 = new Transform3d(12, 2, 0, new Rotation3d(0, 0.349, 0));
+    public static final Transform3d cameraToRobotCenter3 = new Transform3d(12, 1, 0, new Rotation3d(0, 0.349, -1.57));
 
     public static final double cameraHeight = Units.inchesToMeters(0);
 
@@ -143,8 +144,8 @@ public class Constants {
 
     /** Drive motor characterization. */
     public static final double DRIVE_KS = 0.11937;
-    public static final double DRIVE_KV = 2.6335;
-    public static final double DRIVE_KA = 0.46034;
+    public static final double DRIVE_KV = 2.3;
+    public static final double DRIVE_KA = 0.11;
 
     /** Angle motor PID values. */
     public static final double ANGLE_KP = 40;
@@ -157,8 +158,8 @@ public class Constants {
     public static final double MAX_ANGULAR_RADIANS_PER_SECOND = 4;
 
     /** Inversions. */
-    public static final boolean DRIVE_MOTOR_INVERSION = true;
-    public static final boolean ANGLE_MOTOR_INVERSION = true;
+    public static final InvertedValue DRIVE_MOTOR_INVERSION = InvertedValue.CounterClockwise_Positive;
+    public static final InvertedValue ANGLE_MOTOR_INVERSION = InvertedValue.CounterClockwise_Positive;
     public static final boolean CANCODER_INVERSION = false;
 
     /** Idle modes. */

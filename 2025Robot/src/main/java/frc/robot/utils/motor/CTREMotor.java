@@ -13,6 +13,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class CTREMotor implements Motor {
     private TalonFX motor;
+    private TalonFX motor2;
     PIDController pid = new PIDController(0, 0, 0);
     private TalonFXConfiguration config;
     private Encoder encoder = null;

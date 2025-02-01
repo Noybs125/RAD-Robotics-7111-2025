@@ -96,7 +96,7 @@ public class Camera extends PhotonCamera{
     public Matrix<N3, N1> getPoseAmbiguity(){
         double smallestDistance = Double.POSITIVE_INFINITY;
         double confidenceMultiplier = 0;
-        if(estRobotPose != null){
+        if(estRobotPose.targetsUsed != null){
             for (var target : estRobotPose.targetsUsed) {
                 var t3d = target.getBestCameraToTarget();
                 var distance = Math.sqrt(Math.pow(t3d.getX(), 2) + Math.pow(t3d.getY(), 2) + Math.pow(t3d.getZ(), 2));

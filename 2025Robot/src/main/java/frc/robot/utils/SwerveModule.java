@@ -8,6 +8,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -144,7 +145,9 @@ public class SwerveModule {
     driveMotorConfig.Slot0.kV = Constants.kSwerve.DRIVE_KV;
     driveMotorConfig.Slot0.kA = Constants.kSwerve.DRIVE_KA;
 
-    driveMotor.setInverted(driveMotorInversion);
+    driveMotorConfig.MotorOutput.Inverted = driveMotorInversion
+    ? InvertedValue.CounterClockwise_Positive 
+    : InvertedValue.Clockwise_Positive;
 
     driveMotorConfig.MotorOutput.NeutralMode = Constants.kSwerve.DRIVE_IDLE_MODE;
     
@@ -165,7 +168,10 @@ public class SwerveModule {
     angleMotorConfig.ClosedLoopGeneral.ContinuousWrap = true;
     //angleMotorConfig.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
   
-    angleMotor.setInverted(Constants.kSwerve.ANGLE_MOTOR_INVERSION);
+    /*angleMotorConfig.MotorOutput.Inverted = driveMotorInversion 
+    ? InvertedValue.CounterClockwise_Positive 
+    : InvertedValue.Clockwise_Positive;*/
+
     angleMotorConfig.MotorOutput.NeutralMode = Constants.kSwerve.ANGLE_IDLE_MODE;    
     
     
