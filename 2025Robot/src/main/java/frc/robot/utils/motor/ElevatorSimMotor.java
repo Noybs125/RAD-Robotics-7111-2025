@@ -76,7 +76,7 @@ public class ElevatorSimMotor implements Motor{
     }        
     
     public void setSetpoint(double setPoint){
-        var pos = pid.calculate(getPosition(), setPoint);
+        var pos = pid.calculate(getPosition(), setPoint) + feedForward.calculate(Velocity); //Needs velocity for feedforward
         motor.setInput(pos);
         this.setPoint = setPoint;
     }
