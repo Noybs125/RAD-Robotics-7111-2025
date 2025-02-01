@@ -45,10 +45,7 @@ public class ElevatorSimMotor implements Motor{
         this.feedForward = feedForward;
         //The line below may not be needed
         //encoder = new WpiEncoder(Constants.kSimulation.kEncoderAChannel, Constants.kSimulation.kEncoderBChannel);
-        this.motor = elevatorSim;
-        
-
-        
+        this.motor = elevatorSim;        
     }
 
     

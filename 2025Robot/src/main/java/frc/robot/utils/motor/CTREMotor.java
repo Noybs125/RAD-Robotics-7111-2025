@@ -19,8 +19,6 @@ public class CTREMotor implements Motor {
     private double gearRatio;
     private double currentSetpoint;
     private SimpleMotorFeedforward feedforward;
-
-    
     
     public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward){
         this.encoder = encoder;

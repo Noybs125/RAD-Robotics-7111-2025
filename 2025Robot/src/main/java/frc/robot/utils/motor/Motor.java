@@ -26,10 +26,6 @@ public interface Motor {
 
     public Encoder getEncoder();
 
-    public void setGearRatio(double gearRatio);
-
-    public double getGearRatio();
-
     public double getVoltage();
 
     public boolean isAtSetpoint(double deadzone);
