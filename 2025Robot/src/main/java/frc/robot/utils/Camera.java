@@ -87,7 +87,7 @@ public class Camera extends PhotonCamera{
     }
     public double getTime(){
         if(latestResult != null){
-        return photonPoseEstimator.update(latestResult).get().timestampSeconds;
+            return photonPoseEstimator.update(latestResult).get().timestampSeconds;
         }
         else{
             return Timer.getFPGATimestamp();

@@ -250,7 +250,7 @@ public class Swerve extends SubsystemBase {
       swerveOdometry.update(getYaw(), getPositions());
     for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
-        swerveOdometry.addVisionMeasurement(camera.getRobotPose(), camera.getTime(), camera.getPoseAmbiguity());
+        swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
       }
     }
     
