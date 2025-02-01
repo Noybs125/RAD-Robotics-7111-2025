@@ -102,6 +102,9 @@ public class ElevatorSimMotor implements Motor{
     public void setPID(double p, double i, double d){
         pid.setPID(p, i, d);
     }
+    public PIDController getPID(){
+        return pid;
+    }
 
     public double getP(){
         return pid.getP();
