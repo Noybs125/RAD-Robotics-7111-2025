@@ -63,21 +63,13 @@ public class BagMotor implements Motor{
             encoder.periodic();
         }
     }
-
+    
     public void setPID(double p, double i, double d){
         pid.setPID(p, i, d);
     }
 
-    public double getP(){
-        return pid.getP();
-    }
-
-    public double getI(){
-        return pid.getI();
-    }
-
-    public double getD(){
-        return pid.getD();
+    public PIDController getPID(){
+        return pid;
     }
 
     public Encoder getEncoder(){
