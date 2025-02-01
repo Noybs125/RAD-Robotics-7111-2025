@@ -128,7 +128,7 @@ public class Swerve extends SubsystemBase {
 
       // Get desired module states
       ChassisSpeeds chassisSpeeds = isFieldRelative.getAsBoolean()
-        ? ChassisSpeeds.fromFieldRelativeSpeeds(forwardBack, leftRight, rotation, getYaw())
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(forwardBack, leftRight, rotation, getYaw().unaryMinus())
         : new ChassisSpeeds(forwardBack, leftRight, rotation);
 
       SwerveModuleState[] states = Constants.kSwerve.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
@@ -266,7 +266,8 @@ public class Swerve extends SubsystemBase {
     for(SwerveModule mod : modules){
       SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderDegrees().getDegrees());
       SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-      SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+      SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+      SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle Position", mod.getAngle().getRadians());    
     }
     SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
     field.setRobotPose(getPose());

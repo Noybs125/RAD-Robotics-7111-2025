@@ -89,7 +89,6 @@ public class SwerveModule {
 
     angleMotor.setControl(anglePosition.withPosition(state.angle.getRotations()));
 
-    SmartDashboard.putNumber("Angle Pos", angleMotor.getPosition().getValueAsDouble());
   }
 
   public SwerveModuleState getState() {
@@ -165,7 +164,7 @@ public class SwerveModule {
     angleMotorConfig.ClosedLoopGeneral.ContinuousWrap = true;
     //angleMotorConfig.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
   
-    angleMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    angleMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     angleMotorConfig.MotorOutput.NeutralMode = Constants.kSwerve.ANGLE_IDLE_MODE;    
     
@@ -178,6 +177,6 @@ public class SwerveModule {
 
     angleMotor.getConfigurator().apply(angleMotorConfig);
     
-    angleMotor.setPosition((-canCoder.getAbsolutePosition().getValueAsDouble() + canCoderOffsetRotations)); // added ".getValue..."
+    angleMotor.setPosition((-canCoder.getAbsolutePosition().getValueAsDouble() + canCoderOffsetRotations)); // added ".getValue..." 
   }
 }
