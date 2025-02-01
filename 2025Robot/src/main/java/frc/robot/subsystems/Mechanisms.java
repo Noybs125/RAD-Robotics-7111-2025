@@ -10,7 +10,7 @@ import frc.robot.utils.motor.Motor;
 
 public class Mechanisms extends SubsystemBase {
 
-    private Motor elevator, elevator2;
+    private Motor elevator;
     private Motor wrist;
     private double elevatorSetpoint = 0;
     private double wristSetpoint = 0;
@@ -33,9 +33,9 @@ public class Mechanisms extends SubsystemBase {
         Climb,
     };
 
-    public Mechanisms(Motor elevator, Motor elevator2, Motor wrist){
+    public Mechanisms(Motor elevator, Motor wrist){
         this.elevator = elevator;
-        this.elevator2 = elevator2;
+
         this.wrist = wrist;
     }
     
@@ -51,7 +51,6 @@ public class Mechanisms extends SubsystemBase {
 
     public void setElevatorSpeed(double speed) {
         elevator.setSpeed(speed);
-        elevator2.setSpeed(speed); 
         isManual = true;
     }
 
@@ -155,12 +154,10 @@ public class Mechanisms extends SubsystemBase {
         }
         else {
             elevator.setSetpoint(elevatorSetpoint);
-            elevator2.setSetpoint(elevatorSetpoint);
             wrist.setSetpoint(wristSetpoint);
         }
 
         elevator.periodic();
-        elevator2.periodic();
         wrist.periodic();
         
         handleState();
