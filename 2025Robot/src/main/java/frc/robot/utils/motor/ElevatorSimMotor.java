@@ -36,14 +36,7 @@ public class ElevatorSimMotor implements Motor{
     private double gearRatio;
     private double setPoint;
     private SimpleMotorFeedforward feedForward;
-    private double kElevatorMinimumLength = 0;
-    final Mechanism2d mech2d = new Mechanism2d(20, 50);
-    final MechanismRoot2d mech2dRoot = mech2d.getRoot("Elevator Root", 10, 0);
-    final MechanismLigament2d elevatorMech2d;
-    
-   // MechanismRoot2d root = mech2d.getRoot("climber", 2, 0); 
-   // goofyMotor = root.append(new MechanismLigament2d("elevator", kElevatorMinimumLength, 90));
-   // SmartDashboard.putData("Mech2d", mech2d);
+
 
     public ElevatorSimMotor(Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, ElevatorSim elevatorSim){
         this.encoder = encoder;
@@ -53,10 +46,9 @@ public class ElevatorSimMotor implements Motor{
         //The line below may not be needed
         //encoder = new WpiEncoder(Constants.kSimulation.kEncoderAChannel, Constants.kSimulation.kEncoderBChannel);
         this.motor = elevatorSim;
-        elevatorMech2d = mech2dRoot.append(
-            new MechanismLigament2d("Elevator", motor.getPositionMeters(), 90));
+        
 
-        SmartDashboard.putData("Elevator Sim", mech2d);
+        
     }
 
     
@@ -104,7 +96,7 @@ public class ElevatorSimMotor implements Motor{
         RoboRioSim.setVInVoltage(
             BatterySim.calculateDefaultBatteryLoadedVoltage(motor.getCurrentDrawAmps()));
 
-        elevatorMech2d.setLength(encoder.getPosition().getRotations());
+        
     }
 
     public void setPID(double p, double i, double d){
