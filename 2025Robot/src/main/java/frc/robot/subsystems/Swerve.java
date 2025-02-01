@@ -19,6 +19,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.Camera;
@@ -228,6 +229,10 @@ public class Swerve extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose) { // not currently used, using addVisionMeasurements in periodic instead.
       swerveOdometry.resetPose(pose);
+  }
+
+  public Command resetOdometryCommand() {
+    return new InstantCommand(() -> resetOdometry(new Pose2d(0, 0, getYaw())));
   }
 
   public ChassisSpeeds getRelSpeedsNonSuplier() {

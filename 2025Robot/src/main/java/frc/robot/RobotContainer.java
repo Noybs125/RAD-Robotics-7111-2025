@@ -111,6 +111,7 @@ public class RobotContainer {
       //elevatorMech2d.setLength(kElevatorMinimumLength + encoder.getPositionAsDouble());
 
     commXbox.y().onTrue(swerve.zeroGyroCommand());
+    commXbox.a().onTrue(swerve.resetOdometryCommand());
     //commXbox.a().onTrue(new InstantCommand(() -> ElevatorSimMotor.mech2d.setElevatorSetpoint(10))).onFalse(new InstantCommand(() -> mech.setElevatorSetpoint(0)));
     }
   }
