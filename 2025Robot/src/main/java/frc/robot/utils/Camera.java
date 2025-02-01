@@ -106,13 +106,13 @@ public class Camera extends PhotonCamera{
             }
             double poseAmbiguityFactor = estRobotPose.targetsUsed.size() != 1
                 ? 1
-                : Math.max(1, estRobotPose.targetsUsed.get(0).getPoseAmbiguity() + Constants.vision.POSE_AMBIGUITY_SHIFTER * Constants.vision.POSE_AMBIGUITY_MULTIPLIER);
+                : Math.max(1, estRobotPose.targetsUsed.get(0).getPoseAmbiguity() + Constants.kVision.POSE_AMBIGUITY_SHIFTER * Constants.kVision.POSE_AMBIGUITY_MULTIPLIER);
             confidenceMultiplier = Math.max(1,
-                (Math.max(1, Math.max(0, smallestDistance - Constants.vision.NOISY_DISTANCE_METERS) * Constants.vision.DISTANCE_WEIGHT) * poseAmbiguityFactor) 
-                / (1 + ((estRobotPose.targetsUsed.size() - 1) * Constants.vision.TAG_PRESENCE_WEIGHT)));
+                (Math.max(1, Math.max(0, smallestDistance - Constants.kVision.NOISY_DISTANCE_METERS) * Constants.kVision.DISTANCE_WEIGHT) * poseAmbiguityFactor) 
+                / (1 + ((estRobotPose.targetsUsed.size() - 1) * Constants.kVision.TAG_PRESENCE_WEIGHT)));
         }
         SmartDashboard.putNumber(super.getName(), confidenceMultiplier);
-        return Constants.vision.VISION_MEASUREMENT_STANDARD_DEVIATIONS.times(confidenceMultiplier);
+        return Constants.kVision.VISION_MEASUREMENT_STANDARD_DEVIATIONS.times(confidenceMultiplier);
     }
 
     public Transform3d getCameraToRobot(){

@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import frc.robot.Constants;
@@ -26,19 +25,19 @@ public class Vision extends SubsystemBase{
     // TODO: change variable names on actual robot
     public final Camera limelight = new Camera(
         new PhotonCamera("photonvision"), 
-        Constants.vision.cameraToRobotCenter1, 
+        Constants.kVision.cameraToRobotCenter1, 
         new EstimatedRobotPose(estPose3d, 0.0, null, PoseStrategy.AVERAGE_BEST_TARGETS), 
         this
         );
     public final Camera orangepi1 = new Camera(
         new PhotonCamera("OV9281_1"), 
-        Constants.vision.cameraToRobotCenter2, 
+        Constants.kVision.cameraToRobotCenter2, 
         new EstimatedRobotPose(estPose3d, 0.0, null, PoseStrategy.AVERAGE_BEST_TARGETS), 
         this
         );
     public final Camera orangepi2 = new Camera(
         new PhotonCamera("OV9281_3"), 
-        Constants.vision.cameraToRobotCenter3, 
+        Constants.kVision.cameraToRobotCenter3, 
         new EstimatedRobotPose(estPose3d, 0.0, null, PoseStrategy.AVERAGE_BEST_TARGETS), 
         this
         );

@@ -30,7 +30,6 @@ public class REVMotor implements Motor {
         motor = new SparkMax(id, MotorType.kBrushless);
     }
 
-    
 
     public void setSpeed(double speed){
         motor.set(speed);
@@ -70,6 +69,7 @@ public class REVMotor implements Motor {
     public void setPID(double p, double i, double d){
         pid.setPID(p, i, d);
     }
+
     public PIDController getPID(){
         return pid;
     }
@@ -80,7 +80,7 @@ public class REVMotor implements Motor {
 
     public double getVoltage(){
         return motor.getBusVoltage();
-    };
+    }
 
     public boolean isAtSetpoint(double deadzone){
         if (getPosition() >= setPoint - deadzone && getPosition() <= setPoint + deadzone)
