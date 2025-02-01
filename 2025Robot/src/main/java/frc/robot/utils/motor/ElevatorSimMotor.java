@@ -106,18 +106,6 @@ public class ElevatorSimMotor implements Motor{
         return pid;
     }
 
-    public double getP(){
-        return pid.getP();
-    }
-
-    public double getI(){
-        return pid.getI();
-    }
-
-    public double getD(){
-        return pid.getD();
-    }
-
     public Encoder getEncoder(){
         return encoder;
     }
