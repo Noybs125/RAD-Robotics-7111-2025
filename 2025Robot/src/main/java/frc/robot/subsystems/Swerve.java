@@ -38,11 +38,13 @@ public class Swerve extends SubsystemBase {
 
   private SwerveDriveOdometry odometry2;
   private Field2d field = new Field2d();
+  private Field2d fieldcam = new Field2d();
   public RobotConfig config;
 
   private final AHRS gyro;
   private final Vision vision;
   private ComplexWidget fieldPublisher;
+  private ComplexWidget field2Publisher;
 
   public SwerveState state;
   private double translateX;
@@ -55,6 +57,7 @@ public class Swerve extends SubsystemBase {
     this.gyro = gyro;
     this.vision = vision;
     fieldPublisher = Shuffleboard.getTab("Odometry").add("field odometry", field).withWidget("Field");
+    field2Publisher = Shuffleboard.getTab("Odometry").add("field odometry", field).withWidget("Field");
     zeroGyro();
     
 
@@ -264,6 +267,11 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("PoseEst Y", swerveOdometry.getEstimatedPosition().getY());
 
     field.setRobotPose(getPose());
+    for(Camera camera : vision.cameraList){
+      if(camera.updatePose()){
+        fieldcam.setRobotPose(camera.getRobotPose());
+      }
+    }
   }
 
   @Override
