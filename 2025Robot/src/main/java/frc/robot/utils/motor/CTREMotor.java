@@ -75,16 +75,8 @@ public class CTREMotor implements Motor {
         pid.setPID(p, i, d);
     }
 
-    public double getP(){
-        return pid.getP();
-    }
-
-    public double getI(){
-        return pid.getI();
-    }
-
-    public double getD(){
-        return pid.getD();
+    public PIDController getPID() {
+        return pid;
     }
 
     public Encoder getEncoder(){
