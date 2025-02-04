@@ -138,9 +138,12 @@ public class Swerve extends SubsystemBase {
   }
 
   public enum SwerveState{
-    state1,
-    state2,
-    state3,
+    DefaultState,
+    Intaking,
+    Scoring,
+    RobotRelative,
+    VisionGyro,
+    Vision
   }
 
   public double getTransX(){
@@ -159,28 +162,46 @@ public class Swerve extends SubsystemBase {
   private void handleStates()
   {
     switch (state) {
-      case state1:
+      case DefaultState:
         translateX = 0;
         translateY = 0;
         rotationZ = 0;
         isFieldRelative = true;
         break;
 
-      case state2:
+      case Intaking:
         translateX = 0;
         translateY = 0;
         rotationZ = 0;
         isFieldRelative = true;
         break;
 
-      case state3:
+      case Scoring:
         translateX = 0;
         translateY = 0;
         rotationZ = 0;
         isFieldRelative = true;
         break;
 
-      default:
+      case RobotRelative:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        isFieldRelative = true;
+        break;
+
+      case VisionGyro:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        isFieldRelative = true;
+        break;
+
+      case Vision:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        isFieldRelative = true;
         break;
     }
   }
