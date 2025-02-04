@@ -52,7 +52,7 @@ public class Constants {
   
   public static class kSimulation {
     public static final PIDController pid = new PIDController(0.1, 0, 0);
-    public static final ElevatorFeedforward ff = new ElevatorFeedforward(0.0001, 0.00001, 0.00001);
+    public static final ElevatorFeedforward ff = new ElevatorFeedforward(0.0001, 0.00001, 0.00001, 0.000001);
 
     public static final double elevatorSimGearRatio = 1;    
 

@@ -53,7 +53,9 @@ public class ElevatorSimMotor implements Motor{
     
     public void setSetpoint(double setPoint){
         double pidOutput = pid.calculate(encoder.getPositionAsDouble(), setPoint);
-        double feedforwardOutput = feedForward.calculate(pid.getErrorDerivative());
+        double feedforwardOutput = feedForward != null 
+            ? feedForward.calculate(pid.getErrorDerivative())
+            : 0;
 
         outputVoltage = pidOutput + feedforwardOutput;
 

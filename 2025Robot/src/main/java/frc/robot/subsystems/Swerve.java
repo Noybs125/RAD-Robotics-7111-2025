@@ -70,7 +70,7 @@ public class Swerve extends SubsystemBase {
       new SwerveModule(2, Constants.kSwerve.MOD_2_Constants),
       new SwerveModule(3, Constants.kSwerve.MOD_3_Constants),
     };
-    odometry2 = new SwerveDriveOdometry(Constants.kSwerve.KINEMATICS, getYaw(), getPositions());
+    odometry2 = new SwerveDriveOdometry(Constants.kSwerve.KINEMATICS, getYaw().unaryMinus(), getPositions());
     swerveOdometry = new SwerveDrivePoseEstimator(Constants.kSwerve.KINEMATICS, getYaw(), getPositions(),vision.robotPose);
 
     /*try{
@@ -229,7 +229,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return swerveOdometry.getEstimatedPosition();
+    return new Pose2d(swerveOdometry.getEstimatedPosition().getX(), -swerveOdometry.getEstimatedPosition().getY(), swerveOdometry.getEstimatedPosition().getRotation());
   }
 
   public void resetOdometry(Pose2d pose) { // not currently used, using addVisionMeasurements in periodic instead.
@@ -254,7 +254,7 @@ public class Swerve extends SubsystemBase {
   
   @Override 
   public void periodic() {
-      odometry2.update(getYaw(), getPositions());
+      odometry2.update(getYaw().unaryMinus(), getPositions());
       swerveOdometry.update(getYaw(), getPositions());
     for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
@@ -270,8 +270,10 @@ public class Swerve extends SubsystemBase {
       SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle Position", mod.getAngle().getRadians());    
     }
     SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
+    SmartDashboard.putNumber("Pose X", getPose().getX());
+    SmartDashboard.putNumber("Pose Y", getPose().getY());
     field.setRobotPose(getPose());
-    fieldWheel.setRobotPose(odometry2.getPoseMeters());
+    fieldWheel.setRobotPose(new Pose2d(odometry2.getPoseMeters().getX(), -odometry2.getPoseMeters().getY(), getYaw()));
     
   }
 
