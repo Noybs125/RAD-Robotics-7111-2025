@@ -219,6 +219,9 @@ public class Swerve extends SubsystemBase {
   public Rotation2d getYaw() {
     return Rotation2d.fromDegrees(-gyro.getYaw());
   }
+  public Rotation2d getAngle() {
+    return Rotation2d.fromDegrees(gyro.getAngle());
+  }
 
   public Command zeroGyroCommand() {
     return runOnce(this::zeroGyro).withName("ZeroGyroCommand");
@@ -255,7 +258,7 @@ public class Swerve extends SubsystemBase {
   @Override 
   public void periodic() {
       odometry2.update(getYaw().unaryMinus(), getPositions());
-      swerveOdometry.update(getYaw(), getPositions());
+      swerveOdometry.update(getAngle(), getPositions());
     for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
         swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
