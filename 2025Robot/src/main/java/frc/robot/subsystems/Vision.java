@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import frc.robot.Constants;
@@ -113,5 +114,34 @@ public class Vision extends SubsystemBase{
             camera.periodic();
         }
         handleState();
+    }
+
+    public boolean canSeeTarget(int id, Camera camera){
+        for(int i = 0; i <= camera.getAllUnreadResults().get(0).getTargets().size(); i++){
+            if(camera.getAllUnreadResults().get(0).getTargets().get(i).getFiducialId() == id){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public double rotateToTarget(int id, Camera camera, double speed){
+        for(int i = 0; i <= camera.getAllUnreadResults().get(0).getTargets().size(); i++){
+            if(canSeeTarget(id, camera)){
+                return 0;
+            } 
+        }
+        return speed;
+    }
+
+    public Transform2d getAlignmentToTarget(int id, Camera camera){
+        for(int i = 0; i <= camera.getAllUnreadResults().get(0).getTargets().size(); i++){
+            if(canSeeTarget(id, camera)){
+                Transform3d cameraToTarget = camera.getAllUnreadResults().get(0).getTargets().get(i).getBestCameraToTarget();
+
+                return new Transform2d(cameraToTarget.getX(), cameraToTarget.getY(), cameraToTarget.getRotation().toRotation2d());
+            }
+        }
+        return null;
     }
 }
