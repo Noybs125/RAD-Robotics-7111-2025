@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -43,6 +44,9 @@ public class Swerve extends SubsystemBase {
   private Field2d fieldcam = new Field2d();
   private Field2d fieldWheel = new Field2d();
   public RobotConfig config;
+
+  private PIDController visionPID = new PIDController(0.1, 0,0);
+  private PIDController gyroPID;
 
   private final AHRS gyro;
   private final Vision vision;
@@ -80,7 +84,6 @@ public class Swerve extends SubsystemBase {
       
       e.printStackTrace();
     }*/
-    
     
     AutoBuilder.configure(
             this::getPose, // Robot pose supplier
@@ -139,9 +142,12 @@ public class Swerve extends SubsystemBase {
   }
 
   public enum SwerveState{
-    state1,
-    state2,
-    state3,
+    DefaultState,
+    Intaking,
+    Scoring,
+    RobotRelative,
+    VisionGyro,
+    Vision
   }
 
   public double getTransX(){
@@ -160,28 +166,46 @@ public class Swerve extends SubsystemBase {
   private void handleStates()
   {
     switch (state) {
-      case state1:
+      case DefaultState:
         translateX = 0;
         translateY = 0;
         rotationZ = 0;
         isFieldRelative = true;
         break;
 
-      case state2:
+      case Intaking:
         translateX = 0;
         translateY = 0;
         rotationZ = 0;
         isFieldRelative = true;
         break;
 
-      case state3:
+      case Scoring:
         translateX = 0;
         translateY = 0;
         rotationZ = 0;
         isFieldRelative = true;
         break;
 
-      default:
+      case RobotRelative:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        isFieldRelative = true;
+        break;
+
+      case VisionGyro:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        isFieldRelative = true;
+        break;
+
+      case Vision:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        isFieldRelative = true;
         break;
     }
   }
