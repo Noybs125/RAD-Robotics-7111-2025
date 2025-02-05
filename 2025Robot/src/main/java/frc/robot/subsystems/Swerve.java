@@ -263,11 +263,13 @@ public class Swerve extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return swerveOdometry.getEstimatedPosition();
+    var swervePose = swerveOdometry.getEstimatedPosition();
+    return new Pose2d(swervePose.getX(), swervePose.getY(), swervePose.getRotation());
   }
 
   public void resetOdometry(Pose2d pose) { // not currently used, using addVisionMeasurements in periodic instead.
-      swerveOdometry.resetPose(pose);
+      swerveOdometry.resetPose(new Pose2d(pose.getX(),pose.getY(), pose.getRotation()));
+      odometry2.resetPose(pose);
   }
 
   public Command resetOdometryCommand() {
@@ -281,6 +283,8 @@ public class Swerve extends SubsystemBase {
 
   public void driveRobotRelative(ChassisSpeeds speeds){
     speeds = ChassisSpeeds.discretize(speeds, 0.02);
+    speeds.omegaRadiansPerSecond *= -1;
+    speeds.vyMetersPerSecond *= -1;
     SwerveModuleState[] states = Constants.kSwerve.KINEMATICS.toSwerveModuleStates(speeds);
     setModuleStates(states);
 
@@ -306,7 +310,7 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
     SmartDashboard.putNumber("Pose X", getPose().getX());
     SmartDashboard.putNumber("Pose Y", getPose().getY());
-    field.setRobotPose(getPose());
+    field.setRobotPose(swerveOdometry.getEstimatedPosition());
     fieldWheel.setRobotPose(new Pose2d(odometry2.getPoseMeters().getX(), -odometry2.getPoseMeters().getY(), getYaw()));
     
   }
