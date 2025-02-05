@@ -98,6 +98,11 @@ public class SwerveModule {
     Rotation2d rot = Rotation2d.fromRotations(angleMotor.getPosition().getValueAsDouble());
     return new SwerveModulePosition(distance, rot);
   }
+  public SwerveModulePosition getInvertedPosition() {
+    double distance = driveMotor.getPosition().getValueAsDouble() * Constants.kSwerve.WHEEL_CIRCUMFERENCE;
+    Rotation2d rot = Rotation2d.fromRotations(angleMotor.getPosition().getValueAsDouble());
+    return new SwerveModulePosition(distance, rot.unaryMinus());
+  }
 
   public Rotation2d getCanCoderDegrees(){
     return Rotation2d.fromDegrees(canCoder.getAbsolutePosition().getValueAsDouble() * 360);

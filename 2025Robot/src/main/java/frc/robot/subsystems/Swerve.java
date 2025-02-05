@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.security.PublicKey;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -120,7 +121,7 @@ public class Swerve extends SubsystemBase {
       forwardBack = Math.abs(forwardBack) < Constants.kControls.AXIS_DEADZONE ? 0 : forwardBack;
       leftRight = Math.abs(leftRight) < Constants.kControls.AXIS_DEADZONE ? 0 : leftRight;
       rotation = Math.abs(rotation) < Constants.kControls.AXIS_DEADZONE ? 0 : rotation;
-
+      
       // Converting to m/s
       forwardBack *= Constants.kSwerve.MAX_VELOCITY_METERS_PER_SECOND;
       leftRight *= Constants.kSwerve.MAX_VELOCITY_METERS_PER_SECOND;
@@ -212,7 +213,13 @@ public class Swerve extends SubsystemBase {
     for (int i = 0; i < modules.length; i++) {
       currentStates[i] = modules[i].getPosition();
     }
-
+    return currentStates;
+  }
+  public SwerveModulePosition[] getInvertedPositions() {
+    SwerveModulePosition currentStates[] = new SwerveModulePosition[modules.length];
+    for (int i = 0; i < modules.length; i++) {
+      currentStates[i] = modules[i].getInvertedPosition();
+    }
     return currentStates;
   }
 
@@ -220,7 +227,7 @@ public class Swerve extends SubsystemBase {
     return Rotation2d.fromDegrees(-gyro.getYaw());
   }
   public Rotation2d getAngle() {
-    return Rotation2d.fromDegrees(gyro.getAngle());
+    return Rotation2d.fromDegrees(-gyro.getAngle());
   }
 
   public Command zeroGyroCommand() {
@@ -232,7 +239,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return new Pose2d(swerveOdometry.getEstimatedPosition().getX(), -swerveOdometry.getEstimatedPosition().getY(), swerveOdometry.getEstimatedPosition().getRotation());
+    return swerveOdometry.getEstimatedPosition();
   }
 
   public void resetOdometry(Pose2d pose) { // not currently used, using addVisionMeasurements in periodic instead.
@@ -258,7 +265,7 @@ public class Swerve extends SubsystemBase {
   @Override 
   public void periodic() {
       odometry2.update(getYaw().unaryMinus(), getPositions());
-      swerveOdometry.update(getAngle(), getPositions());
+      swerveOdometry.update(getAngle(), getInvertedPositions());
     for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
         swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
