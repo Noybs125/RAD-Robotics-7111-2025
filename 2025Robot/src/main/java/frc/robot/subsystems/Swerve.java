@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -42,6 +43,9 @@ public class Swerve extends SubsystemBase {
   private Field2d fieldcam = new Field2d();
   private Field2d fieldWheel = new Field2d();
   public RobotConfig config;
+
+  private PIDController visionPID = new PIDController(0.1, 0,0);
+  private PIDController gyroPID;
 
   private final AHRS gyro;
   private final Vision vision;
@@ -79,7 +83,6 @@ public class Swerve extends SubsystemBase {
       
       e.printStackTrace();
     }*/
-    
     
     AutoBuilder.configure(
             this::getPose, // Robot pose supplier
