@@ -142,7 +142,7 @@ public class Constants {
     public static final double ANGLE_KP = 40;
     public static final double ANGLE_KI = 5;
     public static final double ANGLE_KD = 0;
-    public static final double ANGLE_KF = 0.0;
+    public static final double ANGLE_KF = 0;
   
     /** Swerve constraints. */
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 2;
@@ -224,8 +224,8 @@ public class Constants {
     public static final RobotConfig config = new RobotConfig(massKgs, MOI, moduleConfig, moduleLocations);
 
     public static final PPHolonomicDriveController cont = new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(3, 0.0, 0.1), // Translation PID constants
-                    new PIDConstants(3, 0.0, 0.1) // Rotation PID constants
+                    new PIDConstants(3, 0.03, 0.01), // Translation PID constants
+                    new PIDConstants(3, 0.03, 0.01) // Rotation PID constants
             );
 
     
