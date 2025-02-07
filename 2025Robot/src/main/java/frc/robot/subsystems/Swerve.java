@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.security.PublicKey;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -14,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -42,6 +44,9 @@ public class Swerve extends SubsystemBase {
   private Field2d fieldcam = new Field2d();
   private Field2d fieldWheel = new Field2d();
   public RobotConfig config;
+
+  private PIDController visionPID = new PIDController(0.1, 0,0);
+  private PIDController gyroPID;
 
   private final AHRS gyro;
   private final Vision vision;
@@ -79,7 +84,6 @@ public class Swerve extends SubsystemBase {
       
       e.printStackTrace();
     }*/
-    
     
     AutoBuilder.configure(
             this::getPose, // Robot pose supplier
@@ -120,7 +124,7 @@ public class Swerve extends SubsystemBase {
       forwardBack = Math.abs(forwardBack) < Constants.kControls.AXIS_DEADZONE ? 0 : forwardBack;
       leftRight = Math.abs(leftRight) < Constants.kControls.AXIS_DEADZONE ? 0 : leftRight;
       rotation = Math.abs(rotation) < Constants.kControls.AXIS_DEADZONE ? 0 : rotation;
-
+      
       // Converting to m/s
       forwardBack *= Constants.kSwerve.MAX_VELOCITY_METERS_PER_SECOND;
       leftRight *= Constants.kSwerve.MAX_VELOCITY_METERS_PER_SECOND;
@@ -138,9 +142,12 @@ public class Swerve extends SubsystemBase {
   }
 
   public enum SwerveState{
-    state1,
-    state2,
-    state3,
+    DefaultState,
+    Intaking,
+    Scoring,
+    RobotRelative,
+    VisionGyro,
+    Vision
   }
 
   public double getTransX(){
@@ -159,28 +166,46 @@ public class Swerve extends SubsystemBase {
   private void handleStates()
   {
     switch (state) {
-      case state1:
+      case DefaultState:
         translateX = 0;
         translateY = 0;
         rotationZ = 0;
         isFieldRelative = true;
         break;
 
-      case state2:
+      case Intaking:
         translateX = 0;
         translateY = 0;
         rotationZ = 0;
         isFieldRelative = true;
         break;
 
-      case state3:
+      case Scoring:
         translateX = 0;
         translateY = 0;
         rotationZ = 0;
         isFieldRelative = true;
         break;
 
-      default:
+      case RobotRelative:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        isFieldRelative = true;
+        break;
+
+      case VisionGyro:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        isFieldRelative = true;
+        break;
+
+      case Vision:
+        translateX = 0;
+        translateY = 0;
+        rotationZ = 0;
+        isFieldRelative = true;
         break;
     }
   }
@@ -212,7 +237,13 @@ public class Swerve extends SubsystemBase {
     for (int i = 0; i < modules.length; i++) {
       currentStates[i] = modules[i].getPosition();
     }
-
+    return currentStates;
+  }
+  public SwerveModulePosition[] getInvertedPositions() {
+    SwerveModulePosition currentStates[] = new SwerveModulePosition[modules.length];
+    for (int i = 0; i < modules.length; i++) {
+      currentStates[i] = modules[i].getInvertedPosition();
+    }
     return currentStates;
   }
 
@@ -220,7 +251,7 @@ public class Swerve extends SubsystemBase {
     return Rotation2d.fromDegrees(-gyro.getYaw());
   }
   public Rotation2d getAngle() {
-    return Rotation2d.fromDegrees(gyro.getAngle());
+    return Rotation2d.fromDegrees(-gyro.getAngle());
   }
 
   public Command zeroGyroCommand() {
@@ -232,11 +263,13 @@ public class Swerve extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return new Pose2d(swerveOdometry.getEstimatedPosition().getX(), -swerveOdometry.getEstimatedPosition().getY(), swerveOdometry.getEstimatedPosition().getRotation());
+    var swervePose = swerveOdometry.getEstimatedPosition();
+    return new Pose2d(swervePose.getX(), swervePose.getY(), swervePose.getRotation());
   }
 
   public void resetOdometry(Pose2d pose) { // not currently used, using addVisionMeasurements in periodic instead.
-      swerveOdometry.resetPose(pose);
+      swerveOdometry.resetPose(new Pose2d(pose.getX(),pose.getY(), pose.getRotation()));
+      odometry2.resetPose(pose);
   }
 
   public Command resetOdometryCommand() {
@@ -250,6 +283,8 @@ public class Swerve extends SubsystemBase {
 
   public void driveRobotRelative(ChassisSpeeds speeds){
     speeds = ChassisSpeeds.discretize(speeds, 0.02);
+    speeds.omegaRadiansPerSecond *= -1;
+    speeds.vyMetersPerSecond *= -1;
     SwerveModuleState[] states = Constants.kSwerve.KINEMATICS.toSwerveModuleStates(speeds);
     setModuleStates(states);
 
@@ -258,7 +293,7 @@ public class Swerve extends SubsystemBase {
   @Override 
   public void periodic() {
       odometry2.update(getYaw().unaryMinus(), getPositions());
-      swerveOdometry.update(getAngle(), getPositions());
+      swerveOdometry.update(getAngle(), getInvertedPositions());
     for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
         swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
@@ -275,7 +310,7 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
     SmartDashboard.putNumber("Pose X", getPose().getX());
     SmartDashboard.putNumber("Pose Y", getPose().getY());
-    field.setRobotPose(getPose());
+    field.setRobotPose(swerveOdometry.getEstimatedPosition());
     fieldWheel.setRobotPose(new Pose2d(odometry2.getPoseMeters().getX(), -odometry2.getPoseMeters().getY(), getYaw()));
     
   }
