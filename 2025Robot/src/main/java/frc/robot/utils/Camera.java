@@ -111,7 +111,7 @@ public class Camera extends PhotonCamera{
                 (Math.max(1, Math.max(0, smallestDistance - Constants.kVision.NOISY_DISTANCE_METERS) * Constants.kVision.DISTANCE_WEIGHT) * poseAmbiguityFactor) 
                 / (1 + ((estRobotPose.targetsUsed.size() - 1) * Constants.kVision.TAG_PRESENCE_WEIGHT)));
         }
-        SmartDashboard.putNumber(super.getName(), confidenceMultiplier);
+        SmartDashboard.putNumber(super.getName() + " CONFIDENCE OF TAG", confidenceMultiplier);
         return Constants.kVision.VISION_MEASUREMENT_STANDARD_DEVIATIONS.times(confidenceMultiplier);
     }
 
