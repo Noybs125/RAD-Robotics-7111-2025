@@ -10,8 +10,8 @@ public class SuperStructure extends SubsystemBase {
     private Vision vision;
     private Mechanisms mechanisms;
     private Flywheels flywheels; 
-    private ActualState ActualRobotState;
-    private ControlState ControlRobotState;
+    private ActualState actualRobotState;
+    private ControlState controlRobotState;
 
     public enum ControlState {
         ReafL1Processor,
@@ -23,19 +23,33 @@ public class SuperStructure extends SubsystemBase {
         Default,
     }
 
+    public enum ActualState {
+        coralL1,
+        coralL2,
+        coralL3,
+        coralL4,
+        coralFeeder,
+        algaeProcessor,
+        algaeNet,
+        algaeL2,
+        algaeL3,
+        deepClimb,
+        DefaultState,
+    }
+
     public SuperStructure(Swerve swerve, Vision vision, Sensors sensors, Mechanisms mechanisms, Flywheels flywheels){
         this.swerve = swerve;
         this.vision = vision;
         this.mechanisms = mechanisms;
         this.flywheels = flywheels;
 
-        ControlRobotState = ControlState.Default;
-        ActualRobotState = ActualState.DefaultState;
+        controlRobotState = ControlState.Default;
+        actualRobotState = ActualState.DefaultState;
     }
 
 
     public void periodic() {
-        switch (ControlRobotState) {   
+        switch (controlRobotState) {   
             case ReafL1Processor:
                 //checks for whether it should align for reaf or processor
                 break;
@@ -61,23 +75,9 @@ public class SuperStructure extends SubsystemBase {
         }
     }
 
-    public enum ActualState {
-        coralL1,
-        coralL2,
-        coralL3,
-        coralL4,
-        coralFeeder,
-        algaeProcessor,
-        algaeNet,
-        algaeL2,
-        algaeL3,
-        deepClimb,
-        DefaultState,
-    }
-
-    private void ActualState()
+    private void actualState()
     {
-        switch(ActualRobotState)
+        switch(actualRobotState)
         {
             case coralL1:
                 break;
@@ -104,8 +104,8 @@ public class SuperStructure extends SubsystemBase {
         }
     }
 
-    private void setRobotState(RobotState state){
-        ControlState = state;
+    private void setRobotState(ControlState state){
+        controlRobotState = state;
     }
 
     public Command setRobotStateCommand(RobotState state){
