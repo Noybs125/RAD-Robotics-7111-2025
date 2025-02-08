@@ -52,7 +52,7 @@ public class ElevatorSimMotor implements Motor{
     }        
     
     public void setSetpoint(double setPoint){
-        double pidOutput = pid.calculate(encoder.getPositionAsDouble(), setPoint);
+        double pidOutput = pid.calculate(getPosition(), setPoint);
         double feedforwardOutput = feedForward != null 
             ? feedForward.calculate(pid.getErrorDerivative())
             : 0;
@@ -69,7 +69,7 @@ public class ElevatorSimMotor implements Motor{
             encoder.setPosition(Rotation2d.fromDegrees(positionMeters));
         }
         motor.update(0.020);
-        motor.setState(positionMeters, velocityMPS);
+        //motor.setState(positionMeters, velocityMPS);
 
         RoboRioSim.setVInVoltage(
             BatterySim.calculateDefaultBatteryLoadedVoltage(motor.getCurrentDrawAmps()));

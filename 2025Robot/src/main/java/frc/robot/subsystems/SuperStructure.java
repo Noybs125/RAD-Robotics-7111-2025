@@ -55,12 +55,15 @@ public class SuperStructure extends SubsystemBase {
         switch (controlRobotState) {   
             case ReafL1Processor:
                 //checks for whether it should align for reaf or processor
+                actualRobotState = ActualState.coralL1;
                 break;
             case ReafL2:
                 //checks for whether it should score coral or intake algae
+                actualRobotState = ActualState.coralL2;
                 break;
             case ReafL3:
                 //checks for whether it should score coral or intake algae
+                actualRobotState = ActualState.coralL3;
                 break;
             case ReafL4Net:
                 //checks for whether it should score coral on L4 or score algae in net
@@ -76,6 +79,7 @@ public class SuperStructure extends SubsystemBase {
                 //will contain the default state
                 break;
         }
+        actualState();
     }
 
     private void actualState()

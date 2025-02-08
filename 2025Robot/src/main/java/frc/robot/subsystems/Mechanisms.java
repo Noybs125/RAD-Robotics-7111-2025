@@ -32,11 +32,11 @@ public class Mechanisms extends SubsystemBase {
         Climb,
     };
 
-    private double elevatorMinimumLength = 0;
-    private double wristLength = 2;
-    private Mechanism2d mech2d = new Mechanism2d(20, 50);
-    private MechanismRoot2d elevatorMech2dRoot = mech2d.getRoot("Elevator Root", 10, 0);
-    private MechanismRoot2d wristMech2dRoot = mech2d.getRoot("Wrist Root", 10, 0);
+    private double elevatorMinimumLength = 0.14925;
+    private double wristLength = 1;
+    private Mechanism2d mech2d = new Mechanism2d(5, 5);
+    private MechanismRoot2d elevatorMech2dRoot = mech2d.getRoot("Elevator Root", 1, 1);
+    private MechanismRoot2d wristMech2dRoot = mech2d.getRoot("Wrist Root", 2, 1);
     private MechanismLigament2d elevatorMech2d = elevatorMech2dRoot.append(new MechanismLigament2d("elevator", elevatorMinimumLength, 90));
     private MechanismLigament2d wristMech2d = wristMech2dRoot.append(new MechanismLigament2d("wrist", wristLength, 0));
 
@@ -93,18 +93,18 @@ public class Mechanisms extends SubsystemBase {
     private void handleState() {
         switch (state) {
             case ReefL1:
-                elevatorSetpoint = 0;
-                wristSetpoint = 0;
+                elevatorSetpoint = 1;
+                wristSetpoint = 55;
                 break;
                 
             case ReefL2:
-                elevatorSetpoint = 0;
-                wristSetpoint = 0;
+                elevatorSetpoint = 1.6;
+                wristSetpoint = 215;
                 break;
 
             case ReefL3:
-                elevatorSetpoint = 0;
-                wristSetpoint = 0;
+                elevatorSetpoint = 5;
+                wristSetpoint = 110;
                 break;
 
             case ReefL4:

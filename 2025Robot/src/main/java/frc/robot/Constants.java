@@ -9,6 +9,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.MatBuilder;
@@ -24,6 +25,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.utils.SwerveModuleConstants;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -52,8 +54,11 @@ public class Constants {
   }
   
   public static class kSimulation {
-    public static final PIDController pid = new PIDController(0.1, 0, 0);
-    public static final ElevatorFeedforward ff = new ElevatorFeedforward(0.0001, 0.00001, 0.00001, 0.000001);
+    public static final PIDController elevatorPid = new PIDController(40, 20, 0);
+    public static final ElevatorFeedforward elevatorFF = new ElevatorFeedforward(1.23, 0.36, 7.22, 0.05);
+
+    public static final PIDController wristPid = new PIDController(1, 0, 0.05);
+    public static final ArmFeedforward wristFF = new ArmFeedforward(0.1, 0.1, 0.1);
 
     public static final double elevatorSimGearRatio = 1;    
 
@@ -65,14 +70,16 @@ public class Constants {
     public static final int encoderBChannel = 1;
 
     // TODO Adjust these values below
-    public static final double minHeight = 1;
-    public static final double maxHeight = 2;
+    public static final double minHeight = 0.14925;
+    public static final double maxHeight = 1.864;
     public static final double startingHeight = 1.5;
 
     public static final double[] measurementStdDevs = {};
 
-    public static final ElevatorSim elevatorSimConstants = new ElevatorSim(ff.getKv(), ff.getKa(), DCMotor.getKrakenX60(2), minHeight, maxHeight, true, startingHeight, measurementStdDevs);
+    public static final ElevatorSim elevatorSimConstants = new ElevatorSim(elevatorFF.getKv(), elevatorFF.getKa(), DCMotor.getKrakenX60(2), minHeight, maxHeight, true, minHeight, measurementStdDevs);
     
+    public static final SingleJointedArmSim armSim = new SingleJointedArmSim(DCMotor.getKrakenX60(1), 44, 0.93573, 0.532, Units.degreesToRadians(55), Units.degreesToRadians(215), true, Units.degreesToRadians(55), measurementStdDevs);
+
   }
   /** All joystick, button, and axis IDs. */
   public static class kControls {

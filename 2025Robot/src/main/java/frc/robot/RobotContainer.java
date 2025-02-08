@@ -16,12 +16,16 @@ import frc.robot.subsystems.Auto;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Flywheels;
 import frc.robot.subsystems.Mechanisms;
+import frc.robot.subsystems.Sensors;
+import frc.robot.subsystems.SuperStructure;
 import frc.robot.utils.encoder.RevEncoder;
+import frc.robot.utils.motor.ArmSimMotor;
 import frc.robot.utils.motor.CTREMotor;
 import frc.robot.utils.motor.ElevatorSimMotor;
 import frc.robot.utils.motor.REVMotor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 //import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -39,8 +43,10 @@ public class RobotContainer {
   public final Swerve swerve;
   public final Auto auto;
   public final Vision vision;
-  //public final Mechanisms mechanisms;
+  public final Mechanisms mechanisms;
   public final Flywheels flywheels;
+  public final SuperStructure superStructure;
+  public final Sensors sensors;
 
   public final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
@@ -50,17 +56,20 @@ public class RobotContainer {
     xbox = new XboxController(2);
     commXbox = new CommandXboxController(2);
 
+    
     auto = new Auto();
+    sensors = new Sensors();
     vision = new Vision(gyro);
     swerve = new Swerve(gyro, vision);
-   /*  mechanisms = new Mechanisms(
+    mechanisms = new Mechanisms(
         new ElevatorSimMotor(
-            new RevEncoder(0), Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.pid,
-            Constants.kSimulation.ff, Constants.kSimulation.elevatorSimConstants
+            null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid,
+            Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants
             ), 
-         new CTREMotor(0));*/
+         new ArmSimMotor(null, Constants.kSimulation.armSim, Constants.kSimulation.wristPid,  null));//Constants.kSimulation.wristFF));
     flywheels = new Flywheels(new REVMotor(0));
     
+    superStructure = new SuperStructure(swerve, vision, sensors, mechanisms, flywheels);
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData(autoChooser);
     
@@ -80,6 +89,11 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    Trigger simSetpoint1 = commXbox.rightBumper();
+    Trigger simSetpoint2 = commXbox.leftBumper();
+    Trigger simSetpoint3 = commXbox.leftTrigger();
+
     swerve.setDefaultCommand(swerve.drive(
       () -> Constants.kControls.Y_DRIVE_LIMITER.calculate(-xbox.getLeftY()), 
       () -> Constants.kControls.X_DRIVE_LIMITER.calculate(xbox.getLeftX()),  
@@ -91,5 +105,9 @@ public class RobotContainer {
     commXbox.y().onTrue(swerve.zeroGyroCommand());
     commXbox.a().onTrue(swerve.resetOdometryCommand());
     commXbox.b().onTrue(auto.pathfindToSetpoint(Auto.FieldSetpoints.Reef6));
+
+    simSetpoint1.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReafL1Processor));
+    simSetpoint2.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReafL2));
+    simSetpoint3.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReafL3));
     }
   }
