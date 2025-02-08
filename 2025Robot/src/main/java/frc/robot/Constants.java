@@ -6,6 +6,7 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
@@ -204,8 +205,11 @@ public class Constants {
     /** Constraints. */
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 5.0;
     public static final double MAX_ACCEL_METERS_PER_SECOND_SQUARED = 8.0;
-
+    public static final double MAX_ANGULAR_RADIANS_PER_SECOND = 6.99;
+    public static final double MAX_ANGULAR_ACCEL_RAD_PER_SECOND = 12.56;
     /** Pathplanner config */
+
+    public static final PathConstraints constraints = new PathConstraints(MAX_VELOCITY_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED, MAX_ANGULAR_RADIANS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED);
 
     public static final int numModules = 4;
     public static final double massKgs = Units.lbsToKilograms(42);
