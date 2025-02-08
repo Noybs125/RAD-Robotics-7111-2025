@@ -44,7 +44,7 @@ public class Vision extends SubsystemBase{
         );
 
     public Camera[] cameraList = new Camera[] {
-        //orangepi1,
+        orangepi1,
         //orangepi2,
     };
 

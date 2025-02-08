@@ -42,7 +42,6 @@ public class Swerve extends SubsystemBase {
 
   public final SwerveDrivePoseEstimator swerveOdometry;
 
-  private SwerveDriveOdometry odometry2;
   private Field2d field = new Field2d();
   private FieldObject2d fieldObjectPose = field.getObject("FieldPosition");
   public RobotConfig config;
@@ -268,16 +267,15 @@ public class Swerve extends SubsystemBase {
 
   public Pose2d getPose() {
     var swervePose = swerveOdometry.getEstimatedPosition();
-    return new Pose2d(swervePose.getX(), swervePose.getY(), swervePose.getRotation());
+    return swervePose;
   }
 
   public void resetOdometry(Pose2d pose) { // not currently used, using addVisionMeasurements in periodic instead.
-      swerveOdometry.resetPose(new Pose2d(pose.getX(),pose.getY(), pose.getRotation()));
-      odometry2.resetPose(pose);
+      swerveOdometry.resetPose(pose);
   }
 
   public Command resetOdometryCommand() {
-    return new InstantCommand(() -> resetOdometry(new Pose2d(0, 0, getYaw())));
+    return new InstantCommand(() -> resetOdometry(new Pose2d(poseX.getDouble(0), poseY.getDouble(0), getYaw())));
   }
 
   public ChassisSpeeds getRelSpeedsNonSuplier() {
@@ -304,16 +302,13 @@ public class Swerve extends SubsystemBase {
     }
     
     for(SwerveModule mod : modules){
-      SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderDegrees().getDegrees());
-      SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-      SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-      SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle Position", mod.getAngle().getRadians());    
+      SmartDashboard.putNumber("angle Motor " + mod +" current", mod.angleMotor.getStatorCurrent().getValueAsDouble());
+      SmartDashboard.putNumber("drive motor " + mod + " current", mod.driveMotor.getStatorCurrent().getValueAsDouble());
     }
-    SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
     
     
    
-    field.setRobotPose(swerveOdometry.getEstimatedPosition());
+    field.setRobotPose(getPose());
     fieldObjectPose.setPose(new Pose2d(poseX.getDouble(0), poseY.getDouble(0), Rotation2d.fromDegrees(poseRot.getDouble(0))));
     
     

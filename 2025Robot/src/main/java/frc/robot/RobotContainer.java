@@ -39,7 +39,7 @@ public class RobotContainer {
   public final Swerve swerve;
   public final Auto auto;
   public final Vision vision;
-  public final Mechanisms mechanisms;
+  //public final Mechanisms mechanisms;
   public final Flywheels flywheels;
 
   public final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
@@ -53,12 +53,12 @@ public class RobotContainer {
     auto = new Auto();
     vision = new Vision(gyro);
     swerve = new Swerve(gyro, vision);
-    mechanisms = new Mechanisms(
+   /*  mechanisms = new Mechanisms(
         new ElevatorSimMotor(
             new RevEncoder(0), Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.pid,
             Constants.kSimulation.ff, Constants.kSimulation.elevatorSimConstants
             ), 
-        new CTREMotor(0));
+         new CTREMotor(0));*/
     flywheels = new Flywheels(new REVMotor(0));
     
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -90,6 +90,6 @@ public class RobotContainer {
 
     commXbox.y().onTrue(swerve.zeroGyroCommand());
     commXbox.a().onTrue(swerve.resetOdometryCommand());
-    commXbox.b().onTrue(auto.pathfindToSetpoint(Auto.FieldSetpoints.Reef1));
+    commXbox.b().onTrue(auto.pathfindToSetpoint(Auto.FieldSetpoints.Reef6));
     }
   }

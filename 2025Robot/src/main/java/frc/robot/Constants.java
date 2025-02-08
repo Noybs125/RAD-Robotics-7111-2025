@@ -125,7 +125,7 @@ public class Constants {
     /** Current limiting. */
     public static final int DRIVE_CURRENT_LIMIT = 40;
     public static final int DRIVE_CURRENT_THRESHOLD = 60;
-    public static final int ANGLE_CURRENT_LIMIT = 40;
+    public static final int ANGLE_CURRENT_LIMIT = 20;
     public static final int ANGLE_CURRENT_THRESHOLD = 40;
 
     /** Drive motor PID values. */
@@ -211,7 +211,7 @@ public class Constants {
     
     /** Constraints. */
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 5.0;
-    public static final double MAX_ACCEL_METERS_PER_SECOND_SQUARED = 8.0;
+    public static final double MAX_ACCEL_METERS_PER_SECOND_SQUARED = 3.0;
     public static final double MAX_ANGULAR_RADIANS_PER_SECOND = 6.99;
     public static final double MAX_ANGULAR_ACCEL_RAD_PER_SECOND = 12.56;
     /** Pathplanner config */

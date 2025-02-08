@@ -4,6 +4,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,7 +39,12 @@ public class Auto extends SubsystemBase {
     }
 
     public Command pathfindToPose(Pose2d pose) {
-        return AutoBuilder.pathfindToPose(pose, Constants.kAuto.constraints, 0);
+        if (DriverStation.getAlliance().isPresent()) {
+            return DriverStation.getAlliance().get() == Alliance.Blue 
+                ? AutoBuilder.pathfindToPose(pose, Constants.kAuto.constraints, 0)
+                : AutoBuilder.pathfindToPoseFlipped(pose, Constants.kAuto.constraints, 0);
+        }
+        else return AutoBuilder.pathfindToPose(pose, Constants.kAuto.constraints, 0);
     }
 
     public Command pathfindToSetpoint(FieldSetpoints state) {
@@ -98,7 +105,5 @@ public class Auto extends SubsystemBase {
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("Pose Setpoint X", poseSetpoint.getX());
-        SmartDashboard.putNumber("Pose Setpoint Y", poseSetpoint.getY());
     }
 }

@@ -22,7 +22,7 @@ import frc.robot.Constants;
 public class SwerveModule {
   public final int moduleNumber;
 
-  private final TalonFX driveMotor;
+  public final TalonFX driveMotor;
   private final SimpleMotorFeedforward driveFeedforward;
   private final TalonFXConfiguration driveMotorConfig = new TalonFXConfiguration();
   private boolean driveMotorInversion;
