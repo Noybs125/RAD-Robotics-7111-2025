@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
@@ -9,10 +10,10 @@ public class SuperStructure extends SubsystemBase {
     private Vision vision;
     private Mechanisms mechanisms;
     private Flywheels flywheels; 
-    private RobotState currentRobotState;
-    private RobotState robotState;
+    private ActualState ActualRobotState;
+    private ControlState ControlRobotState;
 
-    public enum RobotState {
+    public enum ControlState {
         ReafL1Processor,
         ReafL2,
         ReafL3,
@@ -27,11 +28,14 @@ public class SuperStructure extends SubsystemBase {
         this.vision = vision;
         this.mechanisms = mechanisms;
         this.flywheels = flywheels;
+
+        ControlRobotState = ControlState.Default;
+        ActualRobotState = ActualState.DefaultState;
     }
 
 
     public void periodic() {
-        switch (robotState) {   
+        switch (ControlRobotState) {   
             case ReafL1Processor:
                 //checks for whether it should align for reaf or processor
                 break;
@@ -57,8 +61,51 @@ public class SuperStructure extends SubsystemBase {
         }
     }
 
+    public enum ActualState {
+        coralL1,
+        coralL2,
+        coralL3,
+        coralL4,
+        coralFeeder,
+        algaeProcessor,
+        algaeNet,
+        algaeL2,
+        algaeL3,
+        deepClimb,
+        DefaultState,
+    }
+
+    private void ActualState()
+    {
+        switch(ActualRobotState)
+        {
+            case coralL1:
+                break;
+            case coralL2:
+                break;
+            case coralL3:
+                break;
+            case coralL4:
+                break;
+            case coralFeeder:
+                break;
+            case algaeProcessor:
+                break;
+            case algaeNet:
+                break;
+            case algaeL2:
+                break;
+            case algaeL3:
+                break;
+            case deepClimb:
+                break;
+            case DefaultState:
+                break;
+        }
+    }
+
     private void setRobotState(RobotState state){
-        robotState = state;
+        ControlState = state;
     }
 
     public Command setRobotStateCommand(RobotState state){
