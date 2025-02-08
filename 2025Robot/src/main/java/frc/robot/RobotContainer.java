@@ -5,11 +5,14 @@ import com.studica.frc.AHRS.NavXComType;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Auto;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Flywheels;
 import frc.robot.subsystems.Mechanisms;
@@ -34,6 +37,7 @@ public class RobotContainer {
   public final CommandXboxController commXbox;
 
   public final Swerve swerve;
+  public final Auto auto;
   public final Vision vision;
   public final Mechanisms mechanisms;
   public final Flywheels flywheels;
@@ -46,6 +50,7 @@ public class RobotContainer {
     xbox = new XboxController(2);
     commXbox = new CommandXboxController(2);
 
+    auto = new Auto();
     vision = new Vision(gyro);
     swerve = new Swerve(gyro, vision);
     mechanisms = new Mechanisms(
@@ -85,5 +90,6 @@ public class RobotContainer {
 
     commXbox.y().onTrue(swerve.zeroGyroCommand());
     commXbox.a().onTrue(swerve.resetOdometryCommand());
+    commXbox.b().onTrue(auto.pathfindToSetpoint(Auto.FieldSetpoints.Reef1));
     }
   }

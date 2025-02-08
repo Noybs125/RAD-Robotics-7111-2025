@@ -4,19 +4,17 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Auto {
+public class Auto extends SubsystemBase {
 
     private SendableChooser<Integer> alliance = new SendableChooser<Integer>();
 
-    private Pose2d poseSetpoint;
-    private FieldSetpoints state;
+    private Pose2d poseSetpoint = new Pose2d();
 
     public enum FieldSetpoints {
         Reef1,
@@ -97,5 +95,10 @@ public class Auto {
     
         return pathfindToPose(poseSetpoint);
 
+    }
+
+    public void periodic() {
+        SmartDashboard.putNumber("Pose Setpoint X", poseSetpoint.getX());
+        SmartDashboard.putNumber("Pose Setpoint Y", poseSetpoint.getY());
     }
 }
