@@ -311,6 +311,7 @@ public class Swerve extends SubsystemBase {
     }
     SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
     
+    
    
     field.setRobotPose(swerveOdometry.getEstimatedPosition());
     fieldObjectPose.setPose(new Pose2d(poseX.getDouble(0), poseY.getDouble(0), Rotation2d.fromDegrees(poseRot.getDouble(0))));
