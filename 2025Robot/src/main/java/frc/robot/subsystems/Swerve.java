@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.lang.reflect.Field;
 import java.security.PublicKey;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -19,6 +20,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -27,6 +29,7 @@ import frc.robot.Constants;
 import frc.robot.utils.Camera;
 import frc.robot.utils.SwerveModule;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -41,10 +44,13 @@ public class Swerve extends SubsystemBase {
 
   private SwerveDriveOdometry odometry2;
   private Field2d field = new Field2d();
-  private Field2d fieldcam = new Field2d();
-  private Field2d fieldWheel = new Field2d();
+  private FieldObject2d fieldObjectPose = field.getObject("FieldPosition");
   public RobotConfig config;
 
+  private GenericEntry poseX = Shuffleboard.getTab("Odometry").add("Pose X", 0).withWidget("Text View").getEntry();
+  private GenericEntry poseY = Shuffleboard.getTab("Odometry").add("Pose Y", 0).withWidget("Text View").getEntry();
+  private GenericEntry poseRot = Shuffleboard.getTab("Odometry").add("Pose Rot", 0).withWidget("Text View").getEntry();
+  
   private PIDController visionPID = new PIDController(0.1, 0,0);
   private PIDController gyroPID;
 
@@ -64,8 +70,7 @@ public class Swerve extends SubsystemBase {
     this.gyro = gyro;
     this.vision = vision;
     fieldPublisher = Shuffleboard.getTab("Odometry").add("field odometry", field).withWidget("Field");
-    fieldPublisher = Shuffleboard.getTab("April Tag Odometry").add("april tag field odometry", fieldcam).withWidget("April Fields");
-    fieldPublisher = Shuffleboard.getTab("Wheel Odometry").add("Wheel Odometry Field", fieldWheel).withWidget("Wheel Field");
+    
     zeroGyro();
     
 
@@ -75,7 +80,6 @@ public class Swerve extends SubsystemBase {
       new SwerveModule(2, Constants.kSwerve.MOD_2_Constants),
       new SwerveModule(3, Constants.kSwerve.MOD_3_Constants),
     };
-    odometry2 = new SwerveDriveOdometry(Constants.kSwerve.KINEMATICS, getYaw().unaryMinus(), getPositions());
     swerveOdometry = new SwerveDrivePoseEstimator(Constants.kSwerve.KINEMATICS, getYaw(), getPositions(),vision.robotPose);
 
     /*try{
@@ -292,12 +296,10 @@ public class Swerve extends SubsystemBase {
   
   @Override 
   public void periodic() {
-      odometry2.update(getYaw().unaryMinus(), getPositions());
       swerveOdometry.update(getAngle(), getInvertedPositions());
     for(Camera camera : vision.cameraList){
       if(camera.updatePose()){
         swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
-        fieldcam.setRobotPose(camera.getRobotPose());
       }
     }
     
@@ -308,10 +310,12 @@ public class Swerve extends SubsystemBase {
       SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle Position", mod.getAngle().getRadians());    
     }
     SmartDashboard.putNumber("Gyro", getYaw().getDegrees());
-    SmartDashboard.putNumber("Pose X", getPose().getX());
-    SmartDashboard.putNumber("Pose Y", getPose().getY());
+    
+    
+   
     field.setRobotPose(swerveOdometry.getEstimatedPosition());
-    fieldWheel.setRobotPose(new Pose2d(odometry2.getPoseMeters().getX(), -odometry2.getPoseMeters().getY(), getYaw()));
+    fieldObjectPose.setPose(new Pose2d(poseX.getDouble(0), poseY.getDouble(0), Rotation2d.fromDegrees(poseRot.getDouble(0))));
+    
     
   }
 
