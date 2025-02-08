@@ -196,6 +196,13 @@ public class Constants {
     );
   }
 
+  public static class kMechanisms {
+    /** Current Limiting */
+    public static final double wristCurrentLimit = 40;
+    public static final double elevatorCurrentLimit = 40;
+    public static final double flywheelCurrentLimit = 40;
+  }
+
   public static class kAuto {
     /** PID Values. */
     public static final double X_CONTROLLER_KP = 1.0;
