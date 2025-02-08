@@ -32,10 +32,13 @@ public class Mechanisms extends SubsystemBase {
         Climb,
     };
 
-    double elevatorMinimumLength = 0;
-    Mechanism2d mech2d = new Mechanism2d(20, 50);
-    MechanismRoot2d mech2dRoot = mech2d.getRoot("Elevator Root", 10, 0);
-    MechanismLigament2d elevatorMech2d = mech2dRoot.append(new MechanismLigament2d("elevator", elevatorMinimumLength, 90));
+    private double elevatorMinimumLength = 0;
+    private double wristLength = 2;
+    private Mechanism2d mech2d = new Mechanism2d(20, 50);
+    private MechanismRoot2d elevatorMech2dRoot = mech2d.getRoot("Elevator Root", 10, 0);
+    private MechanismRoot2d wristMech2dRoot = mech2d.getRoot("Wrist Root", 10, 0);
+    private MechanismLigament2d elevatorMech2d = elevatorMech2dRoot.append(new MechanismLigament2d("elevator", elevatorMinimumLength, 90));
+    private MechanismLigament2d wristMech2d = wristMech2dRoot.append(new MechanismLigament2d("wrist", wristLength, 0));
 
     public Mechanisms(Motor elevator, Motor wrist){
         this.elevator = elevator;
@@ -169,9 +172,10 @@ public class Mechanisms extends SubsystemBase {
 
     public void simulationPeriodic(){
         elevatorMech2d.setLength(elevator.getPosition());
+        wristMech2d.setAngle(wrist.getPosition());
 
         SmartDashboard.putData("Mech2d", mech2d);
-        SmartDashboard.putData("Elevator Sim", mech2d);
         SmartDashboard.putNumber("Elevator Pos", elevator.getPosition());
+        SmartDashboard.putNumber("Wrist", wrist.getPosition());
     }
 }
