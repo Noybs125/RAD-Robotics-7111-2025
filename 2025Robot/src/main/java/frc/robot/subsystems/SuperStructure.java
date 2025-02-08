@@ -108,7 +108,7 @@ public class SuperStructure extends SubsystemBase {
         controlRobotState = state;
     }
 
-    public Command setRobotStateCommand(RobotState state){
+    public Command setRobotStateCommand(ControlState state){
         return new InstantCommand(() -> setRobotState(state));
     }
 

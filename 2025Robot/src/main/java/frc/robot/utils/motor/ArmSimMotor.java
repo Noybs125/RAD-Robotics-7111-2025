@@ -43,9 +43,18 @@ public class ArmSimMotor implements Motor {
     }
     
     public void setSetpoint(double setPoint){
-        outputVoltage = pid.calculate(getPosition(), setPoint) + feedforward.calculate(getPosition(), pid.getErrorDerivative());
+
+        double useFeedForward;
+        if (feedforward != null) {
+            useFeedForward = feedforward.calculate(getPosition(), pid.getErrorDerivative());
+        }
+        else useFeedForward = 0;
+        
+        outputVoltage = pid.calculate(getPosition(), setPoint) + useFeedForward;
         this.setpoint = setPoint;
         motor.setInputVoltage(outputVoltage);
+        
+        
     }
 
     /** Must be called by the subystems periodic method */
