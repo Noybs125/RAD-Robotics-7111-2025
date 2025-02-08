@@ -18,17 +18,17 @@ public class Mechanisms extends SubsystemBase {
     private double upperLimit;
     private MechanismsState state = MechanismsState.Store;
 
-    private enum MechanismsState{
+    public enum MechanismsState{
         ReefL1,
         ReefL2,
         ReefL3,
         ReefL4,
-        AlgaeL1,
         AlgaeL2,
+        AlgaeL3,
         AlgaeProcessor,
-        AlgaeBarge,
+        AlgaeNet,
         Store,
-        Intake,
+        CoralFeeder,
         Climb,
     };
 
@@ -112,12 +112,12 @@ public class Mechanisms extends SubsystemBase {
                 wristSetpoint = 0;
                 break;
 
-            case AlgaeL1:
+            case AlgaeL2:
                 elevatorSetpoint = 0;
                 wristSetpoint = 0;
                 break;
 
-            case AlgaeL2:
+            case AlgaeL3:
                 elevatorSetpoint = 0;
                 wristSetpoint = 0;
                 break;
@@ -127,7 +127,7 @@ public class Mechanisms extends SubsystemBase {
                 wristSetpoint = 0;
                 break;
 
-            case AlgaeBarge:
+            case AlgaeNet:
                 elevatorSetpoint = 0;
                 wristSetpoint = 0;
                 break;
@@ -137,7 +137,7 @@ public class Mechanisms extends SubsystemBase {
                 wristSetpoint = 0;
                 break;
 
-            case Intake:
+            case CoralFeeder:
                 elevatorSetpoint = 0;
                 wristSetpoint = 0;
                 break;

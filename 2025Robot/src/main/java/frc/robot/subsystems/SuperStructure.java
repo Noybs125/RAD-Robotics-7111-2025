@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Mechanisms.MechanismsState;
+import com.ctre.phoenix6.mechanisms.MechanismState;
+
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -34,7 +37,7 @@ public class SuperStructure extends SubsystemBase {
         algaeL2,
         algaeL3,
         deepClimb,
-        DefaultState,
+        defaultState,
     }
 
     public SuperStructure(Swerve swerve, Vision vision, Sensors sensors, Mechanisms mechanisms, Flywheels flywheels){
@@ -44,7 +47,7 @@ public class SuperStructure extends SubsystemBase {
         this.flywheels = flywheels;
 
         controlRobotState = ControlState.Default;
-        actualRobotState = ActualState.DefaultState;
+        actualRobotState = ActualState.defaultState;
     }
 
 
@@ -80,26 +83,37 @@ public class SuperStructure extends SubsystemBase {
         switch(actualRobotState)
         {
             case coralL1:
+                coralL1();
                 break;
             case coralL2:
+                coralL2();
                 break;
             case coralL3:
+                coralL3();
                 break;
             case coralL4:
+                coralL4();
                 break;
             case coralFeeder:
+                coralFeeder();
                 break;
             case algaeProcessor:
+                algaeProcessor();
                 break;
             case algaeNet:
+                algaeNet();
                 break;
             case algaeL2:
+                algaeL2();
                 break;
             case algaeL3:
+                algaeL3();
                 break;
             case deepClimb:
+                deepClimb();
                 break;
-            case DefaultState:
+            case defaultState:
+                defaultState();
                 break;
         }
     }
@@ -108,19 +122,41 @@ public class SuperStructure extends SubsystemBase {
         controlRobotState = state;
     }
 
-    public Command setRobotStateCommand(RobotState state){
+    public Command setRobotStateCommand(ControlState state){
         return new InstantCommand(() -> setRobotState(state));
     }
 
-    private void coralL1(){}
-    private void coralL2(){}
-    private void coralL3(){}
-    private void coralL4(){}
-    private void coralFeeder(){}
-    private void algaeProcessor(){}
-    private void algaeNet(){}
-    private void algaeL2(){}
-    private void algaeL3(){}
-    private void deepClimb(){}
-    private void defaultState(){}
+    private void coralL1(){
+        mechanisms.setState(Mechanisms.MechanismsState.ReefL1);
+    }
+    private void coralL2(){
+        mechanisms.setState(Mechanisms.MechanismsState.ReefL2);
+    }
+    private void coralL3(){
+        mechanisms.setState(Mechanisms.MechanismsState.ReefL3);
+    }
+    private void coralL4(){
+        mechanisms.setState(Mechanisms.MechanismsState.ReefL4);
+    }
+    private void coralFeeder(){
+        mechanisms.setState(Mechanisms.MechanismsState.CoralFeeder);
+    }
+    private void algaeProcessor(){
+        mechanisms.setState(Mechanisms.MechanismsState.AlgaeProcessor);
+    }
+    private void algaeNet(){
+        mechanisms.setState(Mechanisms.MechanismsState.AlgaeNet);
+    }
+    private void algaeL2(){
+        mechanisms.setState(Mechanisms.MechanismsState.AlgaeL2);
+    }
+    private void algaeL3(){
+        mechanisms.setState(Mechanisms.MechanismsState.AlgaeL3);
+    }
+    private void deepClimb(){
+        mechanisms.setState(Mechanisms.MechanismsState.Climb);
+    }
+    private void defaultState(){
+        mechanisms.setState(Mechanisms.MechanismsState.Store);
+    }
 }
