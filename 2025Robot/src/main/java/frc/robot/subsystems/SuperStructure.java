@@ -17,11 +17,11 @@ public class SuperStructure extends SubsystemBase {
     private ControlState controlRobotState;
 
     public enum ControlState {
-        ReafL1Processor,
-        ReafL2,
-        ReafL3,
-        ReafL4Net,
-        ReafFeeder,
+        ReefL1Processor,
+        ReefL2,
+        ReefL3,
+        ReefL4Net,
+        ReefFeeder,
         DeepClimb,
         Default,
     }
@@ -53,22 +53,22 @@ public class SuperStructure extends SubsystemBase {
 
     public void periodic() {
         switch (controlRobotState) {   
-            case ReafL1Processor:
-                //checks for whether it should align for reaf or processor
+            case ReefL1Processor:
+                //checks for whether it should align for reef or processor
                 actualRobotState = ActualState.coralL1;
                 break;
-            case ReafL2:
+            case ReefL2:
                 //checks for whether it should score coral or intake algae
                 actualRobotState = ActualState.coralL2;
                 break;
-            case ReafL3:
+            case ReefL3:
                 //checks for whether it should score coral or intake algae
                 actualRobotState = ActualState.coralL3;
                 break;
-            case ReafL4Net:
+            case ReefL4Net:
                 //checks for whether it should score coral on L4 or score algae in net
                 break;
-            case ReafFeeder:
+            case ReefFeeder:
                 //
                 break;
             case DeepClimb:
