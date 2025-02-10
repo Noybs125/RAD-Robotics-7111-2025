@@ -106,8 +106,8 @@ public class RobotContainer {
     commXbox.a().onTrue(swerve.resetOdometryCommand());
     commXbox.b().onTrue(auto.pathfindToSetpoint(Auto.FieldSetpoints.Reef6));
 
-    simSetpoint1.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReafL1Processor));
-    simSetpoint2.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReafL2));
-    simSetpoint3.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReafL3));
+    simSetpoint1.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReefL1Processor));
+    simSetpoint2.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReefL2));
+    simSetpoint3.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReefL3));
     }
   }
