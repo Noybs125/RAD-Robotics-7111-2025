@@ -12,7 +12,7 @@ import frc.robot.utils.encoder.Encoder;
 
 public class ElevatorSimMotor implements Motor{
     private ElevatorSim motor; 
-    private PIDController pid = new PIDController(0,0,0);
+    private PIDController pid;
     private Encoder encoder;
     private double gearRatio;
     private double setPoint;
