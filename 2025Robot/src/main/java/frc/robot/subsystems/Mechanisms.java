@@ -93,17 +93,17 @@ public class Mechanisms extends SubsystemBase {
     private void handleState() {
         switch (state) {
             case ReefL1:
-                elevatorSetpoint = 1;
+                elevatorSetpoint = 0.16;
                 wristSetpoint = 55;
                 break;
                 
             case ReefL2:
-                elevatorSetpoint = 1.6;
+                elevatorSetpoint = 0.9;
                 wristSetpoint = 215;
                 break;
 
             case ReefL3:
-                elevatorSetpoint = 1.8;
+                elevatorSetpoint = 1.6;
                 wristSetpoint = 110;
                 break;
 

@@ -95,12 +95,13 @@ public class RobotContainer {
     Trigger simSetpoint3 = commXbox.leftTrigger();
 
     swerve.setDefaultCommand(swerve.drive(
-      () -> Constants.kControls.Y_DRIVE_LIMITER.calculate(-xbox.getLeftY()), 
-      () -> Constants.kControls.X_DRIVE_LIMITER.calculate(xbox.getLeftX()),  
-      () -> Constants.kControls.THETA_DRIVE_LIMITER.calculate(xbox.getRightX()),
+      () -> Constants.kControls.Y_DRIVE_LIMITER.calculate(Math.pow(-xbox.getLeftY(), 3 / 1)), 
+      () -> Constants.kControls.X_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftX(), 3 / 1)),  
+      () -> Constants.kControls.THETA_DRIVE_LIMITER.calculate(Math.pow(xbox.getRightX(), 3 / 1)),
       () -> true, 
       false
-      ));
+      )
+     );
 
     commXbox.y().onTrue(swerve.zeroGyroCommand());
     commXbox.a().onTrue(swerve.resetOdometryCommand());
