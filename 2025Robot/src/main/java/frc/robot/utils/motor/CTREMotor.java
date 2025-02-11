@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.utils.encoder.Encoder;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 
 public class CTREMotor implements Motor {
     private TalonFX motor;
@@ -17,13 +18,15 @@ public class CTREMotor implements Motor {
     private SimpleMotorFeedforward feedforward;
     private Motor simType;
     
-    public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, Motor simType){
+    public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, Motor simType, TalonFXConfiguration talonConfig){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
         this.feedforward = feedForward;
         motor = new TalonFX(id);
         this.simType = simType;
+
+        motor.getConfigurator().apply(talonConfig);
     }
 
     public CTREMotor(int id){
