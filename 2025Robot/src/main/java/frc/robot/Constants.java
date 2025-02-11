@@ -54,7 +54,7 @@ public class Constants {
   }
   
   public static class kSimulation {
-    public static final PIDController elevatorPid = new PIDController(40, 20, 0);
+    public static final PIDController elevatorPid = new PIDController(85, 6,3);
     public static final ElevatorFeedforward elevatorFF = new ElevatorFeedforward(1.23, 0.36, 7.22, 0.05);
 
     public static final PIDController wristPid = new PIDController(1, 0, 0.05);
@@ -62,7 +62,17 @@ public class Constants {
 
     public static final double elevatorSimGearRatio = 1;    
 
-    public static final double elevatorDrumRadius = Units.inchesToMeters(2.0);
+    public static final double elevatorDrumRadius = Units
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    .inchesToMeters(2.0);
     public static final double elevatorEncoderDistPerPulse =
       2.0 * Math.PI * elevatorDrumRadius / 4096;
       

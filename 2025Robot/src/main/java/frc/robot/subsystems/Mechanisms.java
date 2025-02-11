@@ -103,7 +103,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case ReefL3:
-                elevatorSetpoint = 5;
+                elevatorSetpoint = 1.8;
                 wristSetpoint = 110;
                 break;
 
