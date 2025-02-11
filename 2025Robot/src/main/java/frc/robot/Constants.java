@@ -253,7 +253,7 @@ public class Constants {
 
     public static final PPHolonomicDriveController cont = new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                     new PIDConstants(13, 0.0001, 0.022), // Translation PID constants
-                    new PIDConstants(1.5, .45, .01) // Rotation PID constants
+                    new PIDConstants(9.15, 0.09, 0.9) // Rotation PID constants
             );
 
     
