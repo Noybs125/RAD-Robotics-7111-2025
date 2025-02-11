@@ -54,8 +54,8 @@ public class Constants {
   }
   
   public static class kSimulation {
-    public static final PIDController elevatorPid = new PIDController(40, 20, 0);
-    public static final ElevatorFeedforward elevatorFF = new ElevatorFeedforward(1.23, 0.36, 7.22, 0.05);
+    public static final PIDController elevatorPid = new PIDController(30, 1, 6);
+    public static final ElevatorFeedforward elevatorFF = new ElevatorFeedforward(0.1, 0.36, 7.22, 0.05);
 
     public static final PIDController wristPid = new PIDController(1, 0, 0.05);
     public static final ArmFeedforward wristFF = new ArmFeedforward(0.1, 0.1, 0.1);
@@ -83,7 +83,7 @@ public class Constants {
   }
   /** All joystick, button, and axis IDs. */
   public static class kControls {
-    public static final double AXIS_DEADZONE = 0.15;
+    public static final double AXIS_DEADZONE = 0;
 
     public static final int LEFT_JOY_ID = 0;
     public static final int RIGHT_JOY_ID = 1;
