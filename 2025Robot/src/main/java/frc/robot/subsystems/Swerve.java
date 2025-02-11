@@ -235,6 +235,16 @@ public class Swerve extends SubsystemBase {
     return currentStates;
   }
 
+  public SwerveModuleState[] getInvertedStates() {
+    SwerveModuleState currentStates[] = new SwerveModuleState[modules.length];
+    for (int i = 0; i < modules.length; i++) {
+      currentStates[i] = modules[i].getInvertedState();
+    }
+
+    return currentStates;
+  }
+  
+
   public SwerveModulePosition[] getPositions() {
     SwerveModulePosition currentStates[] = new SwerveModulePosition[modules.length];
     for (int i = 0; i < modules.length; i++) {
@@ -279,7 +289,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public ChassisSpeeds getRelSpeedsNonSuplier() {
-    ChassisSpeeds relSpeed = Constants.kSwerve.KINEMATICS.toChassisSpeeds(getStates());
+    ChassisSpeeds relSpeed = Constants.kSwerve.KINEMATICS.toChassisSpeeds(getInvertedStates());
     return relSpeed;
   }
 

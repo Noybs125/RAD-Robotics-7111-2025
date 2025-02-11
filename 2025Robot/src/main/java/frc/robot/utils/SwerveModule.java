@@ -85,6 +85,12 @@ public class SwerveModule {
     return new SwerveModuleState(velocity, rot);
   }
 
+  public SwerveModuleState getInvertedState() {
+    double velocity = driveMotor.getVelocity().getValueAsDouble() * 60 * Constants.kSwerve.DRIVE_RPM_TO_METERS_PER_SECOND;
+    Rotation2d rot = Rotation2d.fromRotations(angleMotor.getPosition().getValueAsDouble());
+    return new SwerveModuleState(velocity, rot.unaryMinus());
+  }
+
   public double getCanCoder() {
     return canCoder.getAbsolutePosition().getValueAsDouble();
   }
