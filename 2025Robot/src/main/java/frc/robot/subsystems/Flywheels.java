@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.motor.Motor;
+import frc.robot.utils.motor.REVMotor;
 
 public class Flywheels extends SubsystemBase {
 
@@ -14,8 +15,8 @@ public class Flywheels extends SubsystemBase {
         AlgaeOutake
     };
 
-    public Flywheels(Motor effectorWheels){
-        this.effectorWheels = effectorWheels;
+    public Flywheels(){
+         effectorWheels = new REVMotor(0);
     }
 
     public void setSpeed(double speed){
