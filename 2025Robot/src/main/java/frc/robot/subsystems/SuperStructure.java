@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Mechanisms.MechanismsState;
+import frc.robot.subsystems.Swerve.SwerveState;
+
 import com.ctre.phoenix6.mechanisms.MechanismState;
 
 import edu.wpi.first.wpilibj.RobotState;
@@ -131,7 +133,8 @@ public class SuperStructure extends SubsystemBase {
     }
 
     private void coralL1(){
-        mechanisms.setState(Mechanisms.MechanismsState.ReefL1);
+        //mechanisms.setState(Mechanisms.MechanismsState.ReefL1);
+        swerve.setState(SwerveState.Vision);
     }
     private void coralL2(){
         mechanisms.setState(Mechanisms.MechanismsState.ReefL2);
@@ -161,6 +164,7 @@ public class SuperStructure extends SubsystemBase {
         mechanisms.setState(Mechanisms.MechanismsState.Climb);
     }
     private void defaultState(){
-        mechanisms.setState(Mechanisms.MechanismsState.Store);
+        //mechanisms.setState(Mechanisms.MechanismsState.Store);
+        swerve.setState(SwerveState.DefaultState);
     }
 }

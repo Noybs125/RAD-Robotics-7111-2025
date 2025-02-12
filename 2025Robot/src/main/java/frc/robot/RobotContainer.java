@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Auto;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Swerve.SwerveState;
 import frc.robot.subsystems.Flywheels;
 import frc.robot.subsystems.Mechanisms;
 import frc.robot.subsystems.Sensors;
@@ -95,10 +96,10 @@ public class RobotContainer {
     Trigger simSetpoint3 = commXbox.leftTrigger();
 
     swerve.setDefaultCommand(swerve.drive(
-      () -> Constants.kControls.Y_DRIVE_LIMITER.calculate(Math.pow(-xbox.getLeftY(), 3 / 1)), 
-      () -> Constants.kControls.X_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftX(), 3 / 1)),  
-      () -> Constants.kControls.THETA_DRIVE_LIMITER.calculate(Math.pow(xbox.getRightX(), 3 / 1)),
-      () -> true, 
+      () -> -swerve.getTransY(), 
+      () -> swerve.getTransX(),  
+      () -> swerve.getRotationZ(),
+      () -> swerve.getFieldRelative(), 
       false
       )
      );
@@ -106,7 +107,7 @@ public class RobotContainer {
     commXbox.y().onTrue(swerve.zeroGyroCommand());
     commXbox.a().onTrue(swerve.resetOdometryCommand());
     commXbox.b().onTrue(auto.pathfindToSetpoint(Auto.FieldSetpoints.Reef6));
-
+    commXbox.x().onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReefL1Processor)).onFalse(superStructure.setRobotStateCommand(SuperStructure.ControlState.Default));
     simSetpoint1.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReefL1Processor));
     simSetpoint2.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReefL2));
     simSetpoint3.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReefL3));

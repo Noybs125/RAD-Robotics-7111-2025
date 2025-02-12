@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
@@ -12,6 +13,8 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import frc.robot.Constants;
 import frc.robot.utils.Camera;
 
@@ -116,30 +119,39 @@ public class Vision extends SubsystemBase{
         handleState();
     }
 
-    public boolean canSeeTarget(int id, Camera camera){
-        for(int i = 0; i <= camera.getAllUnreadResults().get(0).getTargets().size(); i++){
-            if(camera.getAllUnreadResults().get(0).getTargets().get(i).getFiducialId() == id){
-                return true;
+    public boolean canSeeTarget(int id, Camera camera) {
+        List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
+        if(latest != null){
+            for(int i = 0; i <= latest.size(); i++){
+                if(latest.get(i).getFiducialId() == id){
+                    return true;
+                }
             }
         }
         return false;
     }
 
     public double rotateToTarget(int id, Camera camera, double speed){
-        for(int i = 0; i <= camera.getAllUnreadResults().get(0).getTargets().size(); i++){
-            if(canSeeTarget(id, camera)){
-                return 0;
-            } 
+        List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
+        if(latest != null){
+            for(int i = 0; i <= latest.size(); i++){
+                if(canSeeTarget(id, camera)){
+                    return 0;
+                } 
+            }
         }
         return speed;
     }
 
     public Transform2d getAlignmentToTarget(int id, Camera camera){
-        for(int i = 0; i <= camera.getAllUnreadResults().get(0).getTargets().size(); i++){
-            if(canSeeTarget(id, camera)){
-                Transform3d cameraToTarget = camera.getAllUnreadResults().get(0).getTargets().get(i).getBestCameraToTarget();
+        List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
+        if(latest != null){
+            for(int i = 0; i <= latest.size(); i++){
+                if(canSeeTarget(id, camera)){
+                    Transform3d cameraToTarget = latest.get(i).getBestCameraToTarget();
 
-                return new Transform2d(cameraToTarget.getX(), cameraToTarget.getY(), cameraToTarget.getRotation().toRotation2d());
+                    return new Transform2d(cameraToTarget.getX(), cameraToTarget.getY(), cameraToTarget.getRotation().toRotation2d());
+                }
             }
         }
         return null;

@@ -29,7 +29,7 @@ public class Camera extends PhotonCamera{
     private Transform3d cameraToRobotCenter;
     private Vision vision;
     private PhotonPoseEstimator photonPoseEstimator;
-    private PhotonPipelineResult latestResult;
+    public PhotonPipelineResult latestResult;
     private PhotonTrackedTarget bestTarget;
     private Transform3d bestCameraToTarget;
     public EstimatedRobotPose estRobotPose;

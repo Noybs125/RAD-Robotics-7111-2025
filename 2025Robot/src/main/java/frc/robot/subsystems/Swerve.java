@@ -33,13 +33,14 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 
 public class Swerve extends SubsystemBase {
   private final SwerveModule[] modules;
-
+  public final XboxController xbox;
   public final SwerveDrivePoseEstimator swerveOdometry;
 
   private Field2d field = new Field2d();
@@ -58,7 +59,7 @@ public class Swerve extends SubsystemBase {
   private ComplexWidget fieldPublisher;
   private ComplexWidget field2Publisher;
 
-  public SwerveState state;
+  public SwerveState state = SwerveState.DefaultState;
   private double translateX;
   private double translateY;
   private double rotationZ;
@@ -69,7 +70,7 @@ public class Swerve extends SubsystemBase {
     this.gyro = gyro;
     this.vision = vision;
     fieldPublisher = Shuffleboard.getTab("Odometry").add("field odometry", field).withWidget("Field");
-    
+    xbox = new XboxController(2);
     zeroGyro();
     
 
@@ -162,6 +163,9 @@ public class Swerve extends SubsystemBase {
   public double getRotationZ(){
     return rotationZ;
   }
+  public boolean getFieldRelative(){
+    return isFieldRelative;
+  }
   public void setState(SwerveState State){
     this.state = State;
   }
@@ -170,9 +174,9 @@ public class Swerve extends SubsystemBase {
   {
     switch (state) {
       case DefaultState:
-        translateX = 0;
-        translateY = 0;
-        rotationZ = 0;
+        translateX = Constants.kControls.X_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftX(), 3 / 1));
+        translateY = Constants.kControls.Y_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftY(), 3 / 1));
+        rotationZ = Constants.kControls.THETA_DRIVE_LIMITER.calculate(Math.pow(xbox.getRightX(), 3 / 1));
         isFieldRelative = true;
         break;
 
@@ -205,10 +209,16 @@ public class Swerve extends SubsystemBase {
         break;
 
       case Vision:
+      if (vision.canSeeTarget(18, vision.orangepi1)){
+        translateX = visionPID.calculate(vision.getAlignmentToTarget(18, vision.orangepi1).getX(), 0.1);
+        translateY = visionPID.calculate(vision.getAlignmentToTarget(18, vision.orangepi1).getY(),0.1);
+        rotationZ = visionPID.calculate(vision.getAlignmentToTarget(18, vision.orangepi1).getRotation().getDegrees(),0.1);
+      } else {
         translateX = 0;
         translateY = 0;
         rotationZ = 0;
-        isFieldRelative = true;
+      }
+        isFieldRelative = false;
         break;
     }
   }
@@ -316,8 +326,7 @@ public class Swerve extends SubsystemBase {
       SmartDashboard.putNumber("drive motor " + mod + " current", mod.driveMotor.getStatorCurrent().getValueAsDouble());
     }
     
-    
-   
+    handleStates();
     field.setRobotPose(getPose());
     fieldObjectPose.setPose(new Pose2d(poseX.getDouble(0), poseY.getDouble(0), Rotation2d.fromDegrees(poseRot.getDouble(0))));
     
