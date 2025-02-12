@@ -9,21 +9,10 @@ public class TwoMotors implements Motor {
     private Motor motor1;
     private Motor motor2;
 
-    private double invertMotor1 = 1;
-    private double invertMotor2 = 1;
-
-    public TwoMotors(Motor motor1, Motor motor2, boolean invertedMotor1, boolean invertedMotor2){
+    public TwoMotors(Motor motor1, Motor motor2){
         this.motor1 = motor1;
         this.motor2 = motor2;
-
-        if(invertedMotor1)
-        {
-            invertMotor1 = -1;
-        }
-        if(invertedMotor2)
-        {
-            invertMotor2 = -1;
-        }
+   
     }
     
     public void setSpeed(double speed){
@@ -36,8 +25,8 @@ public class TwoMotors implements Motor {
     }
 
     public void setPosition(double position){
-        motor1.setPosition(position * invertMotor1);
-        motor2.setPosition(position * invertMotor2);
+        motor1.setPosition(position);
+        motor2.setPosition(position);
     }
     
     public double getPosition(){
@@ -45,8 +34,8 @@ public class TwoMotors implements Motor {
     }
     
     public void setSetpoint(double setPoint){
-        motor1.setSetpoint(setPoint * invertMotor1);
-        motor2.setSetpoint(setPoint * invertMotor2);
+        motor1.setSetpoint(setPoint);
+        motor2.setSetpoint(setPoint);
     }
 
     /** Must be called by the subystems periodic method */

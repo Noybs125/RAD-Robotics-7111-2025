@@ -1,5 +1,6 @@
 package frc.robot.utils.motor;
 
+import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
@@ -22,7 +23,7 @@ public class REVMotor implements Motor {
 
     }
     
-    public REVMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedforward, Motor simType){
+    public REVMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedforward, Motor simType, SparkBaseConfig sparkMotorConfig){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
@@ -30,6 +31,9 @@ public class REVMotor implements Motor {
 
         motor = new SparkMax(id, MotorType.kBrushless);
         this.simType = simType;
+
+        motor.configure(sparkMotorConfig, null, null);
+        
     }
 
 
