@@ -55,7 +55,10 @@ public class Camera extends PhotonCamera{
     }
     
     public void periodic(){
-        latestResult = super.getLatestResult();
+
+        for(PhotonPipelineResult result : getAllUnreadResults()){
+            latestResult = result;
+        }
         
         if(latestResult.hasTargets()){
             bestTarget = latestResult.getBestTarget();
@@ -72,7 +75,7 @@ public class Camera extends PhotonCamera{
     }
 
     public boolean updatePose(){
-        return super.getLatestResult().hasTargets();
+        return latestResult.hasTargets();
     }
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
         photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
@@ -111,7 +114,7 @@ public class Camera extends PhotonCamera{
                 (Math.max(1, Math.max(0, smallestDistance - Constants.kVision.NOISY_DISTANCE_METERS) * Constants.kVision.DISTANCE_WEIGHT) * poseAmbiguityFactor) 
                 / (1 + ((estRobotPose.targetsUsed.size() - 1) * Constants.kVision.TAG_PRESENCE_WEIGHT)));
         }
-        SmartDashboard.putNumber(super.getName() + " CONFIDENCE OF TAG", confidenceMultiplier);
+        SmartDashboard.putNumber(getName() + " CONFIDENCE OF TAG", confidenceMultiplier);
         return Constants.kVision.VISION_MEASUREMENT_STANDARD_DEVIATIONS.times(confidenceMultiplier);
     }
 
