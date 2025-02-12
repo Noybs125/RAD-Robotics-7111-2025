@@ -61,13 +61,8 @@ public class RobotContainer {
     sensors = new Sensors();
     vision = new Vision(gyro);
     swerve = new Swerve(gyro, vision);
-    mechanisms = new Mechanisms(
-        new ElevatorSimMotor(
-            null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid,
-            Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants
-            ), 
-         new ArmSimMotor(null, Constants.kSimulation.armSim, Constants.kSimulation.wristPid,  null));//Constants.kSimulation.wristFF));
-    flywheels = new Flywheels(new REVMotor(0));
+    mechanisms = new Mechanisms();
+    flywheels = new Flywheels();
     
     superStructure = new SuperStructure(swerve, vision, sensors, mechanisms, flywheels);
     autoChooser = AutoBuilder.buildAutoChooser();

@@ -5,6 +5,9 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.utils.motor.ArmSimMotor;
+import frc.robot.utils.motor.ElevatorSimMotor;
 import frc.robot.utils.motor.Motor;
 
 public class Mechanisms extends SubsystemBase {
@@ -40,10 +43,12 @@ public class Mechanisms extends SubsystemBase {
     private MechanismLigament2d elevatorMech2d = elevatorMech2dRoot.append(new MechanismLigament2d("elevator", elevatorMinimumLength, 90));
     private MechanismLigament2d wristMech2d = wristMech2dRoot.append(new MechanismLigament2d("wrist", wristLength, 0));
 
-    public Mechanisms(Motor elevator, Motor wrist){
-        this.elevator = elevator;
-
-        this.wrist = wrist;
+    public Mechanisms(){
+        elevator = new ElevatorSimMotor(
+            null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid,
+            Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants
+            );
+        wrist =  new ArmSimMotor(null, Constants.kSimulation.armSim, Constants.kSimulation.wristPid,  null);//Constants.kSimulation.wristFF));
     }
     
     public void setWristSetpoint(double setPoint) {
