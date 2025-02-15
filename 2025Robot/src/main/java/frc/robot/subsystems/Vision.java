@@ -48,7 +48,7 @@ public class Vision extends SubsystemBase{
         );
 
     public Camera[] cameraList = new Camera[] {
-        orangepi1,
+        //orangepi1,
         //orangepi2,
     };
 
@@ -121,11 +121,13 @@ public class Vision extends SubsystemBase{
     }
 
     public boolean canSeeTarget(int id, Camera camera) {
-        List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
-        if(latest != null){
-            for(PhotonTrackedTarget target : latest){
-                if(target.getFiducialId() == id){
-                    return true;
+        if (camera.latestResult != null) {
+            List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
+            if(latest != null){
+                for(PhotonTrackedTarget target : latest){
+                    if(target.getFiducialId() == id){
+                        return true;
+                    }
                 }
             }
         }
@@ -133,23 +135,27 @@ public class Vision extends SubsystemBase{
     }
 
     public double rotateToTarget(int id, Camera camera, double speed){
-        List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
-            if(canSeeTarget(id, camera)){
-                return speed;
-            } 
+        if (camera.latestResult != null) {
+            List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
+                if(canSeeTarget(id, camera)){
+                 return speed;
+               } 
+            }
         return 0;
     }
 
     public Transform2d getAlignmentToTarget(int id, Camera camera){
-        List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
-        if(latest != null){
-            for(PhotonTrackedTarget target : latest){
-                if(canSeeTarget(id, camera) && target.fiducialId == id){
-                    Transform3d cameraToTarget = target.getBestCameraToTarget();
-                    SmartDashboard.putNumber("Vision Rot CamtoTarget", cameraToTarget.getRotation().toRotation2d().getDegrees());
-                    SmartDashboard.putNumber("Vision Rot Rotations", cameraToTarget.getRotation().toRotation2d().getRotations());
-                    SmartDashboard.putNumber("Vision Rot getYaw", Rotation2d.fromDegrees(target.getYaw()).getDegrees());
-                    return new Transform2d(cameraToTarget.getY(), cameraToTarget.getX(), cameraToTarget.getRotation().toRotation2d());
+        if (camera.latestResult != null) {
+            List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
+            if(latest != null){
+                for(PhotonTrackedTarget target : latest){
+                    if(canSeeTarget(id, camera) && target.fiducialId == id){
+                        Transform3d cameraToTarget = target.getBestCameraToTarget();
+                        SmartDashboard.putNumber("Vision Rot CamtoTarget", cameraToTarget.getRotation().toRotation2d().getDegrees());
+                        SmartDashboard.putNumber("Vision Rot Rotations", cameraToTarget.getRotation().toRotation2d().getRotations());
+                        SmartDashboard.putNumber("Vision Rot getYaw", Rotation2d.fromDegrees(target.getYaw()).getDegrees());
+                        return new Transform2d(cameraToTarget.getY(), cameraToTarget.getX(), cameraToTarget.getRotation().toRotation2d());
+                    }
                 }
             }
         }

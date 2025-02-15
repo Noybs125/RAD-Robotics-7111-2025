@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,6 +20,18 @@ public class Auto extends SubsystemBase {
     private SendableChooser<Integer> alliance = new SendableChooser<Integer>();
 
     private Pose2d poseSetpoint = new Pose2d();
+
+    Pose2d FeederLeft = new Pose2d(1.20, 70.3, Rotation2d.fromDegrees(306.59));
+    Pose2d FeederRight = new Pose2d(1.20, 1.03, Rotation2d.fromDegrees(50.60)); 
+    Pose2d CoralZone1 = new Pose2d(3.27, 4.03, Rotation2d.fromDegrees(0.00)); 
+    Pose2d CoralZone2 = new Pose2d(3.87, 5.08, Rotation2d.fromDegrees(300.69)); 
+    Pose2d CoralZone3 = new Pose2d(5.12, 5.11, Rotation2d.fromDegrees(237.01)); 
+    Pose2d CoralZone4 = new Pose2d(5.72, 4.03, Rotation2d.fromDegrees(180)); 
+    Pose2d CoralZone5 = new Pose2d(5.18, 2.78, Rotation2d.fromDegrees(119.01)); 
+    Pose2d CoralZone6 = new Pose2d(3.76, 2.80, Rotation2d.fromDegrees(60.01)); 
+    Pose2d Processor = new Pose2d(6.21, 0.39, Rotation2d.fromDegrees(270)); 
+    Pose2d Barge = new Pose2d(7.90, 6.10, Rotation2d.fromDegrees(0.00));     
+    public List<Pose2d> zoneMap = new ArrayList<>();
 
     public enum FieldSetpoints {
         Reef1,
@@ -36,6 +51,16 @@ public class Auto extends SubsystemBase {
         alliance.addOption("1", 1);
         alliance.addOption("2", 2);
         alliance.addOption("3", 3);
+        zoneMap.add(FeederLeft);
+        zoneMap.add(FeederRight);
+        zoneMap.add(CoralZone1);
+        zoneMap.add(CoralZone2);
+        zoneMap.add(CoralZone3);
+        zoneMap.add(CoralZone4);
+        zoneMap.add(CoralZone5);
+        zoneMap.add(CoralZone6);
+        zoneMap.add(Processor);
+        zoneMap.add(Barge);
     }
 
     public Command pathfindToPose(Pose2d pose) {
@@ -102,6 +127,9 @@ public class Auto extends SubsystemBase {
     
         return pathfindToPose(poseSetpoint);
 
+    }
+    public Pose2d findZone(Pose2d robotPose){
+        return robotPose.nearest(zoneMap);
     }
 
     public void periodic() {

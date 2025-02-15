@@ -342,9 +342,7 @@ public class Swerve extends SubsystemBase {
     if(vision.canSeeTarget(18, vision.orangepi1)){
       SmartDashboard.putNumber("Vison TranslateY", vision.getAlignmentToTarget(18, vision.orangepi1).getY());
       SmartDashboard.putNumber("Vison TranslateX", vision.getAlignmentToTarget(18, vision.orangepi1).getX());
-
     }
-    
     
     handleStates();
     field.setRobotPose(getPose());

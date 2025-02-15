@@ -49,12 +49,12 @@ public class Sensors extends SubsystemBase {
 
     //gets PDH total energy and power
     public double getPDHEnergy(){
-        double totalEnergy = getPDHEnergy();
+        double totalEnergy = powerHub.getTotalEnergy();
         return totalEnergy;
     }
 
     public double getPDHPower(){
-        double totalPower = getPDHPower();
+        double totalPower = powerHub.getTotalPower();
         return totalPower;
     }
 
