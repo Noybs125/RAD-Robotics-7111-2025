@@ -32,9 +32,9 @@ public class CTREMotor implements Motor {
 
         motor.getConfigurator().apply(talonConfig);
 
-        Shuffleboard.getTab("Voltage").addDouble("Motor" + id + " Voltage", () -> motor.getMotorVoltage().getValueAsDouble()).withWidget("");
-        Shuffleboard.getTab("Voltage").addDouble("Motor" + id + " Speed", () -> motor.get()).withWidget("");
-        Shuffleboard.getTab("Voltage").addDouble("Motor" + id + " Position", () -> 360 * motor.getRotorPosition().getValueAsDouble()).withWidget("");
+        Shuffleboard.getTab("DeviceOutputs").addDouble("Motor" + id + " Voltage", () -> motor.getMotorVoltage().getValueAsDouble()).withWidget("");
+        Shuffleboard.getTab("DeviceOutputs").addDouble("Motor" + id + " Speed", () -> motor.get()).withWidget("");
+        Shuffleboard.getTab("DeviceOutputs").addDouble("Motor" + id + " Position", () -> 360 * motor.getRotorPosition().getValueAsDouble()).withWidget("");
     }
 
     public CTREMotor(int id){

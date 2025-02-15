@@ -35,9 +35,9 @@ public class REVMotor implements Motor {
 
         motor.configure(sparkMotorConfig, null, null);
         
-        Shuffleboard.getTab("Voltage").addDouble("Motor" + id + " Voltage", () -> motor.getBusVoltage()).withWidget("");
-        Shuffleboard.getTab("Voltage").addDouble("Motor" + id + " Speed", () -> motor.get()).withWidget("");
-        Shuffleboard.getTab("Voltage").addDouble("Motor" + id + " Position", () -> motor.getAbsoluteEncoder().getPosition()).withWidget("");
+        Shuffleboard.getTab("DeviceOutputs").addDouble("Motor" + id + " Voltage", () -> motor.getBusVoltage()).withWidget("");
+        Shuffleboard.getTab("DeviceOutputs").addDouble("Motor" + id + " Speed", () -> motor.get()).withWidget("");
+        Shuffleboard.getTab("DeviceOutputs").addDouble("Motor" + id + " Position", () -> motor.getAbsoluteEncoder().getPosition()).withWidget("");
     }
 
 
