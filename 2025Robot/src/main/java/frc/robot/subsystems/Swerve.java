@@ -91,6 +91,11 @@ public class Swerve extends SubsystemBase {
       
       e.printStackTrace();
     }*/
+    for(SwerveModule mod : modules){
+      Shuffleboard.getTab("DeviceOutputs").add("angle Motor " + mod +" current", mod.angleMotor.getStatorCurrent().getValueAsDouble()).withWidget("Text View").getEntry();
+      Shuffleboard.getTab("DeviceOutputs").add("drive motor " + mod + " current", mod.driveMotor.getStatorCurrent().getValueAsDouble()).withWidget("Text View").getEntry();
+      Shuffleboard.getTab("DeviceOutputs").add("drive motor " + mod + " current", mod.driveMotor.getStatorCurrent().getValueAsDouble()).withWidget("Text View").getEntry();
+    }
     
     AutoBuilder.configure(
             this::getPose, // Robot pose supplier
@@ -333,10 +338,6 @@ public class Swerve extends SubsystemBase {
 
     }
     
-    for(SwerveModule mod : modules){
-      SmartDashboard.putNumber("angle Motor " + mod +" current", mod.angleMotor.getStatorCurrent().getValueAsDouble());
-      SmartDashboard.putNumber("drive motor " + mod + " current", mod.driveMotor.getStatorCurrent().getValueAsDouble());
-    }
     
     handleStates();
     field.setRobotPose(getPose());
