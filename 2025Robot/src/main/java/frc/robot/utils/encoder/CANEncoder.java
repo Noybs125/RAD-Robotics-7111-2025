@@ -4,6 +4,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class CANEncoder implements Encoder {
     private final CANcoder encoder;
@@ -18,6 +19,8 @@ public class CANEncoder implements Encoder {
         this.gearRatio = gearRatio;
         encoder = new CANcoder(id);
         this.isCW = isCW;
+
+        Shuffleboard.getTab("DeviceOutputs").add("CANEncoderVolt", getVoltage()).withWidget("").getEntry();
     }
 
     public Rotation2d getPosition(){
