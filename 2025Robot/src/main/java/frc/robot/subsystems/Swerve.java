@@ -44,6 +44,7 @@ public class Swerve extends SubsystemBase {
   private final SwerveModule[] modules;
   public final XboxController xbox;
   public final SwerveDrivePoseEstimator swerveOdometry;
+  private Mechanisms elevator;
 
   private Field2d field = new Field2d();
   private FieldObject2d fieldObjectPose = field.getObject("FieldPosition");
@@ -66,6 +67,8 @@ public class Swerve extends SubsystemBase {
   private double translateX;
   private double translateY;
   private double rotationZ;
+
+  private double maxSpeed = 1;
 
   private boolean isFieldRelative = true;
 
@@ -185,12 +188,14 @@ public class Swerve extends SubsystemBase {
     this.state = State;
   }
 
+
+
   private void handleStates()
   {
     switch (state) {
       case DefaultState:
-        translateX = Constants.kControls.X_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftX(), 3 / 1));
-        translateY = Constants.kControls.Y_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftY(), 3 / 1));
+        translateX = Constants.kControls.X_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftX(), 3 / 1) * maxSpeed);
+        translateY = Constants.kControls.Y_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftY(), 3 / 1) * maxSpeed);
         rotationZ = Constants.kControls.THETA_DRIVE_LIMITER.calculate(Math.pow(xbox.getRightX(), 3 / 1));
         isFieldRelative = true;
         break;
@@ -342,7 +347,16 @@ public class Swerve extends SubsystemBase {
     if(vision.canSeeTarget(18, vision.orangepi1)){
       SmartDashboard.putNumber("Vison TranslateY", vision.getAlignmentToTarget(18, vision.orangepi1).getY());
       SmartDashboard.putNumber("Vison TranslateX", vision.getAlignmentToTarget(18, vision.orangepi1).getX());
+
     }
+    
+    if(elevator.getElevatorHeight() < 2 /* ft */){
+      maxSpeed = 1 - elevator.getElevatorHeight() * 0.10; 
+    }
+    else {
+      maxSpeed = 1;
+    }
+    
     
     handleStates();
     field.setRobotPose(getPose());
