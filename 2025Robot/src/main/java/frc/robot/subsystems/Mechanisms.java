@@ -71,7 +71,7 @@ public class Mechanisms extends SubsystemBase {
         isManual = false;
     }
     public double getElevatorHeight(){
-        double elevatorHeight = Math.PI * 2 * elevator.getPosition() / 360.0;
+        double elevatorHeight = (Math.PI * 2 * elevator.getPosition() / 360.0) * 12;
         return elevatorHeight;
     }
 
