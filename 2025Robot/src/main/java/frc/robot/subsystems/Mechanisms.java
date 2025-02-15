@@ -64,13 +64,10 @@ public class Mechanisms extends SubsystemBase {
         elevatorSetpoint = setPoint;
         isManual = false;
     }
-    /*
     public double getElevatorHeight(){
-        double rotationCount = elevator.getEncoder().getPosition().getRotations();
-        double elevatorHeight = Math.PI * 2 * rotationCount;
+        double elevatorHeight = Math.PI * 2 * elevator.getPosition() / 360.0;
         return elevatorHeight;
     }
-    */
 
     public void setElevatorSpeed(double speed) {
         elevator.setSpeed(speed);

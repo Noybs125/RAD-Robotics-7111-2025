@@ -55,6 +55,11 @@ public class CANEncoder implements Encoder {
         this.gearRatio = gearRatio;
     }
 
+    public void resetEncoder(){
+        encoder.setPosition(0);
+        return;
+    }
+
     public void setDirection(boolean isCW){
         if (isCW)
             this.isCW = SensorDirectionValue.Clockwise_Positive;

@@ -53,6 +53,11 @@ public class WpiEncoder implements frc.robot.utils.encoder.Encoder {
         this.gearRatio = gearRatio;
     }
 
+    public void resetEncoder(){
+        encoder.reset();
+        return;
+    }
+
     public boolean getDirection(){
         return inverted;
     }

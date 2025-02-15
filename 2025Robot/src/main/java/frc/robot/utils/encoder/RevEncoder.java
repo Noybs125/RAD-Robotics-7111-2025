@@ -49,10 +49,14 @@ public class RevEncoder implements Encoder {
         this.gearRatio = gearRatio;
     }
 
+    public void resetEncoder(){
+        offset = encoder.get();
+    }
+
     public boolean getDirection(){
         return inverted;
     }
-
+    
     public void setDirection(boolean inverted){
         this.inverted = inverted;
     }
