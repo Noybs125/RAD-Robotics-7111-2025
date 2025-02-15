@@ -78,7 +78,7 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case Default:
             default:
-                //will contain the default state
+                actualRobotState = ActualState.defaultState;
                 break;
         }
         actualState();

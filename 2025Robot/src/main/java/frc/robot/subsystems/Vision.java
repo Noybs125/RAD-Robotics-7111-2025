@@ -143,7 +143,7 @@ public class Vision extends SubsystemBase{
         List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
         if(latest != null){
             for(PhotonTrackedTarget target : latest){
-                if(canSeeTarget(id, camera)){
+                if(canSeeTarget(id, camera) && target.fiducialId == id){
                     Transform3d cameraToTarget = target.getBestCameraToTarget();
 
                     return new Transform2d(cameraToTarget.getY(), cameraToTarget.getX(), Rotation2d.fromDegrees(target.getYaw()));
