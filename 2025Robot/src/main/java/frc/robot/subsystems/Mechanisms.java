@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.encoder.Encoder;
 import frc.robot.utils.encoder.RevEncoder;
+import frc.robot.utils.encoder.WpiEncoder;
 import frc.robot.utils.motor.ArmSimMotor;
 import frc.robot.utils.motor.CTREMotor;
 import frc.robot.utils.motor.ElevatorSimMotor;
@@ -21,6 +22,7 @@ public class Mechanisms extends SubsystemBase {
 
     private Motor elevator;
     private Motor wrist;
+    private Encoder testEncoder;
     private double elevatorSetpoint = 0;
     private double wristSetpoint = 0;
     private boolean isManual = false;
@@ -51,7 +53,11 @@ public class Mechanisms extends SubsystemBase {
     private MechanismLigament2d wristMech2d = wristMech2dRoot.append(new MechanismLigament2d("wrist", wristLength, 0));
 
     public Mechanisms(){
-        elevator = new CTREMotor(17, new RevEncoder(0), 1, new PIDController(0.1, 0, 0), new SimpleMotorFeedforward(0, 0), null, null);
+        testEncoder = new WpiEncoder(0, 1);
+        elevator = new ElevatorSimMotor(
+            null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid,
+            Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants
+            );
         wrist =  new ArmSimMotor(null, Constants.kSimulation.armSim, Constants.kSimulation.wristPid,  null);//Constants.kSimulation.wristFF));
     }
     
