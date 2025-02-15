@@ -2,6 +2,7 @@ package frc.robot.utils.encoder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class RevEncoder implements Encoder {
     private DutyCycleEncoder encoder;
@@ -14,6 +15,8 @@ public class RevEncoder implements Encoder {
     public RevEncoder(int id){
         encoder = new DutyCycleEncoder(id);
         this.id = id;
+
+        Shuffleboard.getTab("DeviceOutputs").add("RevEncoderPos", getPosition()).withWidget("").getEntry();
     }
 
     public RevEncoder(int id, double gearRatio){
