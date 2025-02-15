@@ -169,7 +169,8 @@ public class Swerve extends SubsystemBase {
     Scoring,
     RobotRelative,
     VisionGyro,
-    Vision
+    Vision,
+    lowerSpeed,
   }
 
   public double getTransX(){
@@ -194,10 +195,16 @@ public class Swerve extends SubsystemBase {
   {
     switch (state) {
       case DefaultState:
+        translateX = Constants.kControls.X_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftX(), 3 / 1));
+        translateY = Constants.kControls.Y_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftY(), 3 / 1));
+        rotationZ = Constants.kControls.THETA_DRIVE_LIMITER.calculate(Math.pow(xbox.getRightX(), 3 / 1));
+        isFieldRelative = true;
+        break;
+
+      case lowerSpeed:
         translateX = Constants.kControls.X_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftX(), 3 / 1) * maxSpeed);
         translateY = Constants.kControls.Y_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftY(), 3 / 1) * maxSpeed);
         rotationZ = Constants.kControls.THETA_DRIVE_LIMITER.calculate(Math.pow(xbox.getRightX(), 3 / 1));
-        isFieldRelative = true;
         break;
 
       case Intaking:
@@ -350,19 +357,11 @@ public class Swerve extends SubsystemBase {
 
     }
     
-    if(elevator.getElevatorHeight() < 2 /* ft */){
-      maxSpeed = 1 - elevator.getElevatorHeight() * 0.10; 
-    }
-    else {
-      maxSpeed = 1;
-    }
-    
-    
     handleStates();
     field.setRobotPose(getPose());
     fieldObjectPose.setPose(new Pose2d(poseX.getDouble(0), poseY.getDouble(0), Rotation2d.fromDegrees(poseRot.getDouble(0))));
     
-    
+    maxSpeed = 1 - elevator.getElevatorHeight() * 0.10; 
   }
 
   @Override
