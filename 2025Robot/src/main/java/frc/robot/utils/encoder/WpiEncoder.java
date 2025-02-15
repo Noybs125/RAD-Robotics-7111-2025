@@ -2,6 +2,7 @@ package frc.robot.utils.encoder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import frc.robot.Constants;
 

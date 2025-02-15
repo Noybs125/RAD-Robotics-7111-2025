@@ -43,7 +43,7 @@ public class Camera extends PhotonCamera{
             throw new RuntimeException(e);
         }
     }
-
+    
     private AHRS gyro;
 
     public Camera(PhotonCamera camera, Transform3d cameraToRobotCenter, EstimatedRobotPose estRobotPose, Vision vision) {

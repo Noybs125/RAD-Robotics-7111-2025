@@ -1,12 +1,19 @@
 package frc.robot.subsystems;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.utils.encoder.Encoder;
+import frc.robot.utils.encoder.RevEncoder;
 import frc.robot.utils.motor.ArmSimMotor;
+import frc.robot.utils.motor.CTREMotor;
 import frc.robot.utils.motor.ElevatorSimMotor;
 import frc.robot.utils.motor.Motor;
 
@@ -44,10 +51,7 @@ public class Mechanisms extends SubsystemBase {
     private MechanismLigament2d wristMech2d = wristMech2dRoot.append(new MechanismLigament2d("wrist", wristLength, 0));
 
     public Mechanisms(){
-        elevator = new ElevatorSimMotor(
-            null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid,
-            Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants
-            );
+        elevator = new CTREMotor(17, new RevEncoder(0), 1, new PIDController(0.1, 0, 0), new SimpleMotorFeedforward(0, 0), null, null);
         wrist =  new ArmSimMotor(null, Constants.kSimulation.armSim, Constants.kSimulation.wristPid,  null);//Constants.kSimulation.wristFF));
     }
     
@@ -60,6 +64,13 @@ public class Mechanisms extends SubsystemBase {
         elevatorSetpoint = setPoint;
         isManual = false;
     }
+    /*
+    public double getElevatorHeight(){
+        double rotationCount = elevator.getEncoder().getPosition().getRotations();
+        double elevatorHeight = Math.PI * 2 * rotationCount;
+        return elevatorHeight;
+    }
+    */
 
     public void setElevatorSpeed(double speed) {
         elevator.setSpeed(speed);
