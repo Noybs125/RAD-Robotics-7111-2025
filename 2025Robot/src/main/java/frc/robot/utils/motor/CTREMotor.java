@@ -5,8 +5,12 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.utils.encoder.Encoder;
+
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class CTREMotor implements Motor {
     private TalonFX motor;
@@ -27,6 +31,10 @@ public class CTREMotor implements Motor {
         this.simType = simType;
 
         motor.getConfigurator().apply(talonConfig);
+
+        Shuffleboard.getTab("DeviceOutputs").addDouble("Motor" + id + " Voltage", () -> motor.getMotorVoltage().getValueAsDouble()).withWidget("");
+        Shuffleboard.getTab("DeviceOutputs").addDouble("Motor" + id + " Speed", () -> motor.get()).withWidget("");
+        Shuffleboard.getTab("DeviceOutputs").addDouble("Motor" + id + " Position", () -> 360 * motor.getRotorPosition().getValueAsDouble()).withWidget("");
     }
 
     public CTREMotor(int id){
