@@ -129,7 +129,7 @@ public class SuperStructure extends SubsystemBase {
     }
 
     public Command setRobotStateCommand(ControlState state){
-        return new InstantCommand(() -> setRobotState(state));
+        return runOnce(() -> setRobotState(state));
     }
 
     private void coralL1(){

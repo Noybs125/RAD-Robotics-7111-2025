@@ -122,8 +122,8 @@ public class Vision extends SubsystemBase{
     public boolean canSeeTarget(int id, Camera camera) {
         List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
         if(latest != null){
-            for(int i = 0; i <= latest.size(); i++){
-                if(latest.get(i).getFiducialId() == id){
+            for(PhotonTrackedTarget target : latest){
+                if(target.getFiducialId() == id){
                     return true;
                 }
             }
@@ -133,24 +133,20 @@ public class Vision extends SubsystemBase{
 
     public double rotateToTarget(int id, Camera camera, double speed){
         List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
-        if(latest != null){
-            for(int i = 0; i <= latest.size(); i++){
-                if(canSeeTarget(id, camera)){
-                    return 0;
-                } 
-            }
-        }
-        return speed;
+            if(canSeeTarget(id, camera)){
+                return speed;
+            } 
+        return 0;
     }
 
     public Transform2d getAlignmentToTarget(int id, Camera camera){
         List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
         if(latest != null){
-            for(int i = 0; i <= latest.size(); i++){
+            for(PhotonTrackedTarget target : latest){
                 if(canSeeTarget(id, camera)){
-                    Transform3d cameraToTarget = latest.get(i).getBestCameraToTarget();
+                    Transform3d cameraToTarget = target.getBestCameraToTarget();
 
-                    return new Transform2d(cameraToTarget.getX(), cameraToTarget.getY(), cameraToTarget.getRotation().toRotation2d());
+                    return new Transform2d(cameraToTarget.getY(), cameraToTarget.getX(), Rotation2d.fromDegrees(target.getYaw()));
                 }
             }
         }
