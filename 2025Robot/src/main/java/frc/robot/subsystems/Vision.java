@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -145,8 +146,10 @@ public class Vision extends SubsystemBase{
             for(PhotonTrackedTarget target : latest){
                 if(canSeeTarget(id, camera) && target.fiducialId == id){
                     Transform3d cameraToTarget = target.getBestCameraToTarget();
-
-                    return new Transform2d(cameraToTarget.getY(), cameraToTarget.getX(), Rotation2d.fromDegrees(target.getYaw()));
+                    SmartDashboard.putNumber("Vision Rot CamtoTarget", cameraToTarget.getRotation().toRotation2d().getDegrees());
+                    SmartDashboard.putNumber("Vision Rot Rotations", cameraToTarget.getRotation().toRotation2d().getRotations());
+                    SmartDashboard.putNumber("Vision Rot getYaw", Rotation2d.fromDegrees(target.getYaw()).getDegrees());
+                    return new Transform2d(cameraToTarget.getY(), cameraToTarget.getX(), cameraToTarget.getRotation().toRotation2d());
                 }
             }
         }

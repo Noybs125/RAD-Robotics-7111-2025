@@ -13,6 +13,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.Vision.VisionState;
 import frc.robot.utils.Camera;
 import frc.robot.utils.SwerveModule;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -51,8 +53,8 @@ public class Swerve extends SubsystemBase {
   private GenericEntry poseY = Shuffleboard.getTab("Odometry").add("Pose Y", 0).withWidget("Text View").getEntry();
   private GenericEntry poseRot = Shuffleboard.getTab("Odometry").add("Pose Rot", 0).withWidget("Text View").getEntry();
   
-  private PIDController rotVisionPID = new PIDController(0.006, 0,0.00001);
-  private PIDController translationVisionPID = new PIDController(0.25, 0.00001,0.0035);
+  private PIDController rotVisionPID = new PIDController(0.0025, 0,0);
+  private PIDController translationVisionPID = new PIDController(0.2, 0.0001,0.0035);
   private PIDController gyroPID;
 
   private final AHRS gyro;
@@ -210,15 +212,19 @@ public class Swerve extends SubsystemBase {
         break;
 
       case Vision:
-      if (vision.canSeeTarget(18, vision.orangepi1)){
-        translateX = translationVisionPID.calculate(vision.getAlignmentToTarget(18, vision.orangepi1).getX(), 0);
-        translateY = translationVisionPID.calculate(vision.getAlignmentToTarget(18, vision.orangepi1).getY(),0.35);
-        rotationZ = -rotVisionPID.calculate(vision.getAlignmentToTarget(18, vision.orangepi1).getRotation().getDegrees(), 0);
-      } else {
-        translateX = 0;
-        translateY = 0;
-        rotationZ = 0;
-      }
+        if (vision.canSeeTarget(18, vision.orangepi1)){
+          var rotMeasure = vision.getAlignmentToTarget(18, vision.orangepi1).getRotation().getDegrees();
+          if(rotMeasure < 0){
+            rotMeasure += 360;
+          }
+          translateX = translationVisionPID.calculate(vision.getAlignmentToTarget(18, vision.orangepi1).getX(), 0);
+          translateY = translationVisionPID.calculate(vision.getAlignmentToTarget(18, vision.orangepi1).getY(),0.35);
+          rotationZ = rotVisionPID.calculate(rotMeasure, 180);
+        } else {
+          translateX = 0;
+          translateY = 0;
+          rotationZ = 0;
+        }
         isFieldRelative = false;
         break;
     }
@@ -322,7 +328,6 @@ public class Swerve extends SubsystemBase {
       }
     }
     if(vision.canSeeTarget(18, vision.orangepi1)){
-      SmartDashboard.putNumber("Vision Rot", vision.getAlignmentToTarget(18, vision.orangepi1).getRotation().getDegrees());
       SmartDashboard.putNumber("Vison TranslateY", vision.getAlignmentToTarget(18, vision.orangepi1).getY());
       SmartDashboard.putNumber("Vison TranslateX", vision.getAlignmentToTarget(18, vision.orangepi1).getX());
 
