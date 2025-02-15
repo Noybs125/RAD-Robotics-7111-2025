@@ -92,9 +92,16 @@ public class Swerve extends SubsystemBase {
       e.printStackTrace();
     }*/
     for(SwerveModule mod : modules){
-      Shuffleboard.getTab("DeviceOutputs").add("angle Motor " + mod +" current", mod.angleMotor.getStatorCurrent().getValueAsDouble()).withWidget("Text View").getEntry();
-      Shuffleboard.getTab("DeviceOutputs").add("drive motor " + mod + " current", mod.driveMotor.getStatorCurrent().getValueAsDouble()).withWidget("Text View").getEntry();
-      Shuffleboard.getTab("DeviceOutputs").add("drive motor " + mod + " current", mod.driveMotor.getStatorCurrent().getValueAsDouble()).withWidget("Text View").getEntry();
+      Shuffleboard.getTab("DeviceOutputs").addDouble("Angle motor " + mod.moduleNumber + " current", () -> mod.angleMotor.getStatorCurrent().getValueAsDouble()).withWidget("Text View");
+      Shuffleboard.getTab("DeviceOutputs").addDouble("Angle motor " + mod.moduleNumber + " velocity", () -> mod.angleMotor.getVelocity().getValueAsDouble()).withWidget("Text View");
+      Shuffleboard.getTab("DeviceOutputs").addDouble("Angle motor " + mod.moduleNumber + " supply voltage", () -> mod.angleMotor.getSupplyVoltage().getValueAsDouble()).withWidget("Text View");
+      Shuffleboard.getTab("DeviceOutputs").addDouble("Angle motor " + mod.moduleNumber + " output voltage", () -> mod.angleMotor.getMotorVoltage().getValueAsDouble()).withWidget("Text View");
+
+      Shuffleboard.getTab("DeviceOutputs").addDouble("Drive motor " + mod.moduleNumber + " current", () -> mod.driveMotor.getStatorCurrent().getValueAsDouble()).withWidget("Text View");
+      Shuffleboard.getTab("DeviceOutputs").addDouble("Drive motor " + mod.moduleNumber + " velocity", () -> mod.driveMotor.getVelocity().getValueAsDouble()).withWidget("Text View");
+      Shuffleboard.getTab("DeviceOutputs").addDouble("Drive motor " + mod.moduleNumber + " supply voltage", () -> mod.driveMotor.getSupplyVoltage().getValueAsDouble()).withWidget("Text View");
+      Shuffleboard.getTab("DeviceOutputs").addDouble("Drive motor " + mod.moduleNumber + " output voltage", () -> mod.driveMotor.getMotorVoltage().getValueAsDouble()).withWidget("Text View");
+      Shuffleboard.getTab("DeviceOutputs").addDouble("Drive motor " + mod.moduleNumber + " temp C", () -> mod.driveMotor.getProcessorTemp().getValueAsDouble()).withWidget("Text View");
     }
     
     AutoBuilder.configure(
