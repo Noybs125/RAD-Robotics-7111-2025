@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -8,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Sensors extends SubsystemBase {
 
     public PowerDistribution powerHub = new PowerDistribution(1, ModuleType.kRev);
+    private DigitalInput beamBreak = new DigitalInput(2);
 
     public Sensors(){
         Shuffleboard.getTab("DeviceOutputs").addDouble("PDHPower", () -> getPDHPower()).withWidget("");
@@ -56,6 +58,10 @@ public class Sensors extends SubsystemBase {
     public double getPDHPower(){
         double totalPower = powerHub.getTotalPower();
         return totalPower;
+    }
+
+    public boolean isBeamBroken(){
+        return beamBreak.get();
     }
 
 
