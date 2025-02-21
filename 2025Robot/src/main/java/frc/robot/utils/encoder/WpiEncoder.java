@@ -1,6 +1,7 @@
 package frc.robot.utils.encoder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
@@ -13,6 +14,7 @@ public class WpiEncoder implements frc.robot.utils.encoder.Encoder {
     private double offset = 0;
     private boolean inverted = false;
     private int id;
+    private GenericEntry multiplierEntry = Shuffleboard.getTab("test").add("encoder multiplier", 0).getEntry();
 
     public WpiEncoder(int id, int id2){
         encoder = new Encoder(id, id2);
@@ -20,17 +22,21 @@ public class WpiEncoder implements frc.robot.utils.encoder.Encoder {
         encoder.setDistancePerPulse(Constants.kSimulation.elevatorEncoderDistPerPulse);
         this.id = id;
 
-        Shuffleboard.getTab("Teleop").addDouble("encoder distance", () -> encoder.getDistance());
-        Shuffleboard.getTab("Teleop").addDouble("encoder rate", () -> encoder.getRate());
-        Shuffleboard.getTab("Teleop").addInteger("encoder count", () -> (long)encoder.get());
+        Shuffleboard.getTab("test").addDouble("encoder distance", () -> encoder.getDistance());
+        Shuffleboard.getTab("test").addDouble("encoder rate", () -> encoder.getRate());
+        Shuffleboard.getTab("test").addInteger("encoder count", () -> encoder.get());
     }
 
     public WpiEncoder(int id, int id2, double gearRatio){
         encoder = new Encoder(id, id2);
         EncoderSim encoderSim = new EncoderSim(encoder);
-        encoder.setDistancePerPulse(Constants.kSimulation.elevatorEncoderDistPerPulse);
+        encoder.setDistancePerPulse(1);
         this.id = id;
         this.gearRatio = gearRatio;
+
+        Shuffleboard.getTab("test").addDouble("encoder distance", () -> encoder.getDistance());
+        Shuffleboard.getTab("test").addDouble("encoder rate", () -> encoder.getRate());
+        Shuffleboard.getTab("test").addInteger("encoder count", () -> encoder.get());
     }
 
     public Rotation2d getPosition(){
@@ -71,9 +77,8 @@ public class WpiEncoder implements frc.robot.utils.encoder.Encoder {
     }
 
     public void periodic(){
-        position = encoder.get() * gearRatio - offset;
+        encoder.setDistancePerPulse(multiplierEntry.getDouble(0) * gearRatio);
+        position = encoder.getDistance() * gearRatio - offset;
         encoder.setReverseDirection(inverted);
-
-        //Shuffleboard stuff goes here
     }
 }

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Auto;
+import frc.robot.subsystems.Field;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Swerve.SwerveState;
 import frc.robot.subsystems.Flywheels;
@@ -42,7 +42,7 @@ public class RobotContainer {
   public final CommandXboxController commXbox;
 
   public final Swerve swerve;
-  public final Auto auto;
+  public final Field field;
   public final Vision vision;
   public final Mechanisms mechanisms;
   public final Flywheels flywheels;
@@ -56,16 +56,15 @@ public class RobotContainer {
   public RobotContainer() {
     xbox = new XboxController(2);
     commXbox = new CommandXboxController(2);
-
     
-    auto = new Auto();
+    field = new Field();
     sensors = new Sensors();
     vision = new Vision(gyro);
     swerve = new Swerve(gyro, vision);
     mechanisms = new Mechanisms();
     flywheels = new Flywheels();
-    
-    superStructure = new SuperStructure(swerve, vision, sensors, mechanisms, flywheels);
+    superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels);
+
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData(autoChooser);
     

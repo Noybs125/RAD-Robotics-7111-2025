@@ -161,4 +161,21 @@ public class Vision extends SubsystemBase{
         }
         return null;
     }
+
+    public boolean isAtTarget(int id, Camera camera, Transform2d setpoints, double deadzone){
+        if(canSeeTarget(id, camera)){
+            double x = getAlignmentToTarget(id, camera).getX();
+            double y = getAlignmentToTarget(id, camera).getY();
+            double rot = getAlignmentToTarget(id, camera).getRotation().getDegrees() - setpoints.getRotation().getDegrees();
+
+            if(x <= setpoints.getX() + deadzone && x >= setpoints.getX() - deadzone){
+                if(y <= setpoints.getY() + deadzone && y >= setpoints.getY() - deadzone){
+                    if(rot <= setpoints.getRotation().getDegrees() + deadzone && rot >= setpoints.getRotation().getDegrees() - deadzone){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }

@@ -9,18 +9,19 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Auto extends SubsystemBase {
+public class Field extends SubsystemBase {
 
-    private SendableChooser<Integer> alliance = new SendableChooser<Integer>();
+    private SendableChooser<Integer> driverLocation = new SendableChooser<Integer>();
 
     private Pose2d poseSetpoint = new Pose2d();
-      
+
     public List<Pose2d> zoneMap = new ArrayList<>();
     private Pose2d[] zoneArray = new Pose2d[] {
         new Pose2d(1.20, 70.3, Rotation2d.fromDegrees(306.59)),
@@ -49,13 +50,14 @@ public class Auto extends SubsystemBase {
         Climb
     }
 
-    public Auto() {
-        alliance.addOption("1", 1);
-        alliance.addOption("2", 2);
-        alliance.addOption("3", 3);
+    public Field() {
+        driverLocation.addOption("1", 1);
+        driverLocation.addOption("2", 2);
+        driverLocation.addOption("3", 3);
         for(Pose2d zone : zoneArray){
             zoneMap.add(zone);
         }
+        Shuffleboard.getTab("Autonomous").add("DriverStation", driverLocation);
     }
 
     public Command pathfindToPose(Pose2d pose) {
@@ -97,7 +99,7 @@ public class Auto extends SubsystemBase {
                 poseSetpoint = new Pose2d(7.29, 6.18, Rotation2d.fromDegrees(0));
                 break;
             case Climb:
-                switch ((int) alliance.getSelected()) {
+                switch ((int) driverLocation.getSelected()) {
                     case 1:
                         poseSetpoint = new Pose2d(7.33, 7.27, Rotation2d.fromDegrees(0));
                         break;
@@ -123,7 +125,7 @@ public class Auto extends SubsystemBase {
         return pathfindToPose(poseSetpoint);
 
     }
-    public Pose2d findZone(Pose2d robotPose){
+    public Pose2d getNearestZone(Pose2d robotPose){
         return robotPose.nearest(zoneMap);
     }
 

@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 public class SuperStructure extends SubsystemBase {
     private Swerve swerve;
     private Vision vision;
+    private Field field;
+    private Sensors sensors;
     private Mechanisms mechanisms;
     private Flywheels flywheels; 
     private ActualState actualRobotState;
@@ -42,9 +44,11 @@ public class SuperStructure extends SubsystemBase {
         defaultState,
     }
 
-    public SuperStructure(Swerve swerve, Vision vision, Sensors sensors, Mechanisms mechanisms, Flywheels flywheels){
+    public SuperStructure(Swerve swerve, Vision vision, Field field, Sensors sensors, Mechanisms mechanisms, Flywheels flywheels){
         this.swerve = swerve;
         this.vision = vision;
+        this.field = field;
+        this.sensors = sensors;
         this.mechanisms = mechanisms;
         this.flywheels = flywheels;
 
@@ -54,6 +58,13 @@ public class SuperStructure extends SubsystemBase {
 
 
     public void periodic() {
+        manageControlState();
+        manageActualState();
+
+
+    }
+
+    private void manageControlState(){
         switch (controlRobotState) {   
             case ReefL1Processor:
                 //checks for whether it should align for reef or processor
@@ -69,22 +80,27 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case ReefL4Net:
                 //checks for whether it should score coral on L4 or score algae in net
+                boolean isNet = false; //true if we have algae
+                actualRobotState = isNet
+                    ? ActualState.algaeNet
+                    : ActualState.coralL4;
                 break;
             case ReefFeeder:
                 //
+                actualRobotState = ActualState.coralFeeder;
                 break;
             case DeepClimb:
                 //
+                actualRobotState = ActualState.deepClimb;
                 break;
             case Default:
             default:
                 actualRobotState = ActualState.defaultState;
                 break;
         }
-        actualState();
     }
 
-    private void actualState()
+    private void manageActualState()
     {
         switch(actualRobotState)
         {
@@ -138,6 +154,7 @@ public class SuperStructure extends SubsystemBase {
     }
     private void coralL2(){
         mechanisms.setState(Mechanisms.MechanismsState.ReefL2);
+        if(vision.isAtTarget(0, null, null, 0));
     }
     private void coralL3(){
         mechanisms.setState(Mechanisms.MechanismsState.ReefL3);
