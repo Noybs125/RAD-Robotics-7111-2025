@@ -3,6 +3,10 @@ package frc.robot.utils.encoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public interface Encoder {
+    /**
+     * interface for getPosition on the encoders
+     * @return -The position of the encoders
+     */
     public Rotation2d getPosition();
 
     public double getPositionAsDouble();
