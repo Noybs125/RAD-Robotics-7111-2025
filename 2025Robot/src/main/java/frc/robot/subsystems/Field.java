@@ -57,6 +57,8 @@ public class Field extends SubsystemBase {
         FieldSetpoint.Climb,
     };
 
+    private List<AutoCycle> autoCycles = new ArrayList<>();
+
     /**
      * States for different field setpoints, resulting in a path to the setpoint described in the states for this class.
      * States include "Reef1" through "Reef6", "Processor", "SourceLeft" and "SourceRight", "Barge" and "Climb".
@@ -276,6 +278,14 @@ public class Field extends SubsystemBase {
                 throw new IllegalArgumentException("AutoCycle.levelToScore must be a value between 1-4");
         }
         return command;
+    }
+
+    public List<AutoCycle> getAutoCycles(){
+        List<AutoCycle> rearangedCycles = new ArrayList<>();
+        for(var cycle : autoCycles){
+            rearangedCycles.set(cycle.executedPosition, cycle);
+        }
+        return rearangedCycles;
     }
     
     /**
