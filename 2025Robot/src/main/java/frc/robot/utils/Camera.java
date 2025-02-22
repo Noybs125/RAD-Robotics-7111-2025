@@ -45,7 +45,14 @@ public class Camera extends PhotonCamera{
     }
     
     private AHRS gyro;
-
+    /**
+     * Instantiates the Camera object to check for apriltags.
+     * @param camera - The chosen camera to use.
+     * @param cameraToRobotCenter - The distance from the center of the robot to the camera.
+     * @param estRobotPose - The estimated Robot Pose.
+     * @param vision - The vision subsystem in use.
+     * 
+     */
     public Camera(PhotonCamera camera, Transform3d cameraToRobotCenter, EstimatedRobotPose estRobotPose, Vision vision) {
         super(camera.getName());
         this.cameraToRobotCenter = cameraToRobotCenter;
@@ -53,7 +60,9 @@ public class Camera extends PhotonCamera{
         this.estRobotPose = estRobotPose;
         photonPoseEstimator = new PhotonPoseEstimator(apriltagMap, PoseStrategy.AVERAGE_BEST_TARGETS, cameraToRobotCenter);
     }
-    
+    /**
+     * Runs every tick to check for Camera results and set the estimated Robot Pose.
+     */
     public void periodic(){
 
         for(PhotonPipelineResult result : getAllUnreadResults()){
@@ -74,6 +83,10 @@ public class Camera extends PhotonCamera{
         }
     }
 
+    /**
+     * Updates the photonPoseEstimator with the newest apriltags.
+     * @return The updated photonPoseEstimator.
+     */
     public boolean updatePose(){
         return latestResult.hasTargets();
     }
@@ -84,10 +97,18 @@ public class Camera extends PhotonCamera{
         else
             return null;
     }
+    /**
+     * 
+     * @return The Robot Pose transformed by the distance from camera to Robot Center.
+     */
     public Pose2d getRobotPose(){
         newPose = estRobotPose.estimatedPose.transformBy(cameraToRobotCenter).toPose2d();
         return newPose;
     }
+    /**
+     * 
+     * @return The Timestamp for the last apriltag seen.
+     */
     public double getTime(){
         if(latestResult != null){
             return photonPoseEstimator.update(latestResult).get().timestampSeconds;
@@ -96,6 +117,10 @@ public class Camera extends PhotonCamera{
             return Timer.getFPGATimestamp();
         }
     }
+    /**
+     * Calculates the Pose Ambiguity using Constants in kVision for each apriltag.
+     * @return The Pose Ambiguity.
+     */
     public Matrix<N3, N1> getPoseAmbiguity(){
         double smallestDistance = Double.POSITIVE_INFINITY;
         double confidenceMultiplier = 0;
