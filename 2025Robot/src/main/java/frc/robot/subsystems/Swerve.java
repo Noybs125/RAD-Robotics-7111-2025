@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
@@ -72,6 +73,11 @@ public class Swerve extends SubsystemBase {
 
   private boolean isFieldRelative = true;
 
+  /**
+   * Instantiates the swerve subsystem & sets up the modules and pose estimator.
+   * @param gyro - The NavX gyroscope
+   * @param vision - The vision subsystem, set up in RobotContainer
+   */
   public Swerve(AHRS gyro, Vision vision) {
     this.gyro = gyro;
     this.vision = vision;
@@ -162,7 +168,10 @@ public class Swerve extends SubsystemBase {
       setModuleStates(states, isOpenLoop);
     }).withName("SwerveDriveCommand");
   }
-
+  /**
+     * The SwerveState of robot, which should be determined on field position & the beam break.
+     * States include: "DefaultState", "Intaking", "Scoring", "RobotRelative", "VisionGyro", "Vision", & "LowerSpeed".
+     */
   public enum SwerveState{
     DefaultState,
     Intaking,
@@ -173,24 +182,46 @@ public class Swerve extends SubsystemBase {
     lowerSpeed,
   }
 
+  /**
+   * @return The X Translation based on the SwerveState of the Robot.
+   * @see SwerveState
+   */
   public double getTransX(){
     return translateX;
   }
+  /**
+   * @return The Y Translation based on the SwerveState of the Robot.
+   * @see SwerveState
+   */
   public double getTransY(){
     return translateY;
   }
+  /**
+   * @return The Z Rotation based on the SwerveState of the Robot.
+   * @see SwerveState
+   */
   public double getRotationZ(){
     return rotationZ;
   }
+  /**
+   * @return Whether FieldRelative is true or false, based on the SwerveState of the Robot.
+   * @see SwerveState
+   */
   public boolean getFieldRelative(){
     return isFieldRelative;
   }
+  /**Sets the current SwerveState of the robot.
+   * @param  State - What state should be selected.
+   * @see SwerveState
+   */
   public void setState(SwerveState State){
     this.state = State;
   }
 
 
-
+/**Decides the Robot's movement options based on the current SwerveState.
+ * @see SwerveState
+ */
   private void handleStates()
   {
     switch (state) {
@@ -257,7 +288,11 @@ public class Swerve extends SubsystemBase {
   public void setModuleStates(SwerveModuleState[] states) {
     setModuleStates(states, false);
   }
-
+  /**Sets the state for each given module, and desaturates the wheels.
+   * 
+   * @param states - What state to set the modules to
+   * @param isOpenLoop - true or false boolean
+   */
   private void setModuleStates(SwerveModuleState[] states, boolean isOpenLoop) {
     // Makes sure the module states don't exceed the max speed.
     SwerveDriveKinematics.desaturateWheelSpeeds(states, Constants.kSwerve.MAX_VELOCITY_METERS_PER_SECOND);
@@ -266,7 +301,9 @@ public class Swerve extends SubsystemBase {
       modules[i].setState(states[modules[i].moduleNumber], isOpenLoop);
     }
   }
-
+  /** 
+   * @return The list of each module's current state.
+   */
   public SwerveModuleState[] getStates() {
     SwerveModuleState currentStates[] = new SwerveModuleState[modules.length];
     for (int i = 0; i < modules.length; i++) {
@@ -275,7 +312,9 @@ public class Swerve extends SubsystemBase {
 
     return currentStates;
   }
-
+/** 
+   * @return The list of each module's current state but inverted, in order to keep things CCW+.
+   */
   public SwerveModuleState[] getInvertedStates() {
     SwerveModuleState currentStates[] = new SwerveModuleState[modules.length];
     for (int i = 0; i < modules.length; i++) {
@@ -285,7 +324,9 @@ public class Swerve extends SubsystemBase {
     return currentStates;
   }
   
-
+  /**
+   * @return The list of each module's current position.
+   */
   public SwerveModulePosition[] getPositions() {
     SwerveModulePosition currentStates[] = new SwerveModulePosition[modules.length];
     for (int i = 0; i < modules.length; i++) {
@@ -293,6 +334,9 @@ public class Swerve extends SubsystemBase {
     }
     return currentStates;
   }
+  /**
+   * @return The list of each module's current position, but inverted, in order to keep things CCW+.
+   */
   public SwerveModulePosition[] getInvertedPositions() {
     SwerveModulePosition currentStates[] = new SwerveModulePosition[modules.length];
     for (int i = 0; i < modules.length; i++) {
@@ -301,30 +345,48 @@ public class Swerve extends SubsystemBase {
     return currentStates;
   }
 
+  /**
+   * @return The current Yaw from the gyroscope in degrees.
+   */
   public Rotation2d getYaw() {
     return Rotation2d.fromDegrees(-gyro.getYaw());
   }
+  /**
+   * @return The current Angle from the gyroscope in degrees, goes to 360 instead of wrapping to 180 like {@link getYaw}.
+   */
   public Rotation2d getAngle() {
     return Rotation2d.fromDegrees(-gyro.getAngle());
   }
-
+  /**
+   *@return Runs {@link zeroGyro} as a Command.
+   */
   public Command zeroGyroCommand() {
     return runOnce(this::zeroGyro).withName("ZeroGyroCommand");
   }
-
+  /**
+   * Zeros the gyroscope's Yaw (Robot's rotation from left to right)
+   */
   private void zeroGyro() {
     gyro.zeroYaw();
   }
-
+  /**
+   * @return The current Estimated Position of the swerveOdometry
+   */
   public Pose2d getPose() {
     var swervePose = swerveOdometry.getEstimatedPosition();
     return swervePose;
   }
-
-  public void resetOdometry(Pose2d pose) { // not currently used, using addVisionMeasurements in periodic instead.
+  /**
+   * Resets the swerveOdometry's Pose to a chosen position
+   * @param pose The chosen Position
+   */
+  public void resetOdometry(Pose2d pose) { 
       swerveOdometry.resetPose(pose);
   }
 
+  /**
+   * @return Runs {@link resetOdometry} as a Command.
+   */
   public Command resetOdometryCommand() {
     return new InstantCommand(() -> resetOdometry(new Pose2d(poseX.getDouble(0), poseY.getDouble(0), getYaw())));
   }
