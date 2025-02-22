@@ -70,7 +70,6 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     autoChooser.addOption("Custom", new PathPlannerAuto(field.generateAutoRoutine(field.getAutoCycles())));
     SmartDashboard.putData(autoChooser);
-    
 
     // Configure button bindings
     configureButtonBindings();
