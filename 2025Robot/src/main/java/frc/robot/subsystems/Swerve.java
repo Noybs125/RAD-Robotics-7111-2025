@@ -412,7 +412,19 @@ public class Swerve extends SubsystemBase {
 
   }
 
-  
+  /**
+   * Periodic command called 50 times per second.
+   * <p>
+   * Updates the swerve odometry using update, {@link #getAngle()}, and {@link #getInvertedPositions()}.
+   * Also updates the cameras. Uses addVisionMeasurement, getRobotPose, getFPGATimestamp, getPoseAmbiguity methods.
+   * <p>
+   * Runs the {@link #handleStates()} command.
+   * @see -Link to update: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/estimator/PoseEstimator.html#update(edu.wpi.first.math.geometry.Rotation2d,T).
+   * @see -Link to addVisionMeasurement: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/estimator/PoseEstimator.html#addVisionMeasurement(edu.wpi.first.math.geometry.Pose2d,double,edu.wpi.first.math.Matrix).
+   * @see -getRobotPose is found under: frc.robot.utils.Camera.
+   * @see -Link to getFPGATimestamp: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/Timer.html#getFPGATimestamp().
+   * @see -getPoseAmbiguity is found under: frc.robot.utils.Camera.
+   */
   @Override 
   public void periodic() {
       swerveOdometry.update(getAngle(), getInvertedPositions());
