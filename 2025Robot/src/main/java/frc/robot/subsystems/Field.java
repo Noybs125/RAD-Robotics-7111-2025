@@ -30,7 +30,7 @@ public class Field extends SubsystemBase {
 
     public List<Pose2d> zoneMap = new ArrayList<>();
     private Pose2d[] zoneArray = new Pose2d[] {
-        new Pose2d(1.20, 70.3, Rotation2d.fromDegrees(306.59)),
+        new Pose2d(1.20, 7.03, Rotation2d.fromDegrees(306.59)),
         new Pose2d(1.20, 1.03, Rotation2d.fromDegrees(50.60)),
         new Pose2d(3.27, 4.03, Rotation2d.fromDegrees(0.00)),
         new Pose2d(3.87, 5.08, Rotation2d.fromDegrees(300.69)),
@@ -39,7 +39,8 @@ public class Field extends SubsystemBase {
         new Pose2d(5.18, 2.78, Rotation2d.fromDegrees(119.01)),
         new Pose2d(3.76, 2.80, Rotation2d.fromDegrees(60.01)),
         new Pose2d(6.21, 0.39, Rotation2d.fromDegrees(270)), 
-        new Pose2d(7.90, 6.10, Rotation2d.fromDegrees(0.00))
+        new Pose2d(7.90, 6.10, Rotation2d.fromDegrees(0.00)),
+        new Pose2d(0,0, Rotation2d.fromDegrees(0))
     };
     public Map<FieldSetpoint, Pose2d> fieldSetpointMap = new HashMap<>();
     private FieldSetpoint[] fieldSetpoints = new FieldSetpoint[] {

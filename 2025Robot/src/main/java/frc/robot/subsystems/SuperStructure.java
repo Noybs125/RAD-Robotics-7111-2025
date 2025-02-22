@@ -19,7 +19,6 @@ public class SuperStructure extends SubsystemBase {
     private Flywheels flywheels; 
     private ActualState actualRobotState;
     private ControlState controlRobotState;
-    private Mechanisms elevator;
     public boolean hasCoral;
     public boolean hasAlgae;
 
@@ -202,11 +201,13 @@ public class SuperStructure extends SubsystemBase {
     private void defaultState(){
         //mechanisms.setState(Mechanisms.MechanismsState.Store);
         
-        if(elevator.getElevatorHeight() < 2 /* ft */){
+        if(mechanisms.getElevatorHeight() < 2 /* ft */){
             swerve.setState(SwerveState.lowerSpeed);
         }
         else{
             swerve.setState(SwerveState.DefaultState);
         }
     }
+
+    
 }

@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Sensors extends SubsystemBase {
@@ -70,5 +71,7 @@ public class Sensors extends SubsystemBase {
     /**
      * Periodic method called 50 times per second. Currently completely empty.
      */
-    public void periodic(){}
+    public void periodic(){
+        SmartDashboard.putBoolean("BeamBreak", isBeamBroken());
+    }
 }
