@@ -62,37 +62,72 @@ public class CANEncoder implements Encoder {
 
     /**
      * Sets the encoder position to input, overwriting the current value to reset the position.
-     * @param position -Type "Rotation2d", 
+     * Uses setPosition method.
+     * @param position -Type "Rotation2d", used to set the encoder equal to.
+     * @see -Link to setPosition method: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/core/CoreCANcoder.html#setPosition(double).
      */
     public void setPosition(Rotation2d postion){
         encoder.setPosition(postion.getRotations());
     }
 
+    /**
+     * Gets if the encoder is an absolute value.
+     * @return -True.
+     * @deprecated
+     */
     public boolean isAbsolute(){
         return true;
     }
 
+    /**
+     * Gets the rate of change for the encoder. Values range between -512 and 511.998046875. Default is 0.
+     * Uses getVelocity method.
+     * @return -Type "double", contains velocity in rotations per second.
+     * @see -Link to getVelocity method: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/core/CoreCANcoder.html#getVelocity()
+     */
     public double getVelocity(){
         return encoder.getVelocity().getValueAsDouble();
     }
 
+    /**
+     * Gets the supply voltage for the encoder
+     * Uses getSupplyVoltage method.
+     * @return -Type "double", contains voltage of encoder as a double between the range of 4 and 16. Default value is 4. 
+     * @see -Link to getSupplyVoltage method: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/core/CoreCANcoder.html#getSupplyVoltage().
+     */
     public double getVoltage(){
         return encoder.getSupplyVoltage().getValueAsDouble();
     }
 
+    /**
+     * Gets the current gear ratio for the encoder. This method allows other classes to read the current gear ratio.
+     * @return Type "double", the current gear ratio used for calculating the position of the encoder.
+     */
     public double getGearRatio() {
         return gearRatio;
     }
 
+    /**
+     * Sets the gear ratio for the encoder, overwriting the old ratio.
+     */
     public void setGearRatio(double gearRatio){
         this.gearRatio = gearRatio;
     }
 
+    /**
+     * Zeros the encoder, setting the current position to 0.
+     * Uses setPosition method.
+     * @see -Link to setPosition method: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/core/CoreCANcoder.html#setPosition(edu.wpi.first.units.measure.Angle).
+     */
     public void resetEncoder(){
         encoder.setPosition(0);
         return;
     }
 
+    /**
+     * OverWrites the is clockwise variable (isCW).
+     * @param isCW -Type "boolean", sets which direcion increases the encoder, being true is clockwise positive, and false is counterclockwise positive.
+     */
     public void setDirection(boolean isCW){
         if (isCW)
             this.isCW = SensorDirectionValue.Clockwise_Positive;
@@ -100,6 +135,10 @@ public class CANEncoder implements Encoder {
             this.isCW = SensorDirectionValue.CounterClockwise_Positive;
     }
 
+    /**
+     * Returns the current direction the encoder
+     * @return -Type "boolean", true is clockwise positive, and false is counterclockwise positive.
+     */
     public boolean getDirection(){
         if (isCW == SensorDirectionValue.Clockwise_Positive)
             return true;
@@ -107,8 +146,9 @@ public class CANEncoder implements Encoder {
             return false;
     }
 
-    public void periodic(){
-
-    }
-    
+    /**
+     * Periodic method called 50 times per second. Currently completely empty.
+     * @see -Link to a fun read: https://en.wikipedia.org/wiki/M1911_pistol.
+     */
+    public void periodic(){}
 }

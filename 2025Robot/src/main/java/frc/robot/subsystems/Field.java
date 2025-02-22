@@ -246,10 +246,14 @@ public class Field extends SubsystemBase {
         Pose2d pose;
         if(cycle.isLeft){
             pose = fieldSetpointMap.get(targetPoseSetpoint);
-            pose.relativeTo(pose).plus(new Transform2d(0, pose.getY() + 1, pose.getRotation()));
+            var pose2 = pose.relativeTo(pose.plus(new Transform2d(0, pose.getY() + 1, pose.getRotation())));
+            Transform2d transform = new Transform2d(pose2.getX(), pose2.getY(), pose2.getRotation());
+            pose.transformBy(transform);
         }else{
             pose = fieldSetpointMap.get(targetPoseSetpoint);
-            pose.relativeTo(pose).plus(new Transform2d(0, pose.getY() + 1, pose.getRotation()));
+            var pose2 = pose.relativeTo(pose.plus(new Transform2d(0, pose.getY() - 1, pose.getRotation())));
+            Transform2d transform = new Transform2d(pose2.getX(), pose2.getY(), pose2.getRotation());
+            pose.transformBy(transform);
         }
         command.andThen(new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToPose(pose)));
 
