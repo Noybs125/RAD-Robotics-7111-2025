@@ -1,20 +1,26 @@
 package frc.robot.subsystems;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.utils.AutoCycle;
 
 public class Field extends SubsystemBase {
 
@@ -35,12 +41,26 @@ public class Field extends SubsystemBase {
         new Pose2d(6.21, 0.39, Rotation2d.fromDegrees(270)), 
         new Pose2d(7.90, 6.10, Rotation2d.fromDegrees(0.00))
     };
+    public Map<FieldSetpoint, Pose2d> fieldSetpointMap = new HashMap<>();
+    private FieldSetpoint[] fieldSetpoints = new FieldSetpoint[] {
+        FieldSetpoint.Reef1,
+        FieldSetpoint.Reef2,
+        FieldSetpoint.Reef3,
+        FieldSetpoint.Reef4,
+        FieldSetpoint.Reef5,
+        FieldSetpoint.Reef6,
+        FieldSetpoint.Processor,
+        FieldSetpoint.SourceLeft,
+        FieldSetpoint.SourceRight,
+        FieldSetpoint.Barge,
+        FieldSetpoint.Climb,
+    };
 
     /**
      * States for different field setpoints, resulting in a path to the setpoint described in the states for this class.
      * States include "Reef1" through "Reef6", "Processor", "SourceLeft" and "SourceRight", "Barge" and "Climb".
      */
-    public enum FieldSetpoints {
+    public enum FieldSetpoint {
         Reef1,
         Reef2,
         Reef3,
@@ -67,6 +87,12 @@ public class Field extends SubsystemBase {
         for(Pose2d zone : zoneArray){
             zoneMap.add(zone);
         }
+
+        int poseIndex = 0;
+        for(FieldSetpoint setpoint : fieldSetpoints){
+            fieldSetpointMap.put(setpoint, zoneMap.get(poseIndex++));
+        }
+
         Shuffleboard.getTab("Autonomous").add("DriverStation", driverLocation);
     }
 
@@ -88,12 +114,12 @@ public class Field extends SubsystemBase {
     }
 
     /**
-     * States for setting destination for the robot, using the FieldSetpoints as the specified states.
+     * States for setting destination for the robot, using the FieldSetpoint as the specified states.
      * @see -Link to Pose2d object class: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose2d.html.
-     * @param state -Type FieldSetpoints enum. Options include "Reef1" through "Reef6", SourceLeft and "SourceRight", "Barge" and "Climb".
+     * @param state -Type FieldSetpoint enum. Options include "Reef1" through "Reef6", SourceLeft and "SourceRight", "Barge" and "Climb".
      * @return -A command to the state's position, being a point on the field. Uses method "pathfindToPose", defined in this class.
      */
-    public Command pathfindToSetpoint(FieldSetpoints state) {
+    public Command pathfindToSetpoint(FieldSetpoint state) {
         switch (state) {
             case Reef1:
                 poseSetpoint = new Pose2d(3.32, 4.02, Rotation2d.fromDegrees(0));
@@ -158,6 +184,97 @@ public class Field extends SubsystemBase {
      */
     public Pose2d getNearestZone(Pose2d robotPose){
         return robotPose.nearest(zoneMap);
+    }
+
+    /**
+     * Generates an autonomous routine given a list of auto cycles
+     * @param cycles A list of auto cycles to add to the command
+     * @return The autonomous routine as a SequentialCommandGroup
+     * @see AutoCycle
+     * @see SequentialCommandGroup
+     */
+    public Command generateAutoRoutine(List<AutoCycle> cycles){
+        Command command = new SequentialCommandGroup();
+        for(var cycle : cycles){
+            command.andThen(generateAutoCycle(cycle));
+        }
+        return command;
+    }
+    /**
+     * Generates a command given an autonomous cycle
+     * @param cycle The autonomous cycle to use
+     * @return The autonomous cycle as a command
+     */
+    public Command generateAutoCycle(AutoCycle cycle){
+        Command command;
+        switch (cycle.feederStation) {
+            case 2:
+                command = new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToSetpoint(FieldSetpoint.SourceLeft), NamedCommands.getCommand("Intake"));
+                break;
+            case 1:
+                command = new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToSetpoint(FieldSetpoint.SourceRight), NamedCommands.getCommand("Intake"));
+                break;
+            case 0:    
+            default:
+                command = new SequentialCommandGroup(NamedCommands.getCommand("Stow"));
+                break;
+        }
+        FieldSetpoint targetPoseSetpoint;
+        switch (cycle.reefFace) {
+            case 1:
+                targetPoseSetpoint = FieldSetpoint.Reef1;
+                break;
+            case 2:
+                targetPoseSetpoint = FieldSetpoint.Reef2;
+                break;
+            case 3:
+                targetPoseSetpoint = FieldSetpoint.Reef3;
+                break;
+            case 4:
+                targetPoseSetpoint = FieldSetpoint.Reef4;
+                break;
+            case 5:
+                targetPoseSetpoint = FieldSetpoint.Reef5;
+                break;
+            case 6:
+                targetPoseSetpoint = FieldSetpoint.Reef6;
+                break;
+            default:
+                throw new IllegalArgumentException("AutoCycle.reefFace must be a value between 1-6");
+        }
+        Pose2d pose;
+        if(cycle.isLeft){
+            pose = fieldSetpointMap.get(targetPoseSetpoint);
+            var pose2 = pose.relativeTo(pose.plus(new Transform2d(0, pose.getY() + 1, pose.getRotation())));
+            Transform2d transform = new Transform2d(pose2.getX(), pose2.getY(), pose2.getRotation());
+            pose.transformBy(transform);
+        }else{
+            pose = fieldSetpointMap.get(targetPoseSetpoint);
+            var pose2 = pose.relativeTo(pose.plus(new Transform2d(0, pose.getY() - 1, pose.getRotation())));
+            Transform2d transform = new Transform2d(pose2.getX(), pose2.getY(), pose2.getRotation());
+            pose.transformBy(transform);
+        }
+        command.andThen(new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToPose(pose)));
+
+
+        switch (cycle.levelToScore) {
+            case 1:
+                command.andThen(NamedCommands.getCommand("ScoreL1"));
+                break;
+            case 2:
+                command.andThen(NamedCommands.getCommand("ScoreL2"));
+                break;
+            case 3:
+                command.andThen(NamedCommands.getCommand("ScoreL3"));
+                break;
+            case 4:
+                command.andThen(NamedCommands.getCommand("ScoreL4"));
+                break;
+        
+            default:
+                throw new IllegalArgumentException("AutoCycle.levelToScore must be a value between 1-4");
+        }
+        return command;
     }
     
     /**
