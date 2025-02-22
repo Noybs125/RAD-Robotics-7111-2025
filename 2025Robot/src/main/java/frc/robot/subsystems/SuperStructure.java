@@ -20,6 +20,8 @@ public class SuperStructure extends SubsystemBase {
     private ActualState actualRobotState;
     private ControlState controlRobotState;
     private Mechanisms elevator;
+    public boolean hasCoral;
+    public boolean hasAlgae;
 
     public enum ControlState {
         ReefL1Processor,
@@ -61,6 +63,22 @@ public class SuperStructure extends SubsystemBase {
     public void periodic() {
         manageControlState();
         manageActualState();
+
+        if (actualRobotState == ActualState.coralFeeder && sensors.isBeamBroken()) {
+            hasCoral = true;
+            hasAlgae = false;
+        }
+
+        else if (actualRobotState == ActualState.algaeL2 && sensors.isBeamBroken() || actualRobotState == ActualState.algaeL3 && sensors.isBeamBroken()) {
+            hasAlgae = true;
+            hasCoral = false;
+        }
+
+        else {
+            hasAlgae = false;
+            hasCoral = false;
+        }
+
 
 
     }
