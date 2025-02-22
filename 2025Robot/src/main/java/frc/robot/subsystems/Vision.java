@@ -52,6 +52,10 @@ public class Vision extends SubsystemBase{
         orangepi2,
     };
 
+    /**
+     * States for the vision state machine
+     * States include: "LeftReef", "RightReef", "ReefL1", "FeederStation", "Processor", "Climb"
+     */
     public enum VisionState{
         LeftReef,
         RightReef,
@@ -61,14 +65,25 @@ public class Vision extends SubsystemBase{
         Climb,
     }
 
+    /**
+     * Sets local gyro equal to the input gyro.
+     * @param gyro -Type "AHRS"
+     */
     public Vision(AHRS gyro){
         this.gyro = gyro;
     }
 
+    /**
+     * Sets local state to input state.
+     * @param state -Type "VisionState"
+     */
     public void setState(VisionState state){
         this.state = state;
     }
 
+    /**
+     * Changes tagAllignment based on the state.
+     */
     private void handleState(){
         switch (state) {
             case LeftReef:
@@ -100,6 +115,15 @@ public class Vision extends SubsystemBase{
         }
     }
 
+    /**
+     * Periodic method called 50 times per second.
+     * <p>
+     * Updates the estimated position based off of any apriltags seen.
+     * Uses getEstimatedGlobalPose, transformBy, and getCameraToRobot.
+     * @see -getEstimatedGlobalPose is located under frc.robot.utils.Camera.
+     * @see -Link to transformBy: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose3d.html#transformBy(edu.wpi.first.math.geometry.Transform3d).
+     * @see -getCameraToRobot is located under frc.robot.utils.Camera.
+     */
     public void periodic(){
 
         Optional<EstimatedRobotPose> estPose = null;
@@ -120,6 +144,12 @@ public class Vision extends SubsystemBase{
         handleState();
     }
 
+    /**
+     * Checks if a specified camera can see a specified apriltag.
+     * @param id -Type "int", apriltag id
+     * @param camera -Type "Camera", specified camera object
+     * @return -True if id seen by camera, false otherwise.
+     */
     public boolean canSeeTarget(int id, Camera camera) {
         if (camera.latestResult != null) {
             List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
@@ -134,6 +164,13 @@ public class Vision extends SubsystemBase{
         return false;
     }
 
+    /**
+     * Calculates the speed required to rotate to a specified target.
+     * @param id -Type "int", the specified apriltag.
+     * @param camera -Type "Camera", the camera object to check for the target.
+     * @param speed -Type "double", the speed to turn toward the target
+     * @return -Speed if target is identified in the camera, 0 otherwise.
+     */
     public double rotateToTarget(int id, Camera camera, double speed){
         if (camera.latestResult != null) {
             List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
@@ -144,6 +181,12 @@ public class Vision extends SubsystemBase{
         return 0;
     }
 
+    /**
+     * returns the translation needed to align to the aprilTag.
+     * @param id -Type "int", the specified apriltag.
+     * @param camera -Type "Camera", the camera object to check for the target
+     * @return Type "Transform2d", If no apriltag found, returns null. if an apriltag is found, updates SmartDashboard and returns a transform2d to allign with the apriltag
+     */
     public Transform2d getAlignmentToTarget(int id, Camera camera){
         if (camera.latestResult != null) {
             List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
@@ -162,6 +205,14 @@ public class Vision extends SubsystemBase{
         return null;
     }
 
+    /**
+     * Checks if the robot is aligned at the target or not.
+     * @param id -Type "int", the specified apriltag.
+     * @param camera -Type "Camera", the camera object to check for the target.
+     * @param setpoints -Type "Transform2d", used as a destination for the robot to sit at
+     * @param deadzone -Type "double", used to allow clearance greater that 0 in where the robot is considered "at the setpoint".
+     * @return Type "boolean", true if aligned with the target, false otherwise.
+     */
     public boolean isAtTarget(int id, Camera camera, Transform2d setpoints, double deadzone){
         if(canSeeTarget(id, camera)){
             double x = getAlignmentToTarget(id, camera).getX();
