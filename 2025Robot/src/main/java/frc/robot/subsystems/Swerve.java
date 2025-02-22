@@ -352,13 +352,13 @@ public class Swerve extends SubsystemBase {
     return Rotation2d.fromDegrees(-gyro.getYaw());
   }
   /**
-   * @return The current Angle from the gyroscope in degrees, goes to 360 instead of wrapping to 180 like {@link getYaw}.
+   * @return The current Angle from the gyroscope in degrees, goes to 360 instead of wrapping to 180 like {@link #getYaw}.
    */
   public Rotation2d getAngle() {
     return Rotation2d.fromDegrees(-gyro.getAngle());
   }
   /**
-   *@return Runs {@link zeroGyro} as a Command.
+   *@return Runs {@link #zeroGyro} as a Command.
    */
   public Command zeroGyroCommand() {
     return runOnce(this::zeroGyro).withName("ZeroGyroCommand");
@@ -385,17 +385,24 @@ public class Swerve extends SubsystemBase {
   }
 
   /**
-   * @return Runs {@link resetOdometry} as a Command.
+   * @return Runs {@link #resetOdometry} as a Command.
    */
   public Command resetOdometryCommand() {
     return new InstantCommand(() -> resetOdometry(new Pose2d(poseX.getDouble(0), poseY.getDouble(0), getYaw())));
   }
-
+  /**
+   * 
+   * @return The Relative Speed of the Chassis, using the Inverted State, {@code ONLY} for the Pathplanner.
+   */
   public ChassisSpeeds getRelSpeedsNonSuplier() {
     ChassisSpeeds relSpeed = Constants.kSwerve.KINEMATICS.toChassisSpeeds(getInvertedStates());
     return relSpeed;
   }
-
+  /**
+   * Corrects Translational skew, and sets SwerveModule's speed.
+   * @param speeds The Speed to set the SwerveModules to.
+   * @see #setModuleStates
+   */
   public void driveRobotRelative(ChassisSpeeds speeds){
     speeds = ChassisSpeeds.discretize(speeds, 0.02);
     speeds.omegaRadiansPerSecond *= -1;
@@ -450,7 +457,9 @@ public class Swerve extends SubsystemBase {
           null);
     }
   }
-
+  /**
+   * @return The NavX Gyroscope according to {@link Swerve}.
+   */
   public AHRS getGyro(){
     return gyro;
   }
