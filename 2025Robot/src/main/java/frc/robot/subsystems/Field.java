@@ -36,6 +36,10 @@ public class Field extends SubsystemBase {
         new Pose2d(7.90, 6.10, Rotation2d.fromDegrees(0.00))
     };
 
+    /**
+     * States for different field setpoints, resulting in a path to the setpoint described in the states for this class.
+     * States include "Reef1" through "Reef6", "Processor", "SourceLeft" and "SourceRight", "Barge" and "Climb".
+     */
     public enum FieldSetpoints {
         Reef1,
         Reef2,
@@ -50,6 +54,12 @@ public class Field extends SubsystemBase {
         Climb
     }
 
+    /**
+     * Constructor for the field class. Sets up Shuffleboard/SmartDashBoard for locations for the start of the match.
+     * Uses "addOption" and "getTab"
+     * @see -Link to addOption: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/smartdashboard/SendableChooser.html#addOption(java.lang.String,V.
+     * @see -Link to getTab: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/shuffleboard/Shuffleboard.html#getTab(java.lang.String).
+     */
     public Field() {
         driverLocation.addOption("1", 1);
         driverLocation.addOption("2", 2);
@@ -60,6 +70,14 @@ public class Field extends SubsystemBase {
         Shuffleboard.getTab("Autonomous").add("DriverStation", driverLocation);
     }
 
+    /**
+     * Creats a pathfind to the specified position using getAlliance to see what side of the field the robot is on,
+     * Followed by creating a path to the specified position, avoiding constraints.
+     * @see -GetAlliance link: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/DriverStation.html#getAlliance().
+     * @see -PathfindtoPose link: https://pathplanner.dev/api/java/com/pathplanner/lib/auto/AutoBuilder.html#pathfindToPose(edu.wpi.first.math.geometry.Pose2d,com.pathplanner.lib.path.PathConstraints,double).
+     * @param pose -Type "Pose2d", used to give pathfindToPose a position to go toward.
+     * @return -A command to go from the robot's position to the "pose" input, adhearing to constraints.
+     */
     public Command pathfindToPose(Pose2d pose) {
         if (DriverStation.getAlliance().isPresent()) {
             return DriverStation.getAlliance().get() == Alliance.Blue 
@@ -69,6 +87,12 @@ public class Field extends SubsystemBase {
         else return AutoBuilder.pathfindToPose(pose, Constants.kAuto.constraints, 0);
     }
 
+    /**
+     * States for setting destination for the robot, using the FieldSetpoints as the specified states.
+     * @see -Link to Pose2d object class: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose2d.html.
+     * @param state -Type FieldSetpoints enum. Options include "Reef1" through "Reef6", SourceLeft and "SourceRight", "Barge" and "Climb".
+     * @return -A command to the state's position, being a point on the field. Uses method "pathfindToPose", defined in this class.
+     */
     public Command pathfindToSetpoint(FieldSetpoints state) {
         switch (state) {
             case Reef1:
@@ -125,10 +149,20 @@ public class Field extends SubsystemBase {
         return pathfindToPose(poseSetpoint);
 
     }
+
+    /**
+     * Gets the nearest zone to the robot's current position.
+     * @param robotPose -The robot's current position.
+     * @return -Nearest zone to the robot from "zoneMap".
+     * @see -Link to nearest method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose2d.html#nearest(java.util.List).
+     */
     public Pose2d getNearestZone(Pose2d robotPose){
         return robotPose.nearest(zoneMap);
     }
-
+    
+    /**
+     * Periodic function called 50 times per second, currently completely empty.
+     */
     public void periodic() {
     }
 }

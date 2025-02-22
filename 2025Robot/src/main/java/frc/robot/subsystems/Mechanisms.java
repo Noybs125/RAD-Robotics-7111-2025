@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.kMechanisms;
 import frc.robot.utils.encoder.Encoder;
 import frc.robot.utils.encoder.RevEncoder;
 import frc.robot.utils.encoder.WpiEncoder;
@@ -70,8 +71,12 @@ public class Mechanisms extends SubsystemBase {
         elevatorSetpoint = setPoint;
         isManual = false;
     }
+    /**
+     * This method uses circumference of elevator winch and relative position of encoder to calculate elevator height.
+     * @return calculated elevator height in feet. TODO: Change method return to return percent of max height to give more predictable units 
+     */
     public double getElevatorHeight(){
-        double elevatorHeight = (Math.PI * 2 * elevator.getPosition() / 360.0) * 12;
+        double elevatorHeight = (Math.PI * kMechanisms.elevatorWinchDiameter * elevator.getPosition() / 360.0) * 12;
         return elevatorHeight;
     }
 

@@ -218,6 +218,7 @@ public class Constants {
     public static final double wristCurrentLimit = 40;
     public static final double elevatorCurrentLimit = 40;
     public static final double flywheelCurrentLimit = 40;
+    public static final double elevatorWinchDiameter = 2;
   }
 
   public static class kAuto {
