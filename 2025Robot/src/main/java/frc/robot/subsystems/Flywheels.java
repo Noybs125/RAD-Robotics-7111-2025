@@ -50,8 +50,8 @@ public class Flywheels extends SubsystemBase {
      * Sets the state of the end effector motor.
      * Unlike the method "setSpeed" in this class, uses states rather than a direct double.
      * States include; CoralIntake, CoralOutake, AlgaeIntake, AlgaeOutake.
-     * (If using CTRE motors) Uses Set(double) method.
-     * @param speed -Type "WheelsStates", states for taking or dropping algae or coral. Valid values are between -1.0 and 1.0.
+     * (If using CTRE motors) Uses Set(double) method. Inputs must be between -1.0 or 1.0.
+     * @param speed -Type "WheelsStates", states for taking or dropping algae or coral.
      * @see -Link to the setSpeed method: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#set(double
      */
     public void setSpeedState(WheelsStates speed){
