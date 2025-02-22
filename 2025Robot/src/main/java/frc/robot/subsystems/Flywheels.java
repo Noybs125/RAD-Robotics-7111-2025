@@ -27,10 +27,10 @@ public class Flywheels extends SubsystemBase {
     }
 
     /**
-     * Sets the speed of the end effector using the .set method in TalonFX.
-     * Review the following link for more information (for CTRE motors):
-     * {@link https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#set(double)}
+     * Sets the speed of the end effector motor.
+     * (If using CTRE motors) Uses setSpeed(double) method
      * @param speed -Type "Double", used to set the speed of the motor for the effector wheels. valid values are between -1.0 and 1.0.
+     * @see -Link to the .set(double) method: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#set(double).
      */
     public void setSpeed(double speed){
         effectorWheels.setSpeed(speed);
@@ -38,21 +38,21 @@ public class Flywheels extends SubsystemBase {
 
     /**
      * Returns the speed of the motor as a double.
-     * Review the following link for more information (for CTRE motors):
-     * {@link https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#get()}
+     * (If using CTRE motors) Uses get method to find motor speed
      * @return -The speed of the motors, as a double between -1.0 and 1.0.
+     * @see -Link to get method: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#get()
      */    
     public double getSpeed(){
         return effectorWheels.getSpeed();
     }
     
     /**
-     * Sets the state of the end effector motor, using the .set(double) method.
-     * Unlike the method "setSpeed", uses states rather than a direct double.
+     * Sets the state of the end effector motor.
+     * Unlike the method "setSpeed" in this class, uses states rather than a direct double.
      * States include; CoralIntake, CoralOutake, AlgaeIntake, AlgaeOutake.
-     * Review the following link for more information on the used method (for CTRE motors):
-     * {@link https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#set(double)}
+     * (If using CTRE motors) Uses Set(double) method.
      * @param speed -Type "WheelsStates", states for taking or dropping algae or coral. Valid values are between -1.0 and 1.0.
+     * @see -Link to the setSpeed method: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#set(double
      */
     public void setSpeedState(WheelsStates speed){
         switch (speed) {
