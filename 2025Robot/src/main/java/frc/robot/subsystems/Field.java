@@ -1,19 +1,30 @@
 package frc.robot.subsystems;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathfindThenFollowPath;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPoint;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,6 +38,17 @@ public class Field extends SubsystemBase {
     private SendableChooser<Integer> driverLocation = new SendableChooser<Integer>();
 
     private Pose2d poseSetpoint = new Pose2d();
+
+    public GoalEndState endState = new GoalEndState(0, poseSetpoint.getRotation());
+    public PathPlannerPath path;
+
+    private Field2d field = new Field2d();
+    private FieldObject2d fieldObjectPose = field.getObject("FieldPosition");
+    private ComplexWidget fieldPublisher;
+
+    private Swerve swerve;
+
+
 
     public List<Pose2d> zoneMap = new ArrayList<>();
     private Pose2d[] zoneArray = new Pose2d[] {
@@ -81,7 +103,9 @@ public class Field extends SubsystemBase {
      * @see -Link to addOption: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/smartdashboard/SendableChooser.html#addOption(java.lang.String,V.
      * @see -Link to getTab: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/shuffleboard/Shuffleboard.html#getTab(java.lang.String).
      */
-    public Field() {
+    public Field(Swerve swerve) {
+        this.swerve = swerve;
+        fieldPublisher = Shuffleboard.getTab("Odometry").add("field odometry", field).withWidget("Field");
         driverLocation.addOption("1", 1);
         driverLocation.addOption("2", 2);
         driverLocation.addOption("3", 3);
@@ -282,5 +306,14 @@ public class Field extends SubsystemBase {
      * Periodic function called 50 times per second, currently completely empty.
      */
     public void periodic() {
+        field.setRobotPose(swerve.getPose());
+        if (Pathfinding.isNewPathAvailable()){
+            path = Pathfinding.getCurrentPath(Constants.kAuto.constraints, endState);
+        }
+            
+
+        if (path != null) {
+            fieldObjectPose.setPoses(path.getPathPoses());
+        }  
     }
 }
