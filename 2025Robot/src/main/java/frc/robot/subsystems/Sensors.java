@@ -12,26 +12,39 @@ public class Sensors extends SubsystemBase {
     private DigitalInput beamBreak = new DigitalInput(2);
 
     public Sensors(){
-        Shuffleboard.getTab("DeviceOutputs").addDouble("PDHPower", () -> getPDHPower()).withWidget("");
-        Shuffleboard.getTab("DeviceOutputs").addDouble("PDHEnergy", () -> getPDHEnergy()).withWidget("");
         Shuffleboard.getTab("DeviceOutputs").addDouble("PDHTotalCurrent", () -> getPDHCurrentTotal()).withWidget("");
-        Shuffleboard.getTab("DeviceOutputs").addDouble("PDHTemp", () -> getPDHTemp()).withWidget("");
         Shuffleboard.getTab("DeviceOutputs").addDouble("PDHBusVoltage", () -> getPDHVoltage()).withWidget("");
     }
 
-    //Power Distribution Sensors
-    //get bus voltage
+    /**
+     * Gets the current power distribution hub's input voltage.
+     * Uses getVoltage method.
+     * @return -Voltage from the power distribution hub in volts.
+     * @see -Link to getVoltage method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/PowerDistribution.html#getVoltage().
+     */
     public double getPDHVoltage(){
         double voltage = powerHub.getVoltage();
         return voltage;
     }
 
-    //gets total PDH current
+    /**
+     * Gets the current power distribution hub's total current draw.
+     * Uses getTotalCurrent method.
+     * @return -Total current from power distribution hub in amperes, based on all channels.
+     * @see -Link to getTotalCurrent method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/PowerDistribution.html#getTotalCurrent()
+     */
     public double getPDHCurrentTotal(){
         double current = powerHub.getTotalCurrent();
         return current;
     }
-    //gets specified channel current
+    
+    /**
+     * Gets the current power draw of a specified channel.
+     * Uses getCurrent(int) method.
+     * @param channel -Type "int", specifies which channel to read from. Range between 0 and 23.
+     * @return -Channel current in amperes. If givin invaled input, returns -1.
+     * @see -Link to getCurrent(int) method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/PowerDistribution.html#getCurrent(int).
+     */
     public double getPDHChannelCurrent(int channel){
         if(channel <= 23 && channel >= 0){
         double channelCurrent = powerHub.getCurrent(channel);
@@ -43,27 +56,19 @@ public class Sensors extends SubsystemBase {
         }
     }
 
-    //gets PDH temperature
-    public double getPDHTemp(){
-        double temp = (powerHub.getTemperature() * 9/5) + 32;
-        return temp;
-    }
-
-    //gets PDH total energy and power
-    public double getPDHEnergy(){
-        double totalEnergy = powerHub.getTotalEnergy();
-        return totalEnergy;
-    }
-
-    public double getPDHPower(){
-        double totalPower = powerHub.getTotalPower();
-        return totalPower;
-    }
-
+    /**
+     * Reads from digital pin to determine if the beambreak sensor on the end effector has been triggered.
+     * Uses get method.
+     * @return -The state of the beam break sensor pin, being on or off.
+     * @see -Link to get method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/DigitalInput.html#get().
+     */
     public boolean isBeamBroken(){
         return beamBreak.get();
     }
 
 
+    /**
+     * Periodic method called 50 times per second. Currently completely empty.
+     */
     public void periodic(){}
 }
