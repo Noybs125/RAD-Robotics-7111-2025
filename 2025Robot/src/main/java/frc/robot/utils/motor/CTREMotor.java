@@ -78,12 +78,6 @@ public class CTREMotor implements Motor {
         currentSetpoint = setPoint;
     }
 
-    public void periodic(){
-        if (encoder != null){
-            encoder.periodic();
-        }
-    }
-
     public void setPID(double p, double i, double d){
         pid.setPID(p, i, d);
     }
@@ -117,5 +111,11 @@ public class CTREMotor implements Motor {
         config.Slot0.kA = kA;
         motor.getConfigurator().apply(config);
         feedforward = new SimpleMotorFeedforward(kS, kV, kA);
+    }
+
+    public void periodic(){
+        if (encoder != null){
+            encoder.periodic();
+        }
     }
 }

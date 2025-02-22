@@ -16,7 +16,7 @@ public class RevEncoder implements Encoder {
         encoder = new DutyCycleEncoder(id);
         this.id = id;
 
-        Shuffleboard.getTab("DeviceOutputs").addDouble("RevEncoderPos", () -> encoder.get());
+        //Shuffleboard.getTab("DeviceOutputs").addDouble("RevEncoderPos", () -> position);
     }
 
     public RevEncoder(int id, double gearRatio){

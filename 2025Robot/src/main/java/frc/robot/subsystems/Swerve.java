@@ -411,6 +411,7 @@ public class Swerve extends SubsystemBase {
     setModuleStates(states);
 
   }
+
   
   @Override 
   public void periodic() {
@@ -430,7 +431,7 @@ public class Swerve extends SubsystemBase {
     field.setRobotPose(getPose());
     fieldObjectPose.setPose(new Pose2d(poseX.getDouble(0), poseY.getDouble(0), Rotation2d.fromDegrees(poseRot.getDouble(0))));
     
-    maxSpeed = 1 - elevator.getElevatorHeight() * 0.10; 
+     
   }
 
   @Override

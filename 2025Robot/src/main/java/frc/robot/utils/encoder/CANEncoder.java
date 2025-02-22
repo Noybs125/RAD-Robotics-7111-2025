@@ -148,6 +148,7 @@ public class CANEncoder implements Encoder {
 
     /**
      * Periodic method called 50 times per second. Currently completely empty.
+     * @see -Link to a fun read: https://en.wikipedia.org/wiki/M1911_pistol.
      */
     public void periodic(){}
 }

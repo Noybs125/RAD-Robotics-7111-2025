@@ -23,7 +23,6 @@ public class Mechanisms extends SubsystemBase {
 
     private Motor elevator;
     private Motor wrist;
-    private Encoder testEncoder;
     private double elevatorSetpoint = 0;
     private double wristSetpoint = 0;
     private boolean isManual = false;
@@ -65,7 +64,6 @@ public class Mechanisms extends SubsystemBase {
      * @see -ArmSimMotor class is located under frc.robot.utils.motor.ArmSimMotor.
      */
     public Mechanisms(){
-        testEncoder = new WpiEncoder(0, 1);
         elevator = new ElevatorSimMotor(
             null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid,
             Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants
@@ -102,8 +100,17 @@ public class Mechanisms extends SubsystemBase {
      * @see -Link to getPosition: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#get().
      */
     public double getElevatorHeight(){
-        double elevatorHeight = (Math.PI * kMechanisms.elevatorWinchDiameter * elevator.getPosition() / 360.0) * 12;
+        double elevatorHeight;
+
+        if ( elevator != null) {
+            elevatorHeight = (Math.PI * kMechanisms.elevatorWinchDiameter * elevator.getPosition() / 360.0) * 12;
+        }
+        else {
+            elevatorHeight = 0;
+        }
+        
         return elevatorHeight;
+    
     }
 
     /**

@@ -69,13 +69,13 @@ public class Camera extends PhotonCamera{
             latestResult = result;
         }
         
-        if(latestResult.hasTargets()){
+        if(latestResult != null && latestResult.hasTargets()){
             bestTarget = latestResult.getBestTarget();
             bestCameraToTarget = bestTarget.getBestCameraToTarget();
             bestTargetId = bestTarget.getFiducialId();
         }
         Optional<EstimatedRobotPose> estPose = getEstimatedGlobalPose(vision.robotPose);
-        if(estPose.isPresent()){
+        if(estPose != null && estPose.isPresent()){
             if(photonPoseEstimator.getRobotToCameraTransform() != cameraToRobotCenter){
                 photonPoseEstimator.setRobotToCameraTransform(cameraToRobotCenter);
             }
@@ -88,7 +88,13 @@ public class Camera extends PhotonCamera{
      * @return The updated photonPoseEstimator.
      */
     public boolean updatePose(){
-        return latestResult.hasTargets();
+        if (latestResult != null) {
+            return latestResult.hasTargets();
+        }
+
+        else {
+            return false;
+        }
     }
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
         photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
