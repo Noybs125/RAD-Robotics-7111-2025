@@ -79,6 +79,8 @@ public class Field extends SubsystemBase {
         FieldSetpoint.Climb,
     };
 
+    private List<AutoCycle> autoCycles = new ArrayList<>();
+
     /**
      * States for different field setpoints, resulting in a path to the setpoint described in the states for this class.
      * States include "Reef1" through "Reef6", "Processor", "SourceLeft" and "SourceRight", "Barge" and "Climb".
@@ -174,7 +176,7 @@ public class Field extends SubsystemBase {
                 poseSetpoint = new Pose2d(7.29, 6.18, Rotation2d.fromDegrees(0));
                 break;
             case Climb:
-                switch ((int) driverLocation.getSelected()) {
+                switch (driverLocation.getSelected()) {
                     case 1:
                         poseSetpoint = new Pose2d(7.33, 7.27, Rotation2d.fromDegrees(0));
                         break;
@@ -205,7 +207,7 @@ public class Field extends SubsystemBase {
      * Gets the nearest zone to the robot's current position.
      * @param robotPose -The robot's current position.
      * @return -Nearest zone to the robot from "zoneMap".
-     * @see -Link to nearest method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose2d.html#nearest(java.util.List).
+     * @see -Link to "nearest" method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose2d.html#nearest(java.util.List).
      */
     public Pose2d getNearestZone(Pose2d robotPose){
         return robotPose.nearest(zoneMap);
@@ -300,6 +302,14 @@ public class Field extends SubsystemBase {
                 throw new IllegalArgumentException("AutoCycle.levelToScore must be a value between 1-4");
         }
         return command;
+    }
+
+    public List<AutoCycle> getAutoCycles(){
+        List<AutoCycle> rearangedCycles = new ArrayList<>();
+        for(var cycle : autoCycles){
+            rearangedCycles.set(cycle.executedPosition, cycle);
+        }
+        return rearangedCycles;
     }
     
     /**
