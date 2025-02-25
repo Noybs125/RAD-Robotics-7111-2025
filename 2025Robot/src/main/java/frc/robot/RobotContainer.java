@@ -25,6 +25,7 @@ import frc.robot.utils.motor.CTREMotor;
 import frc.robot.utils.motor.ElevatorSimMotor;
 import frc.robot.utils.motor.REVMotor;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -84,10 +85,11 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    Trigger elevatorUp = commXbox.leftTrigger();
+    Trigger elevatorDown = commXbox.rightTrigger();
+    Trigger armUp = commXbox.leftBumper();
+    Trigger armDown = commXbox.rightBumper();
 
-    Trigger simSetpoint1 = commXbox.rightBumper();
-    Trigger simSetpoint2 = commXbox.leftBumper();
-    Trigger simSetpoint3 = commXbox.leftTrigger();
 
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(), 
@@ -97,14 +99,13 @@ public class RobotContainer {
       false
       )
      );
-
+    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(commXbox.getLeftTriggerAxis())));
+    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-commXbox.getRightTriggerAxis())));
+    armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.1)));
+    armDown.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(-0.1)));
     commXbox.y().onTrue(swerve.zeroGyroCommand());
     commXbox.a().onTrue(swerve.resetOdometryCommand());
-    //commXbox.b().onTrue(auto.pathfindToSetpoint(Auto.FieldSetpoints.Reef6));
     commXbox.x().onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReefL1Processor));
     commXbox.b().onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.Default));
-    simSetpoint1.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReefL1Processor));
-    simSetpoint2.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReefL2));
-    simSetpoint3.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReefL3));
     }
   }
