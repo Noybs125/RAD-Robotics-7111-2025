@@ -87,11 +87,16 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    // all of these bindings will be correctly defined when we decide controls
     Trigger elevatorUp = commXbox.leftTrigger();
     Trigger elevatorDown = commXbox.rightTrigger();
     Trigger armUp = commXbox.leftBumper();
     Trigger armDown = commXbox.rightBumper();
+    Trigger effectorIntake = commXbox.povDown();
+    Trigger effectorScore = commXbox.povUp();
 
+    Trigger zeroGyro = commXbox.y();
+    Trigger resetOdometry = commXbox.a();
 
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(), 
@@ -100,13 +105,23 @@ public class RobotContainer {
       () -> swerve.getFieldRelative(), 
       false
       )
-     );
+    );
+
     elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(commXbox.getLeftTriggerAxis())));
     elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-commXbox.getRightTriggerAxis())));
+    elevatorDown.and(elevatorUp).onFalse(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));
+
     armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.1)));
     armDown.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(-0.1)));
-    commXbox.y().onTrue(swerve.zeroGyroCommand());
-    commXbox.a().onTrue(swerve.resetOdometryCommand());
+    armUp.and(armDown).onFalse(new InstantCommand(() -> mechanisms.setWristSpeed(0)));
+
+    effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(-1)));
+    effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(1)));
+    effectorIntake.and(effectorScore).onFalse(new InstantCommand(() -> flywheels.setSpeed(0)));
+
+    // change or remove each of these when we deside controls
+    zeroGyro.onTrue(swerve.zeroGyroCommand());
+    resetOdometry.onTrue(swerve.resetOdometryCommand());
     commXbox.x().onTrue(field.pathfindToSetpoint(FieldSetpoint.Reef2));
     commXbox.b().onTrue(field.pathfindToSetpoint(FieldSetpoint.Reef1));
     }
