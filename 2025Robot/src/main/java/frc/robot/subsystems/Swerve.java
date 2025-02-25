@@ -10,6 +10,9 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -47,9 +50,10 @@ public class Swerve extends SubsystemBase {
   public final SwerveDrivePoseEstimator swerveOdometry;
   private Mechanisms elevator;
 
-  private Field2d field = new Field2d();
-  private FieldObject2d fieldObjectPose = field.getObject("FieldPosition");
+
+ 
   public RobotConfig config;
+ 
 
   private GenericEntry poseX = Shuffleboard.getTab("Odometry").add("Pose X", 0).withWidget("Text View").getEntry();
   private GenericEntry poseY = Shuffleboard.getTab("Odometry").add("Pose Y", 0).withWidget("Text View").getEntry();
@@ -61,8 +65,7 @@ public class Swerve extends SubsystemBase {
 
   private final AHRS gyro;
   private final Vision vision;
-  private ComplexWidget fieldPublisher;
-  private ComplexWidget field2Publisher;
+
 
   public SwerveState state = SwerveState.DefaultState;
   private double translateX;
@@ -81,7 +84,6 @@ public class Swerve extends SubsystemBase {
   public Swerve(AHRS gyro, Vision vision) {
     this.gyro = gyro;
     this.vision = vision;
-    fieldPublisher = Shuffleboard.getTab("Odometry").add("field odometry", field).withWidget("Field");
     xbox = new XboxController(2);
     zeroGyro();
     
@@ -412,7 +414,19 @@ public class Swerve extends SubsystemBase {
 
   }
 
-  
+  /**
+   * Periodic command called 50 times per second.
+   * <p>
+   * Updates the swerve odometry using update, {@link #getAngle()}, and {@link #getInvertedPositions()}.
+   * Also updates the cameras. Uses addVisionMeasurement, getRobotPose, getFPGATimestamp, getPoseAmbiguity methods.
+   * <p>
+   * Runs the {@link #handleStates()} command.
+   * @see -Link to update: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/estimator/PoseEstimator.html#update(edu.wpi.first.math.geometry.Rotation2d,T).
+   * @see -Link to addVisionMeasurement: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/estimator/PoseEstimator.html#addVisionMeasurement(edu.wpi.first.math.geometry.Pose2d,double,edu.wpi.first.math.Matrix).
+   * @see -getRobotPose is found under: frc.robot.utils.Camera.
+   * @see -Link to getFPGATimestamp: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/Timer.html#getFPGATimestamp().
+   * @see -getPoseAmbiguity is found under: frc.robot.utils.Camera.
+   */
   @Override 
   public void periodic() {
       swerveOdometry.update(getAngle(), getInvertedPositions());
@@ -428,8 +442,7 @@ public class Swerve extends SubsystemBase {
     }
     
     handleStates();
-    field.setRobotPose(getPose());
-    fieldObjectPose.setPose(new Pose2d(poseX.getDouble(0), poseY.getDouble(0), Rotation2d.fromDegrees(poseRot.getDouble(0))));
+    
     
      
   }

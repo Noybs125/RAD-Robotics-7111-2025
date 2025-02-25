@@ -1,19 +1,30 @@
 package frc.robot.subsystems;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathfindThenFollowPath;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPoint;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,6 +38,17 @@ public class Field extends SubsystemBase {
     private SendableChooser<Integer> driverLocation = new SendableChooser<Integer>();
 
     private Pose2d poseSetpoint = new Pose2d();
+
+    public GoalEndState endState = new GoalEndState(0, poseSetpoint.getRotation());
+    public PathPlannerPath path;
+
+    private Field2d field = new Field2d();
+    private FieldObject2d fieldObjectPose = field.getObject("FieldPosition");
+    private ComplexWidget fieldPublisher;
+
+    private Swerve swerve;
+
+
 
     public List<Pose2d> zoneMap = new ArrayList<>();
     private Pose2d[] zoneArray = new Pose2d[] {
@@ -57,6 +79,8 @@ public class Field extends SubsystemBase {
         FieldSetpoint.Climb,
     };
 
+    private List<AutoCycle> autoCycles = new ArrayList<>();
+
     /**
      * States for different field setpoints, resulting in a path to the setpoint described in the states for this class.
      * States include "Reef1" through "Reef6", "Processor", "SourceLeft" and "SourceRight", "Barge" and "Climb".
@@ -81,7 +105,9 @@ public class Field extends SubsystemBase {
      * @see -Link to addOption: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/smartdashboard/SendableChooser.html#addOption(java.lang.String,V.
      * @see -Link to getTab: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/shuffleboard/Shuffleboard.html#getTab(java.lang.String).
      */
-    public Field() {
+    public Field(Swerve swerve) {
+        this.swerve = swerve;
+        fieldPublisher = Shuffleboard.getTab("Odometry").add("field odometry", field).withWidget("Field");
         driverLocation.addOption("1", 1);
         driverLocation.addOption("2", 2);
         driverLocation.addOption("3", 3);
@@ -150,7 +176,7 @@ public class Field extends SubsystemBase {
                 poseSetpoint = new Pose2d(7.29, 6.18, Rotation2d.fromDegrees(0));
                 break;
             case Climb:
-                switch ((int) driverLocation.getSelected()) {
+                switch (driverLocation.getSelected()) {
                     case 1:
                         poseSetpoint = new Pose2d(7.33, 7.27, Rotation2d.fromDegrees(0));
                         break;
@@ -181,7 +207,7 @@ public class Field extends SubsystemBase {
      * Gets the nearest zone to the robot's current position.
      * @param robotPose -The robot's current position.
      * @return -Nearest zone to the robot from "zoneMap".
-     * @see -Link to nearest method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose2d.html#nearest(java.util.List).
+     * @see -Link to "nearest" method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose2d.html#nearest(java.util.List).
      */
     public Pose2d getNearestZone(Pose2d robotPose){
         return robotPose.nearest(zoneMap);
@@ -277,10 +303,27 @@ public class Field extends SubsystemBase {
         }
         return command;
     }
+
+    public List<AutoCycle> getAutoCycles(){
+        List<AutoCycle> rearangedCycles = new ArrayList<>();
+        for(var cycle : autoCycles){
+            rearangedCycles.set(cycle.executedPosition, cycle);
+        }
+        return rearangedCycles;
+    }
     
     /**
      * Periodic function called 50 times per second, currently completely empty.
      */
     public void periodic() {
+        field.setRobotPose(swerve.getPose());
+        if (Pathfinding.isNewPathAvailable()){
+            path = Pathfinding.getCurrentPath(Constants.kAuto.constraints, endState);
+        }
+            
+
+        if (path != null) {
+            fieldObjectPose.setPoses(path.getPathPoses());
+        }  
     }
 }

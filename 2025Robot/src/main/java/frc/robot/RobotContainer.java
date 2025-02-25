@@ -4,6 +4,7 @@ import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Field;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Field.FieldSetpoint;
 import frc.robot.subsystems.Swerve.SwerveState;
 import frc.robot.subsystems.Flywheels;
 import frc.robot.subsystems.Mechanisms;
@@ -58,17 +60,17 @@ public class RobotContainer {
     xbox = new XboxController(2);
     commXbox = new CommandXboxController(2);
     
-    field = new Field();
     sensors = new Sensors();
     vision = new Vision(gyro);
     swerve = new Swerve(gyro, vision);
+    field = new Field(swerve);
     mechanisms = new Mechanisms();
     flywheels = new Flywheels();
     superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels);
 
     autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser.addOption("Custom", new PathPlannerAuto(field.generateAutoRoutine(field.getAutoCycles())));
     SmartDashboard.putData(autoChooser);
-    
 
     // Configure button bindings
     configureButtonBindings();
@@ -105,7 +107,7 @@ public class RobotContainer {
     armDown.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(-0.1)));
     commXbox.y().onTrue(swerve.zeroGyroCommand());
     commXbox.a().onTrue(swerve.resetOdometryCommand());
-    commXbox.x().onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.ReefL1Processor));
-    commXbox.b().onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.Default));
+    commXbox.x().onTrue(field.pathfindToSetpoint(FieldSetpoint.Reef2));
+    commXbox.b().onTrue(field.pathfindToSetpoint(FieldSetpoint.Reef1));
     }
   }

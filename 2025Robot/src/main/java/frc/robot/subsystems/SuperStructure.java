@@ -22,6 +22,10 @@ public class SuperStructure extends SubsystemBase {
     public boolean hasCoral;
     public boolean hasAlgae;
 
+    /**
+     * States for what constrolstate we need.
+     * States include; "ReefL1Processor", "ReefL2", "ReefL3", "ReefL4Net", "ReefFeeder", "DeepClimb", and "Default"
+     */
     public enum ControlState {
         ReefL1Processor,
         ReefL2,
@@ -32,6 +36,10 @@ public class SuperStructure extends SubsystemBase {
         Default,
     }
 
+    /**
+     * States for what state the robot is actively in.
+     * States include; "coralL1" through "coralL4", "coralFeeder", "algaeProcessor", "algaeNet", "algaeL2", "algaeL3", "deepClimb" and "defaultState"
+     */
     public enum ActualState {
         coralL1,
         coralL2,
@@ -46,6 +54,15 @@ public class SuperStructure extends SubsystemBase {
         defaultState,
     }
 
+    /**
+     * Constructor for the SuperStructure. initilizes the states for the robot, and sets all the parameters equal to local variables.
+     * @param swerve -Type "Swerve", sets equal to local swerve.
+     * @param vision -Type "Vision", sets equal to local vision.
+     * @param field -Type "Field", sets equal to local field.
+     * @param sensors -Type "Sensors", sets equal to local sensors.
+     * @param mechanisms -Type "Mechanisms", sets equal to local mechanisms.
+     * @param flywheels -Type "Flywheels", sets equal to local flywheels.
+     */
     public SuperStructure(Swerve swerve, Vision vision, Field field, Sensors sensors, Mechanisms mechanisms, Flywheels flywheels){
         this.swerve = swerve;
         this.vision = vision;
@@ -59,6 +76,12 @@ public class SuperStructure extends SubsystemBase {
     }
 
 
+    /**
+     * Periodic method called 50 times per second.
+     * <p>
+     * Calls {@link #manageControlState()} and {@link #manageActualState()} which act on the current states.
+     * Also checks if the robot has coral, algae, or nothing.
+     */
     public void periodic() {
         manageControlState();
         manageActualState();
@@ -82,6 +105,10 @@ public class SuperStructure extends SubsystemBase {
 
     }
 
+    /**
+     * Sets the actual robot state to the equivilent for control state.
+     * This makes the robot turn into the state and start running the appropriate code.
+     */
     private void manageControlState(){
         switch (controlRobotState) {   
             case ReefL1Processor:
@@ -118,6 +145,10 @@ public class SuperStructure extends SubsystemBase {
         }
     }
 
+    /**
+     * Calls the state functions for the set state.
+     * @see -{@link #coralL1()} {@link #coralL2()} {@link #coralL3()} {@link #coralL4()} {@link #coralFeeder()} {@link #algaeL2()} {@link #algaeProcessor()} {@link #algaeNet()} {@link #deepClimb()} {@link #defaultState()}
+     */
     private void manageActualState()
     {
         switch(actualRobotState)
@@ -158,46 +189,99 @@ public class SuperStructure extends SubsystemBase {
         }
     }
 
+    /**
+     * Sets the controlRobotState
+     * @param state -Type "ControlState", controlRobotState is set equal to this.
+     */
     private void setRobotState(ControlState state){
         controlRobotState = state;
     }
 
+    /**
+     * Runs the robotstate input. Uses runOnce, and {@link #setRobotState(ControlState)}.
+     * @param state -The state used for setRobotState.
+     * @return -Type "Command", an object used to run a command.
+     * @see -Link to runOnce method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/Subsystem.html#runOnce(java.lang.Runnable).
+     */
     public Command setRobotStateCommand(ControlState state){
         return runOnce(() -> setRobotState(state));
     }
 
+    /**
+     * Sets the SwerveState to the "Vision" state
+     */
     private void coralL1(){
         //mechanisms.setState(Mechanisms.MechanismsState.ReefL1);
         swerve.setState(SwerveState.Vision);
     }
+
+    /**
+     * Sets the mechanismsState to "ReefL2"
+     */
     private void coralL2(){
         mechanisms.setState(Mechanisms.MechanismsState.ReefL2);
         if(vision.isAtTarget(0, null, null, 0));
     }
+
+    /**
+     * Sets the mechanismsState to "ReefL3"
+     */
     private void coralL3(){
         mechanisms.setState(Mechanisms.MechanismsState.ReefL3);
     }
+
+    /**
+     * Sets the mechanismsState to "ReefL4"
+     */
     private void coralL4(){
         mechanisms.setState(Mechanisms.MechanismsState.ReefL4);
     }
+
+    /**
+     * Sets the mechanismsState to "CoralFeeder"
+     */
     private void coralFeeder(){
         mechanisms.setState(Mechanisms.MechanismsState.CoralFeeder);
     }
+
+    /**
+     * Sets the mechanismsState to "AlgaeProcessor"
+     */
     private void algaeProcessor(){
         mechanisms.setState(Mechanisms.MechanismsState.AlgaeProcessor);
     }
+    
+    /**
+     * Sets the mechanismsState to "AlgaeNet"
+     */
     private void algaeNet(){
         mechanisms.setState(Mechanisms.MechanismsState.AlgaeNet);
     }
+
+    /**
+     * Sets the mechanismsState to "AlgaeL2"
+     */
     private void algaeL2(){
         mechanisms.setState(Mechanisms.MechanismsState.AlgaeL2);
     }
+
+    /**
+     * Sets the mechanismsState to "AlgaeL3"
+     */
     private void algaeL3(){
         mechanisms.setState(Mechanisms.MechanismsState.AlgaeL3);
     }
+
+    /**
+     * Sets the mechanismsState to "Climb"
+     */
     private void deepClimb(){
         mechanisms.setState(Mechanisms.MechanismsState.Climb);
     }
+
+    /**
+     * Checks if the elevator height is greater that 2 feet, setting SwerveState to "lowerSpeed" if the case, otherwise set to "DefaultState"
+     */
     private void defaultState(){
         //mechanisms.setState(Mechanisms.MechanismsState.Store);
         
