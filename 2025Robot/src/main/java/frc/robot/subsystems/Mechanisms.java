@@ -21,6 +21,8 @@ import frc.robot.utils.motor.Motor;
 
 public class Mechanisms extends SubsystemBase {
 
+
+    // Elevator motor id's are 8 and 2. one must be inverted
     private Motor elevator;
     private Motor wrist;
     private double elevatorSetpoint = 0;
