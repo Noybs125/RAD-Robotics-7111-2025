@@ -97,15 +97,17 @@ public class Mechanisms extends SubsystemBase {
         isManual = false;
     }
     /**
-     * Uses circumference of elevator winch and relative position of encoder to calculate elevator height. Uses getPosition method.
-     * @return Calculated elevator height in feet. TODO: Change method return to return percent of max height to give more predictable units.
+     * Uses circumference of elevator winch and relative position of encoder to calculate elevator height, 
+     * then uses that value devided by the max height to calculate percentage of max height. 
+     * Uses getPosition method.
+     * @return Calculated elevator height in percent of max height.
      * @see -Link to getPosition: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#get().
      */
     public double getElevatorHeight(){
         double elevatorHeight;
 
         if ( elevator != null) {
-            elevatorHeight = (Math.PI * kMechanisms.elevatorWinchDiameter * elevator.getPosition() / 360.0) * 12;
+            elevatorHeight = ((Math.PI * kMechanisms.elevatorWinchDiameter * elevator.getPosition() / 360.0 / 12) / kMechanisms.elevatorMaxHeight);
         }
         else {
             elevatorHeight = 0;
