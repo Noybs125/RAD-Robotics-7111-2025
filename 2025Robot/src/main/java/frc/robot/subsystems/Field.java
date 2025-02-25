@@ -35,7 +35,7 @@ import frc.robot.utils.AutoCycle;
 
 public class Field extends SubsystemBase {
 
-    private SendableChooser<Integer> driverLocation = new SendableChooser<Integer>();
+    private SendableChooser<Integer> driverLocation = new SendableChooser<>();
 
     private Pose2d poseSetpoint = new Pose2d();
 
@@ -108,9 +108,11 @@ public class Field extends SubsystemBase {
     public Field(Swerve swerve) {
         this.swerve = swerve;
         fieldPublisher = Shuffleboard.getTab("Odometry").add("field odometry", field).withWidget("Field");
+
         driverLocation.addOption("1", 1);
         driverLocation.addOption("2", 2);
         driverLocation.addOption("3", 3);
+
         for(Pose2d zone : zoneArray){
             zoneMap.add(zone);
         }
