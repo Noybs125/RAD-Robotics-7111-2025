@@ -72,7 +72,7 @@ public class Swerve extends SubsystemBase {
   private double translateY;
   private double rotationZ;
 
-  private double maxSpeed = 1;
+  private double maxSpeed;
 
   private boolean isFieldRelative = true;
 
@@ -440,7 +440,9 @@ public class Swerve extends SubsystemBase {
       SmartDashboard.putNumber("Vison TranslateX", vision.getAlignmentToTarget(18, vision.orangepi1).getX());
 
     }
-    
+    //sets max speed to 100% - % of elevator height.
+    maxSpeed = 1 - elevator.getElevatorHeight();
+
     handleStates();
     
     
