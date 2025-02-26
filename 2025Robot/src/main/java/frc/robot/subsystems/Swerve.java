@@ -442,6 +442,11 @@ public class Swerve extends SubsystemBase {
     }
     //sets max speed to 100% - % of elevator height.
     maxSpeed = 1 - elevator.getElevatorHeight();
+    //failsafe preventing robot from ever setting the swerve drive to less than 7.5% max speed.
+    if(maxSpeed < 0.075)
+    {
+      maxSpeed = 0.1;
+    }
 
     handleStates();
     
