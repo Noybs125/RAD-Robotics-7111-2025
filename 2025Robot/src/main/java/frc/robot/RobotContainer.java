@@ -57,8 +57,8 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
-    xbox = new XboxController(2);
-    commXbox = new CommandXboxController(2);
+    xbox = new XboxController(0);
+    commXbox = new CommandXboxController(0);
     
     sensors = new Sensors();
     vision = new Vision(gyro);
@@ -99,7 +99,7 @@ public class RobotContainer {
     Trigger resetOdometry = commXbox.a();
 
     swerve.setDefaultCommand(swerve.drive(
-      () -> -swerve.getTransY(), 
+      () -> -swerve.getTransY(),
       () -> swerve.getTransX(),  
       () -> swerve.getRotationZ(),
       () -> swerve.getFieldRelative(), 
