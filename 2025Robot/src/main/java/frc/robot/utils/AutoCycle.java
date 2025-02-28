@@ -19,9 +19,8 @@ public class AutoCycle {
     private SendableChooser<Boolean> reefBranchChooser = new SendableChooser<>();
     private SendableChooser<Integer> reefLevelChooser = new SendableChooser<>();
 
-    private int[] coralStations = new int[] {};
-    private int[] reefFaces = new int[] {};
-    private int[] reefLevels = new int[] {};
+    private int[] reefFaces = new int[] {1, 2, 3, 4, 5, 6};
+    private int[] reefLevels = new int[] {1, 2, 3, 4};
 
     /**
      * Initializes the Auto cycle
@@ -38,6 +37,22 @@ public class AutoCycle {
         this.levelToScore = levelToScore;
         this.reefFace = reefFace;
 
+        addChooserOptions();
+    }
+    public AutoCycle(int executedPosition){
+        this.executedPosition = executedPosition;
+
+        addChooserOptions();
+    }
+
+    public void updateAutoCycle(){
+        feederStation = coralStationChooser.getSelected();
+        reefFace = reefFaceChooser.getSelected();
+        levelToScore = reefLevelChooser.getSelected();
+        reefFace = reefFaceChooser.getSelected();
+    }
+
+    private void addChooserOptions(){
         coralStationChooser.addOption("Preload", 0);
         coralStationChooser.addOption("Left", 1);
         coralStationChooser.addOption("Right", 2);
@@ -53,10 +68,16 @@ public class AutoCycle {
         reefBranchChooser.addOption("Right", false);
     }
 
-    public void setAutoCycle(){
-        feederStation = coralStationChooser.getSelected();
-        reefFace = reefFaceChooser.getSelected();
-        levelToScore = reefLevelChooser.getSelected();
-        reefFace = reefFaceChooser.getSelected();
+    public SendableChooser<Integer> getCoralStationChooser(){
+        return coralStationChooser;
+    }
+    public SendableChooser<Integer> getReefFaceChooser(){
+        return reefFaceChooser;
+    }
+    public SendableChooser<Boolean> getReefBranchChooser(){
+        return reefBranchChooser;
+    }
+    public SendableChooser<Integer> getReefLevelChooser(){
+        return reefLevelChooser;
     }
 }

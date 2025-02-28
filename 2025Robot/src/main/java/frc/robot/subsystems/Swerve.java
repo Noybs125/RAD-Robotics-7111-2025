@@ -73,6 +73,7 @@ public class Swerve extends SubsystemBase {
   private double rotationZ;
 
   private double maxSpeed;
+  private double difference = 0;
 
   private boolean isFieldRelative = true;
 
@@ -228,16 +229,11 @@ public class Swerve extends SubsystemBase {
   {
     switch (state) {
       case DefaultState:
-        translateX = Constants.kControls.X_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftX(), 3 / 1));
-        translateY = Constants.kControls.Y_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftY(), 3 / 1));
-        rotationZ = Constants.kControls.THETA_DRIVE_LIMITER.calculate(Math.pow(xbox.getRightX(), 3 / 1));
-        isFieldRelative = true;
-        break;
-
       case lowerSpeed:
         translateX = Constants.kControls.X_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftX(), 3 / 1) * maxSpeed);
         translateY = Constants.kControls.Y_DRIVE_LIMITER.calculate(Math.pow(xbox.getLeftY(), 3 / 1) * maxSpeed);
-        rotationZ = Constants.kControls.THETA_DRIVE_LIMITER.calculate(Math.pow(xbox.getRightX(), 3 / 1));
+        rotationZ = Constants.kControls.THETA_DRIVE_LIMITER.calculate(Math.pow(xbox.getRightX(), 3 / 1) * maxSpeed);
+        isFieldRelative = true;
         break;
 
       case Intaking:
@@ -441,7 +437,7 @@ public class Swerve extends SubsystemBase {
 
     }
     //sets max speed to 100% - % of elevator height.
-    maxSpeed = 1 - elevator.getElevatorHeight();
+    maxSpeed = 1 - difference;
     //failsafe preventing robot from ever setting the swerve drive to less than 7.5% max speed.
     if(maxSpeed < 0.075)
     {
@@ -483,5 +479,9 @@ public class Swerve extends SubsystemBase {
    */
   public AHRS getGyro(){
     return gyro;
+  }
+
+  public void setSubtractedSpeed(double value){
+    difference = value;
   }
 }

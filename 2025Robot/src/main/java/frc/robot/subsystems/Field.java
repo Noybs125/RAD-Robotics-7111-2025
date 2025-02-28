@@ -19,6 +19,9 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
@@ -36,6 +39,12 @@ import frc.robot.utils.AutoCycle;
 public class Field extends SubsystemBase {
 
     private SendableChooser<Integer> driverLocation = new SendableChooser<>();
+    private SendableChooser<AutoCycle> autoCycleChooser = new SendableChooser<>();
+
+    private SendableChooser<Integer> coralStationChooser = new SendableChooser<>();
+    private SendableChooser<Integer> reefFaceChooser = new SendableChooser<>();
+    private SendableChooser<Boolean> reefBranchChooser = new SendableChooser<>();
+    private SendableChooser<Integer> reefLevelChooser = new SendableChooser<>();
 
     private Pose2d poseSetpoint = new Pose2d();
 
@@ -48,7 +57,8 @@ public class Field extends SubsystemBase {
 
     private Swerve swerve;
 
-
+    private GenericEntry cycleAmountEntry;
+    private double autoCycleAmount = 0;
 
     public List<Pose2d> zoneMap = new ArrayList<>();
     private Pose2d[] zoneArray = new Pose2d[] {
@@ -123,6 +133,14 @@ public class Field extends SubsystemBase {
         }
 
         Shuffleboard.getTab("Autonomous").add("DriverStation", driverLocation);
+        
+
+        cycleAmountEntry = Shuffleboard.getTab("Autonomous").add("Apply Cycle Amount", false).getEntry();
+        
+        Shuffleboard.getTab("Autonomous").add(coralStationChooser);
+        Shuffleboard.getTab("Autonomous").add(reefFaceChooser);
+        Shuffleboard.getTab("Autonomous").add(reefBranchChooser);
+        Shuffleboard.getTab("Autonomous").add(reefLevelChooser);
     }
 
     /**
@@ -322,10 +340,26 @@ public class Field extends SubsystemBase {
         if (Pathfinding.isNewPathAvailable()){
             path = Pathfinding.getCurrentPath(Constants.kAuto.constraints, endState);
         }
-            
-
+    
         if (path != null) {
             fieldObjectPose.setPoses(path.getPathPoses());
-        }  
+        }
+
+        if(autoCycleAmount != cycleAmountEntry.getInteger(0)){
+            autoCycleChooser = new SendableChooser<>();
+            for (int i = 1; i < cycleAmountEntry.getInteger(i); i++) {
+                autoCycleChooser.addOption("Cycle " + i, new AutoCycle(i));
+            }
+        }
+        autoCycleAmount = cycleAmountEntry.getInteger(0);
+        
+        if (autoCycleChooser != null && autoCycleChooser.getSelected() != null) {
+            coralStationChooser = autoCycleChooser.getSelected().getCoralStationChooser();
+            reefFaceChooser = autoCycleChooser.getSelected().getReefFaceChooser();
+            reefBranchChooser = autoCycleChooser.getSelected().getReefBranchChooser();
+            reefLevelChooser = autoCycleChooser.getSelected().getReefLevelChooser();
+
+            autoCycleChooser.getSelected().updateAutoCycle();
+        }
     }
 }
