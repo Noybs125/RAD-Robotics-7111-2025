@@ -72,7 +72,8 @@ public class Swerve extends SubsystemBase {
   private double translateY;
   private double rotationZ;
 
-  private double maxSpeed;
+  private double maxSpeed = 0.5;
+  private double maxAngularVelocity = 0.5;
   private double difference = 0;
 
   private boolean isFieldRelative = true;
@@ -438,10 +439,19 @@ public class Swerve extends SubsystemBase {
     }
     //sets max speed to 100% - % of elevator height.
     maxSpeed = 1 - difference;
+
+    //sets max rotational percentage to 100% minus the difference, times 0.5
+    //if difference = 100%, maxAngularVelocity = 1 - (1 * 0.5)
+    maxAngularVelocity = 1 - (difference * 0.5);
     //failsafe preventing robot from ever setting the swerve drive to less than 7.5% max speed.
-    if(maxSpeed < 0.075)
+    if(maxSpeed < 0.075 || maxSpeed > 1)
     {
       maxSpeed = 0.1;
+    }
+
+    if(maxAngularVelocity < 0.5 && maxAngularVelocity > 1)
+    {
+      maxAngularVelocity = 0.5;
     }
 
     handleStates();
@@ -481,6 +491,10 @@ public class Swerve extends SubsystemBase {
     return gyro;
   }
 
+  /**
+   * Subtracts the swerve speed by this value, in a percentage of 0 (0 percent) to 1 (100 percent).
+   * @param value -Type "double", value of 0 to 1, being 0 is not slowing swerve at all, and 1 being swerve modules move at 0% speed. (There is safty so it is never 0% speed)
+   */
   public void setSubtractedSpeed(double value){
     difference = value;
   }
