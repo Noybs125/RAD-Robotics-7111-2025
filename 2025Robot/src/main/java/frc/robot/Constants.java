@@ -62,17 +62,7 @@ public class Constants {
 
     public static final double elevatorSimGearRatio = 1;    
 
-    public static final double elevatorDrumRadius = Units
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    .inchesToMeters(2.0);
+    public static final double elevatorDrumRadius = Units.inchesToMeters(2.0);
     public static final double elevatorEncoderDistPerPulse =
       2.0 * Math.PI * elevatorDrumRadius / 4096;
       

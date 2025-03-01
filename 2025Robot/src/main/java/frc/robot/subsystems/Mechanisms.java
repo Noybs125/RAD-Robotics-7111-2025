@@ -33,7 +33,7 @@ public class Mechanisms extends SubsystemBase {
     private Motor wrist;
     private double elevatorSetpoint = 0;
     private double wristSetpoint = 0;
-    private boolean isManual = false;
+    private boolean isManual = true;
     private double lowerLimit;
     private double upperLimit;
     private MechanismsState state = MechanismsState.Store;
@@ -75,13 +75,20 @@ public class Mechanisms extends SubsystemBase {
         PIDController twoMotorsPID = new PIDController(0.05, 0, 0);
         SimpleMotorFeedforward twoMotorsSMFF = null /*new SimpleMotorFeedforward(0, 0)*/;
         WpiEncoder twoMotorsEncoder = new WpiEncoder(8, 9);
-        TalonFXConfiguration oneMotorInverted = new TalonFXConfiguration();
-        TalonFXConfiguration twoMotorInverted = new TalonFXConfiguration();
-        oneMotorInverted.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-        twoMotorInverted.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        TalonFXConfiguration elevator1Config = new TalonFXConfiguration();
+        TalonFXConfiguration elevator2Config = new TalonFXConfiguration();
+        TalonFXConfiguration wristConfig = new TalonFXConfiguration();
+        elevator1Config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        elevator1Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        elevator2Config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        elevator2Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-        elevator = new TwoMotors(new CTREMotor(8, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, new ElevatorSimMotor(null, 0.0, null, null, null), oneMotorInverted),
-         new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, new ElevatorSimMotor(null, 0.0, null, null, null), twoMotorInverted));
+        elevator = new TwoMotors(
+            new CTREMotor(8, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, 
+                new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), elevator1Config),
+            new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, 
+                new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), elevator2Config));
 
         wrist = new CTREMotor(14, null, kMechanisms.wristGearRatio, new PIDController(0.05, 0, 0), null, new ArmSimMotor(null, null, null, null), new TalonFXConfiguration());
     }

@@ -115,8 +115,8 @@ public class RobotContainer {
     armDown.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(-0.1)));
     armUp.negate().and(armDown.negate()).onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0)));
 
-    effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(-0.3)));
-    effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(0.3)));
+    effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(-1)));
+    effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(1)));
     effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
 
     // change or remove each of these when we deside controls
