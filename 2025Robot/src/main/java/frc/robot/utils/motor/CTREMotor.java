@@ -31,6 +31,7 @@ public class CTREMotor implements Motor {
         this.simType = simType;
 
         motor.getConfigurator().apply(talonConfig);
+        motor.setPosition(0);
 
         Shuffleboard.getTab("DeviceOutputs").addDouble("Motor" + id + " Voltage", () -> motor.getMotorVoltage().getValueAsDouble()).withWidget("");
         Shuffleboard.getTab("DeviceOutputs").addDouble("Motor" + id + " Speed", () -> motor.get()).withWidget("");
@@ -39,6 +40,7 @@ public class CTREMotor implements Motor {
 
     public CTREMotor(int id){
         motor = new TalonFX(id);
+        motor.setPosition(0);
     }
 
     public void setSpeed(double speed){
