@@ -75,13 +75,17 @@ public class Mechanisms extends SubsystemBase {
         PIDController twoMotorsPID = new PIDController(0.05, 0, 0);
         SimpleMotorFeedforward twoMotorsSMFF = null /*new SimpleMotorFeedforward(0, 0)*/;
         WpiEncoder twoMotorsEncoder = new WpiEncoder(8, 9);
+
         TalonFXConfiguration elevator1Config = new TalonFXConfiguration();
         TalonFXConfiguration elevator2Config = new TalonFXConfiguration();
         TalonFXConfiguration wristConfig = new TalonFXConfiguration();
+
         elevator1Config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         elevator1Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
         elevator2Config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         elevator2Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        
         wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         elevator = new TwoMotors(

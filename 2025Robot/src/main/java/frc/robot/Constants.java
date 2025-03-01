@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.config.ModuleConfig;
@@ -212,6 +213,9 @@ public class Constants {
     public static final double wristGearRatio = 48.13;
     /** Elevator Max Height in feet */
     public static final double elevatorMaxHeight = 8;
+
+    /** Motor Configurations */
+    public static final TalonFXConfiguration elevator1Config = new TalonFXConfiguration();
   }
 
   public static class kAuto {
