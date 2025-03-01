@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -74,7 +75,8 @@ public class Mechanisms extends SubsystemBase {
     public Mechanisms(){
         PIDController twoMotorsPID = new PIDController(0.05, 0, 0);
         SimpleMotorFeedforward twoMotorsSMFF = null /*new SimpleMotorFeedforward(0, 0)*/;
-        WpiEncoder twoMotorsEncoder = new WpiEncoder(8, 9);
+        WpiEncoder twoMotorsEncoder = new WpiEncoder(0, 1);
+        Shuffleboard.getTab("test").add("encoder direct position", twoMotorsEncoder.getPosition().getDegrees());
 
         TalonFXConfiguration elevator1Config = new TalonFXConfiguration();
         TalonFXConfiguration elevator2Config = new TalonFXConfiguration();
@@ -85,7 +87,7 @@ public class Mechanisms extends SubsystemBase {
 
         elevator2Config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         elevator2Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        
+
         wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         elevator = new TwoMotors(
@@ -94,7 +96,7 @@ public class Mechanisms extends SubsystemBase {
             new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, 
                 new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), elevator2Config));
 
-        wrist = new CTREMotor(14, null, kMechanisms.wristGearRatio, new PIDController(0.05, 0, 0), null, new ArmSimMotor(null, null, null, null), new TalonFXConfiguration());
+        wrist = new CTREMotor(14, null, kMechanisms.wristGearRatio, new PIDController(0.05, 0, 0), null, new ArmSimMotor(null, null, null, null), wristConfig);
     }
 
     /**
@@ -131,7 +133,7 @@ public class Mechanisms extends SubsystemBase {
         double elevatorHeight;
 
         if ( elevator != null) {
-            elevatorHeight = ((Math.PI * kMechanisms.elevatorWinchDiameter * elevator.getPosition() / 360.0 / 12) / kMechanisms.elevatorMaxHeight);
+            elevatorHeight = ((Math.PI * kMechanisms.elevatorWinchDiameter * elevator.getPosition() / 8192 / 12) / kMechanisms.elevatorMaxHeight);
         }
         else {
             elevatorHeight = 0;
@@ -295,6 +297,9 @@ public class Mechanisms extends SubsystemBase {
         wrist.periodic();
         
         handleState();
+
+        SmartDashboard.putNumber("elevator Position", elevator.getPosition());
+        SmartDashboard.putNumber("wrist Position", wrist.getPosition());
     }
 
     public void simulationPeriodic(){

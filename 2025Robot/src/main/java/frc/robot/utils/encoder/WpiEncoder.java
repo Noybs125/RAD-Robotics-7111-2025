@@ -78,7 +78,9 @@ public class WpiEncoder implements frc.robot.utils.encoder.Encoder {
 
     public void periodic(){
         encoder.setDistancePerPulse(multiplierEntry.getDouble(0) * gearRatio);
-        position = encoder.getDistance() * gearRatio - offset;
+        position = (double)encoder.get() * gearRatio - offset;
         encoder.setReverseDirection(inverted);
+
+        System.out.println("position: " + position);
     }
 }
