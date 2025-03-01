@@ -107,16 +107,16 @@ public class RobotContainer {
       )
     );
 
-    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(commXbox.getLeftTriggerAxis())));
-    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-commXbox.getRightTriggerAxis())));
+    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(commXbox.getLeftTriggerAxis() / 3)));
+    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-commXbox.getRightTriggerAxis() / 3)));
     elevatorDown.and(elevatorUp).onFalse(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));
 
     armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.1)));
     armDown.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(-0.1)));
     armUp.and(armDown).onFalse(new InstantCommand(() -> mechanisms.setWristSpeed(0)));
 
-    effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(-1)));
-    effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(1)));
+    effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(-0.3)));
+    effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(0.3)));
     effectorIntake.and(effectorScore).onFalse(new InstantCommand(() -> flywheels.setSpeed(0)));
 
     // change or remove each of these when we deside controls
