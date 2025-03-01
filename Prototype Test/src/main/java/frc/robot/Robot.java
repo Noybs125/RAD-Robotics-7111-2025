@@ -20,7 +20,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
  
 
-  private XboxController controller = new XboxController(2);
+  private XboxController controller = new XboxController(0);
 
   private final RobotContainer m_robotContainer;
 
@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
     double neoVoltage = neoTestMotor.getBusVoltage();
 
     if(controller.getAButton()){
-      neoTestMotor.set(.75);
+      neoTestMotor.set(.5);
     } else if(controller.getYButton()){
       neoTestMotor.set(-0.5);
     }  else if(controller.getXButton()){
