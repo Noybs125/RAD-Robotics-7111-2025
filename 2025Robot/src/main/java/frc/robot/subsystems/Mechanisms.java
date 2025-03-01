@@ -80,10 +80,10 @@ public class Mechanisms extends SubsystemBase {
         oneMotorInverted.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         twoMotorInverted.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-        elevator = new TwoMotors(new CTREMotor(8, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, elevator, oneMotorInverted),
-         new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, elevator, twoMotorInverted));
+        elevator = new TwoMotors(new CTREMotor(8, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, new ElevatorSimMotor(null, 0.0, null, null, null), oneMotorInverted),
+         new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, new ElevatorSimMotor(null, 0.0, null, null, null), twoMotorInverted));
 
-        wrist = new CTREMotor(13);
+        wrist = new CTREMotor(13, null, kMechanisms.wristGearRatio, new PIDController(0.05, 0, 0), null, new ArmSimMotor(null, null, null, null), new TalonFXConfiguration());
     }
 
     /**

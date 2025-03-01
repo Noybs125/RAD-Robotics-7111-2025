@@ -219,6 +219,7 @@ public class Constants {
     public static final double elevatorCurrentLimit = 40;
     public static final double flywheelCurrentLimit = 40;
     public static final double elevatorWinchDiameter = 2;
+    public static final double wristGearRatio = 48.13;
     /** Elevator Max Height in feet */
     public static final double elevatorMaxHeight = 8;
   }
