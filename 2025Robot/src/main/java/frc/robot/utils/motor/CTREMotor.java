@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class CTREMotor implements Motor {
     private TalonFX motor;
-    PIDController pid = new PIDController(0, 0, 0);
+    PIDController pid = new PIDController(0.05, 0, 0);
     private TalonFXConfiguration config;
     private Encoder encoder = null;
     private double gearRatio;
@@ -31,7 +31,7 @@ public class CTREMotor implements Motor {
         this.simType = simType;
 
         motor.getConfigurator().apply(talonConfig);
-        motor.setPosition(0);
+        setPosition(0);
 
         Shuffleboard.getTab("DeviceOutputs").addDouble("Motor" + id + " Voltage", () -> motor.getMotorVoltage().getValueAsDouble()).withWidget("");
         Shuffleboard.getTab("DeviceOutputs").addDouble("Motor" + id + " Speed", () -> motor.get()).withWidget("");
@@ -40,7 +40,7 @@ public class CTREMotor implements Motor {
 
     public CTREMotor(int id){
         motor = new TalonFX(id);
-        motor.setPosition(0);
+        setPosition(0);
     }
 
     public void setSpeed(double speed){
