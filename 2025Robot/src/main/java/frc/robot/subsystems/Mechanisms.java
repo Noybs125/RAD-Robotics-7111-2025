@@ -78,23 +78,11 @@ public class Mechanisms extends SubsystemBase {
         WpiEncoder twoMotorsEncoder = new WpiEncoder(0, 1);
         Shuffleboard.getTab("test").add("encoder direct position", twoMotorsEncoder.getPosition().getDegrees());
 
-        TalonFXConfiguration elevator1Config = new TalonFXConfiguration();
-        TalonFXConfiguration elevator2Config = new TalonFXConfiguration();
-        TalonFXConfiguration wristConfig = new TalonFXConfiguration();
-
-        elevator1Config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-        elevator1Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-
-        elevator2Config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-        elevator2Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-
-        wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-
         elevator = new TwoMotors(
             new CTREMotor(8, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, 
-                new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), elevator1Config),
+                new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), Constants.kMechanisms.elevator1Config),
             new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, 
-                new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), elevator2Config));
+                new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), Constants.kMechanisms.elevator2Config));
 
         wrist = new CTREMotor(14, null, kMechanisms.wristGearRatio, new PIDController(0.05, 0, 0), null, new ArmSimMotor(null, null, null, null), wristConfig);
     }
