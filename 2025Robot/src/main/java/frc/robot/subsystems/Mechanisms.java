@@ -76,15 +76,14 @@ public class Mechanisms extends SubsystemBase {
         PIDController twoMotorsPID = new PIDController(0.05, 0, 0);
         SimpleMotorFeedforward twoMotorsSMFF = null /*new SimpleMotorFeedforward(0, 0)*/;
         WpiEncoder twoMotorsEncoder = new WpiEncoder(0, 1);
-        Shuffleboard.getTab("test").add("encoder direct position", twoMotorsEncoder.getPosition().getDegrees());
 
         elevator = new TwoMotors(
             new CTREMotor(8, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, 
-                new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), Constants.kMechanisms.elevator1Config),
+                new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), Constants.kMechanisms.elevator1Config()),
             new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, 
-                new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), Constants.kMechanisms.elevator2Config));
+                new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), Constants.kMechanisms.elevator2Config()));
 
-        wrist = new CTREMotor(14, null, kMechanisms.wristGearRatio, new PIDController(0.05, 0, 0), null, new ArmSimMotor(null, null, null, null), wristConfig);
+        wrist = new CTREMotor(14, null, kMechanisms.wristGearRatio, new PIDController(0.05, 0, 0), null, new ArmSimMotor(null, null, null, null), Constants.kMechanisms.wristConfig());
     }
 
     /**

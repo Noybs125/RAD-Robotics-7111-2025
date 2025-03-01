@@ -3,9 +3,12 @@ package frc.robot.utils;
 
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -129,25 +132,27 @@ public class SwerveModule {
     driveMotorConfig.closedLoopRampRate(Constants.kSwerve.CLOSED_LOOP_RAMP);
     driveMotorConfig.smartCurrentLimit(Constants.kSwerve.DRIVE_CURRENT_LIMIT);
 
-    driveMotor.configure(angleMotorConfig, null, null);
-
     drivePIDConfig.p(Constants.kSwerve.DRIVE_KP);
     drivePIDConfig.i(Constants.kSwerve.DRIVE_KI);
     drivePIDConfig.d(Constants.kSwerve.DRIVE_KD);
     drivePIDConfig.velocityFF(Constants.kSwerve.DRIVE_KF);
  
     //setPositionConversionFactor && setVelocityConversionFactor are in SparkAbsoluteEncoderSim
-    driveEncoderConversion.setPositionConversionFactor(Constants.kSwerve.DRIVE_ROTATIONS_TO_METERS);
-    driveEncoderConversion.setVelocityConversionFactor(Constants.kSwerve.DRIVE_RPM_TO_METERS_PER_SECOND);
+    AbsoluteEncoderConfig driveEncoderConfig = new AbsoluteEncoderConfig();
+    driveEncoderConfig.positionConversionFactor(Constants.kSwerve.DRIVE_ROTATIONS_TO_METERS);
+    driveEncoderConfig.velocityConversionFactor(Constants.kSwerve.DRIVE_RPM_TO_METERS_PER_SECOND);
     driveEncoder.setPosition(0);
+
+    driveMotorConfig.absoluteEncoder.apply(driveEncoderConfig);
+    driveMotorConfig.closedLoop.apply(drivePIDConfig);
+
+    driveMotor.configure(driveMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
     // Angle motor configuration.
     //angleMotorConfig.restoreFactoryDefaults();
     angleMotorConfig.inverted(Constants.kSwerve.ANGLE_MOTOR_INVERSION);
     angleMotorConfig.idleMode(Constants.kSwerve.ANGLE_IDLE_MODE);
     angleMotorConfig.smartCurrentLimit(Constants.kSwerve.ANGLE_CURRENT_LIMIT);
-
-    angleMotor.configure(angleMotorConfig, null, null);
 
     anglePIDConfig.p(Constants.kSwerve.ANGLE_KP);
     anglePIDConfig.i(Constants.kSwerve.ANGLE_KI);
@@ -158,8 +163,14 @@ public class SwerveModule {
     anglePIDConfig.positionWrappingMaxInput(2 * Math.PI);
     anglePIDConfig.positionWrappingMinInput(0);
 
-    angleEncoderConversion.setPositionConversionFactor(Constants.kSwerve.ANGLE_ROTATIONS_TO_RADIANS);
-    angleEncoderConversion.setPositionConversionFactor(Constants.kSwerve.ANGLE_RPM_TO_RADIANS_PER_SECOND);
+    var angleEncoderConfig = new AbsoluteEncoderConfig();
+    angleEncoderConfig.positionConversionFactor(Constants.kSwerve.ANGLE_ROTATIONS_TO_RADIANS);
+    angleEncoderConfig.velocityConversionFactor(Constants.kSwerve.ANGLE_RPM_TO_RADIANS_PER_SECOND);
+
+    angleMotorConfig.closedLoop.apply(anglePIDConfig);
+    angleMotorConfig.absoluteEncoder.apply(angleEncoderConfig);
+    angleMotor.configure(angleMotorConfig, null, null);
+
     angleEncoder.setPosition(Units.degreesToRadians((canCoder.getAbsolutePosition().getValueAsDouble() * 360) - canCoderOffsetDegrees)); // added ".getValue..."
   }
 }

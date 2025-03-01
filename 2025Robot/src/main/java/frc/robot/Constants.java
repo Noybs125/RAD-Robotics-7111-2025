@@ -216,14 +216,10 @@ public class Constants {
 
     /** Motor Configurations */
 
-    public static TalonFXConfiguration elevator1Config = new TalonFXConfiguration();
-    public static TalonFXConfiguration elevator2Config = new TalonFXConfiguration();
-    public static TalonFXConfiguration wristConfig = new TalonFXConfiguration();
-
     public static TalonFXConfiguration elevator1Config(){
       TalonFXConfiguration elevator1Config = new TalonFXConfiguration();
       
-      elevator1Config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+      elevator1Config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
       elevator1Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
       return elevator1Config;
     }
@@ -231,7 +227,7 @@ public class Constants {
     public static TalonFXConfiguration elevator2Config(){
       TalonFXConfiguration elevator2Config = new TalonFXConfiguration();
       
-      elevator2Config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+      elevator2Config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
       elevator2Config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
       return elevator2Config;
     }

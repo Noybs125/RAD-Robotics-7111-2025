@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class WpiEncoder implements frc.robot.utils.encoder.Encoder {
@@ -22,7 +23,7 @@ public class WpiEncoder implements frc.robot.utils.encoder.Encoder {
         encoder.setDistancePerPulse(Constants.kSimulation.elevatorEncoderDistPerPulse);
         this.id = id;
 
-        Shuffleboard.getTab("test").addDouble("encoder distance", () -> encoder.getDistance());
+        Shuffleboard.getTab("test").addDouble("encoder distance", () -> encoder.getDistance() * 100);
         Shuffleboard.getTab("test").addDouble("encoder rate", () -> encoder.getRate());
         Shuffleboard.getTab("test").addInteger("encoder count", () -> encoder.get());
     }
@@ -34,7 +35,7 @@ public class WpiEncoder implements frc.robot.utils.encoder.Encoder {
         this.id = id;
         this.gearRatio = gearRatio;
 
-        Shuffleboard.getTab("test").addDouble("encoder distance", () -> encoder.getDistance());
+        Shuffleboard.getTab("test").addDouble("encoder distance", () -> encoder.getDistance() * 100);
         Shuffleboard.getTab("test").addDouble("encoder rate", () -> encoder.getRate());
         Shuffleboard.getTab("test").addInteger("encoder count", () -> encoder.get());
     }
@@ -78,9 +79,7 @@ public class WpiEncoder implements frc.robot.utils.encoder.Encoder {
 
     public void periodic(){
         encoder.setDistancePerPulse(multiplierEntry.getDouble(0) * gearRatio);
-        position = (double)encoder.get() * gearRatio - offset;
+        position = ((double)encoder.get() / 8192.0) * gearRatio - offset;
         encoder.setReverseDirection(inverted);
-
-        System.out.println("position: " + position);
     }
 }

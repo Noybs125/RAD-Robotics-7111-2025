@@ -107,8 +107,8 @@ public class RobotContainer {
       )
     );
 
-    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0.1)));
-    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-0.1)));
+    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-0.1)));
+    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0.3)));
     elevatorDown.negate().and(elevatorUp.negate()).onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));
 
     armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.1)));
