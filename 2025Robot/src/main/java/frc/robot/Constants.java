@@ -114,7 +114,7 @@ public class Constants {
 
   /** All swerve constants. */
   public static class kSwerve {
-    /** Constants that apply to the whole drive train. */
+    /* Constants that apply to the whole drive train. */
     public static final double TRACK_WIDTH = Units.inchesToMeters(19.65); // Width of the drivetrain measured from the middle of the wheels.
     public static final double WHEEL_BASE = Units.inchesToMeters(17.42); // Length of the drivetrain measured from the middle of the wheels.
     public static final double MODULE_TO_CENTER = Units.inchesToMeters(13.95); // Distance from the center of the module to the center of the robot
@@ -135,43 +135,43 @@ public class Constants {
     public static final double ANGLE_ROTATIONS_TO_RADIANS = (Math.PI * 2) / ANGLE_GEAR_RATIO;
     public static final double ANGLE_RPM_TO_RADIANS_PER_SECOND = ANGLE_ROTATIONS_TO_RADIANS / 60; // DRIVE_ROTATIONS_TO_METERS / 60.0;
 
-    /** Speed ramp. */
+    /* Speed ramp. */
     public static final double OPEN_LOOP_RAMP = 0.25;
     public static final double CLOSED_LOOP_RAMP = 0.0;
 
-    /** Current limiting. */
+    /* Current limiting. */
     public static final int DRIVE_CURRENT_LIMIT = 40;
     public static final int DRIVE_CURRENT_THRESHOLD = 60;
     public static final int ANGLE_CURRENT_LIMIT = 20;
     public static final int ANGLE_CURRENT_THRESHOLD = 40;
 
-    /** Drive motor PID values. */
+    /* Drive motor PID values. */
     public static final double DRIVE_KP = 0.1;
     public static final double DRIVE_KI = 0.0;
     public static final double DRIVE_KD = 0.0;
     public static final double DRIVE_KF = 0.0;
 
-    /** Drive motor characterization. */
+    /* Drive motor characterization. */
     public static final double DRIVE_KS = 0.11937;
     public static final double DRIVE_KV = 2.3;
     public static final double DRIVE_KA = 0.11;
 
-    /** Angle motor PID values. */
+    /* Angle motor PID values. */
     public static final double ANGLE_KP = 40;
     public static final double ANGLE_KI = 5;
     public static final double ANGLE_KD = 0;
     public static final double ANGLE_KF = 0;
   
-    /** Swerve constraints. */
+    /* Swerve constraints. */
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 2;
     public static final double MAX_ANGULAR_RADIANS_PER_SECOND = 4;
 
-    /** Inversions. */
+    /* Inversions. */
     public static final InvertedValue DRIVE_MOTOR_INVERSION = InvertedValue.CounterClockwise_Positive;
     public static final InvertedValue ANGLE_MOTOR_INVERSION = InvertedValue.CounterClockwise_Positive;
     public static final boolean CANCODER_INVERSION = false;
 
-    /** Idle modes. */
+    /* Idle modes. */
     public static final NeutralModeValue DRIVE_IDLE_MODE = NeutralModeValue.Brake;
     public static final NeutralModeValue ANGLE_IDLE_MODE = NeutralModeValue.Coast;
     /** 
@@ -214,7 +214,7 @@ public class Constants {
   }
 
   public static class kMechanisms {
-    /** Current Limiting */
+    /* Current Limiting */
     public static final double wristCurrentLimit = 40;
     public static final double elevatorCurrentLimit = 40;
     public static final double flywheelCurrentLimit = 40;
@@ -225,17 +225,17 @@ public class Constants {
   }
 
   public static class kAuto {
-    /** PID Values. */
+    /* PID Values. */
     public static final double X_CONTROLLER_KP = 1.0;
     public static final double Y_CONTROLLER_KP = 1.0;
     public static final double THETA_CONTROLLER_KP = 1.0;
     
-    /** Constraints. */
+    /* Constraints. */
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 5.0;
     public static final double MAX_ACCEL_METERS_PER_SECOND_SQUARED = 3.0;
     public static final double MAX_ANGULAR_RADIANS_PER_SECOND = 6.99;
     public static final double MAX_ANGULAR_ACCEL_RAD_PER_SECOND = 12.56;
-    /** Pathplanner config */
+    /* Pathplanner config */
 
     public static final PathConstraints constraints = new PathConstraints(MAX_VELOCITY_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED, MAX_ANGULAR_RADIANS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED);
 
