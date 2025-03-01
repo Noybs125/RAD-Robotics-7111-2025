@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorOutputStatusValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -72,9 +75,13 @@ public class Mechanisms extends SubsystemBase {
         PIDController twoMotorsPID = new PIDController(0.05, 0, 0);
         SimpleMotorFeedforward twoMotorsSMFF = null /*new SimpleMotorFeedforward(0, 0)*/;
         WpiEncoder twoMotorsEncoder = new WpiEncoder(8, 9);
+        TalonFXConfiguration oneMotorInverted = new TalonFXConfiguration();
+        TalonFXConfiguration twoMotorInverted = new TalonFXConfiguration();
+        oneMotorInverted.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        twoMotorInverted.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-        elevator = new TwoMotors(new CTREMotor(8, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, elevator, new TalonFXConfiguration()),
-         new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, elevator, new TalonFXConfiguration()));
+        elevator = new TwoMotors(new CTREMotor(8, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, elevator, oneMotorInverted),
+         new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, elevator, twoMotorInverted));
 
         wrist = new CTREMotor(13);
     }
