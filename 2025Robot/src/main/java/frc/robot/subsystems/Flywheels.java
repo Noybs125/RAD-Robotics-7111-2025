@@ -23,7 +23,7 @@ public class Flywheels extends SubsystemBase {
      * Constructor for class "Flywheels". Initilizes the end effector motor.
      */
     public Flywheels(){
-         effectorWheels = new REVMotor(0);
+         effectorWheels = new REVMotor(15);
     }
 
     /**

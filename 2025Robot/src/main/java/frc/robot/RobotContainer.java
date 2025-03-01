@@ -88,8 +88,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // all of these bindings will be correctly defined when we decide controls
-    Trigger elevatorUp = commXbox.leftTrigger();
-    Trigger elevatorDown = commXbox.rightTrigger();
+    Trigger elevatorUp = commXbox.leftTrigger(0.05);
+    Trigger elevatorDown = commXbox.rightTrigger(0.05);
     Trigger armUp = commXbox.leftBumper();
     Trigger armDown = commXbox.rightBumper();
     Trigger effectorIntake = commXbox.povDown();
@@ -107,17 +107,17 @@ public class RobotContainer {
       )
     );
 
-    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(commXbox.getLeftTriggerAxis() / 3)));
-    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-commXbox.getRightTriggerAxis() / 3)));
-    elevatorDown.and(elevatorUp).onFalse(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));
+    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0.1)));
+    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-0.1)));
+    elevatorDown.negate().and(elevatorUp.negate()).onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));
 
     armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.1)));
     armDown.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(-0.1)));
-    armUp.and(armDown).onFalse(new InstantCommand(() -> mechanisms.setWristSpeed(0)));
+    armUp.negate().and(armDown.negate()).onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0)));
 
     effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(-0.3)));
     effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(0.3)));
-    effectorIntake.and(effectorScore).onFalse(new InstantCommand(() -> flywheels.setSpeed(0)));
+    effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
 
     // change or remove each of these when we deside controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());

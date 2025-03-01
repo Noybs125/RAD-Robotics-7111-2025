@@ -86,7 +86,7 @@ public class Swerve extends SubsystemBase {
   public Swerve(AHRS gyro, Vision vision) {
     this.gyro = gyro;
     this.vision = vision;
-    xbox = new XboxController(2);
+    xbox = new XboxController(0);
     zeroGyro();
     
 
