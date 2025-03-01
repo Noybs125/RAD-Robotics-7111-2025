@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -18,6 +20,7 @@ import frc.robot.utils.motor.ArmSimMotor;
 import frc.robot.utils.motor.CTREMotor;
 import frc.robot.utils.motor.ElevatorSimMotor;
 import frc.robot.utils.motor.Motor;
+import frc.robot.utils.motor.TwoMotors;
 
 public class Mechanisms extends SubsystemBase {
 
@@ -66,13 +69,16 @@ public class Mechanisms extends SubsystemBase {
      * @see -ArmSimMotor class is located under frc.robot.utils.motor.ArmSimMotor.
      */
     public Mechanisms(){
-        elevator = new ElevatorSimMotor(
-            null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid,
-            Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants
-            );
-        wrist =  new ArmSimMotor(null, Constants.kSimulation.armSim, Constants.kSimulation.wristPid,  null);//Constants.kSimulation.wristFF));
+        PIDController twoMotorsPID = new PIDController(0.05, 0, 0);
+        SimpleMotorFeedforward twoMotorsSMFF = null /*new SimpleMotorFeedforward(0, 0)*/;
+        WpiEncoder twoMotorsEncoder = new WpiEncoder(8, 9);
+
+        elevator = new TwoMotors(new CTREMotor(8, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, elevator, new TalonFXConfiguration()),
+         new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, elevator, new TalonFXConfiguration()));
+
+        wrist = new CTREMotor(13);
     }
-    
+
     /**
      * Sets wristSetpoint equal to setPoint input and sets the isManual boolean to false.
      * WristSetpoint is the variable that controls where the wrist to the end effector is going to try to go.
