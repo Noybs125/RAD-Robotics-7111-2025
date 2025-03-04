@@ -211,8 +211,8 @@ public class SuperStructure extends SubsystemBase {
      * Sets the SwerveState to the "Vision" state
      */
     private void coralL1(){
-        //mechanisms.setState(Mechanisms.MechanismsState.ReefL1);
-        swerve.setState(SwerveState.Vision);
+        mechanisms.setState(Mechanisms.MechanismsState.ReefL1);
+        //swerve.setState(SwerveState.Vision);
     }
 
     /**
@@ -220,7 +220,7 @@ public class SuperStructure extends SubsystemBase {
      */
     private void coralL2(){
         mechanisms.setState(Mechanisms.MechanismsState.ReefL2);
-        if(vision.isAtTarget(0, null, null, 0));
+        //if(vision.isAtTarget(0, null, null, 0));
     }
 
     /**

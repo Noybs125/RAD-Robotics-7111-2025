@@ -23,9 +23,9 @@ public class WpiEncoder implements frc.robot.utils.encoder.Encoder {
         encoder.setDistancePerPulse(1);
         this.id = id;
 
-        Shuffleboard.getTab("test").addDouble("encoder distance", () -> encoder.getDistance() * 100000000.0);
+        Shuffleboard.getTab("test").addDouble("encoder distance", () -> encoder.getDistance() * 1.0);
         Shuffleboard.getTab("test").addDouble("encoder rate", () -> encoder.getRate());
-        Shuffleboard.getTab("test").addInteger("encoder count", () -> encoder.get());
+        Shuffleboard.getTab("test").addDouble("encoder count", () -> (double)encoder.get() / 8192.0 / 2.7);
     }
 
     public WpiEncoder(int id, int id2, double gearRatio){
@@ -78,8 +78,8 @@ public class WpiEncoder implements frc.robot.utils.encoder.Encoder {
     }
 
     public void periodic(){
-        encoder.setDistancePerPulse(multiplierEntry.getDouble(0) * gearRatio);
-        position = ((double)encoder.getDistance() * 100000000.0) * gearRatio - offset;
+        //encoder.setDistancePerPulse(multiplierEntry.getDouble(1) * gearRatio);
+        position = ((double)encoder.get() / 8192.0 / 2.7) * gearRatio - offset;
         encoder.setReverseDirection(inverted);
     }
 }

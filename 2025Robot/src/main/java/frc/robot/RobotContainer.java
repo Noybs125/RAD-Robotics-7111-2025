@@ -16,6 +16,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Field;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Field.FieldSetpoint;
+import frc.robot.subsystems.SuperStructure.ControlState;
 import frc.robot.subsystems.Swerve.SwerveState;
 import frc.robot.subsystems.Flywheels;
 import frc.robot.subsystems.Mechanisms;
@@ -88,15 +89,20 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // all of these bindings will be correctly defined when we decide controls
-    Trigger elevatorUp = commXbox.leftTrigger(0.05);
-    Trigger elevatorDown = commXbox.rightTrigger(0.05);
+    Trigger elevatorUp = commXbox.rightTrigger(0.05);
+    Trigger elevatorDown = commXbox.leftTrigger(0.05);
     Trigger armUp = commXbox.leftBumper();
     Trigger armDown = commXbox.rightBumper();
     Trigger effectorIntake = commXbox.povDown();
     Trigger effectorScore = commXbox.povUp();
 
-    Trigger zeroGyro = commXbox.y();
+    Trigger zeroGyro = commXbox.start();
     Trigger resetOdometry = commXbox.a();
+
+    Trigger l1 = commXbox.x();
+    Trigger l2 = commXbox.a();
+    Trigger l3 = commXbox.b();
+    Trigger l4 = commXbox.y();
 
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(),
@@ -107,8 +113,8 @@ public class RobotContainer {
       )
     );
 
-    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-0.1)));
-    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0.5)));
+    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0.3)));
+    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-0.1)));
     elevatorDown.negate().and(elevatorUp.negate()).onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));
 
     armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.1)));
@@ -119,10 +125,16 @@ public class RobotContainer {
     effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(-1)));
     effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
 
+
+    l1.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL1Processor));
+    l2.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL2));
+    l3.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL3));
+    l4.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL4Net));
+
     // change or remove each of these when we deside controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());
     resetOdometry.onTrue(swerve.resetOdometryCommand());
-    commXbox.x().onTrue(field.pathfindToSetpoint(FieldSetpoint.Reef2));
-    commXbox.b().onTrue(field.pathfindToSetpoint(FieldSetpoint.Reef1));
+    commXbox.povLeft().onTrue(field.pathfindToSetpoint(FieldSetpoint.Reef2));
+    commXbox.povLeft().onTrue(field.pathfindToSetpoint(FieldSetpoint.Reef1));
     }
   }

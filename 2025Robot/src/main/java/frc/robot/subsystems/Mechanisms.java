@@ -34,7 +34,7 @@ public class Mechanisms extends SubsystemBase {
     private Motor wrist;
     private double elevatorSetpoint = 0;
     private double wristSetpoint = 0;
-    private boolean isManual = true;
+    private boolean isManual = false;
     private double lowerLimit;
     private double upperLimit;
     private MechanismsState state = MechanismsState.Store;
@@ -73,7 +73,7 @@ public class Mechanisms extends SubsystemBase {
      * @see -ArmSimMotor class is located under frc.robot.utils.motor.ArmSimMotor.
      */
     public Mechanisms(){
-        PIDController twoMotorsPID = new PIDController(0.05, 0, 0);
+        PIDController twoMotorsPID = Constants.kMechanisms.elevatorPID;
         SimpleMotorFeedforward twoMotorsSMFF = null /*new SimpleMotorFeedforward(0, 0)*/;
         WpiEncoder twoMotorsEncoder = new WpiEncoder(0, 1);
 
@@ -120,7 +120,7 @@ public class Mechanisms extends SubsystemBase {
         double elevatorHeight;
 
         if ( elevator != null) {
-            elevatorHeight = ((Math.PI * kMechanisms.elevatorWinchDiameter * elevator.getPosition() / 8192 / 12) / kMechanisms.elevatorMaxHeight);
+            elevatorHeight = ((Math.PI * kMechanisms.elevatorWinchDiameter * elevator.getPosition()) / kMechanisms.elevatorMaxHeight);
         }
         else {
             elevatorHeight = 0;
@@ -209,22 +209,22 @@ public class Mechanisms extends SubsystemBase {
     private void handleState() {
         switch (state) {
             case ReefL1:
-                elevatorSetpoint = 0.16;
-                wristSetpoint = 55;
+                elevatorSetpoint = 0.2;
+                wristSetpoint = 0;
                 break;
                 
             case ReefL2:
-                elevatorSetpoint = 0.9;
-                wristSetpoint = 215;
+                elevatorSetpoint = 0.3;
+                wristSetpoint = 0;
                 break;
 
             case ReefL3:
-                elevatorSetpoint = 1.6;
-                wristSetpoint = 110;
+                elevatorSetpoint = 0.4;
+                wristSetpoint = 0;
                 break;
 
             case ReefL4:
-                elevatorSetpoint = 0;
+                elevatorSetpoint = 0.95;
                 wristSetpoint = 0;
                 break;
 
@@ -270,14 +270,12 @@ public class Mechanisms extends SubsystemBase {
         }
     }
     public void periodic() {
-
-
         if (isManual) {
             
         }
         else {
-            elevator.setSetpoint(elevatorSetpoint);
-            wrist.setSetpoint(wristSetpoint);
+            elevator.setSetpoint(elevatorSetpoint, false);
+            wrist.setSetpoint(wristSetpoint, false);
         }
 
         elevator.periodic();

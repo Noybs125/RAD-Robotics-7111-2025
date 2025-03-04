@@ -4,6 +4,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.GenericEntry;
 import frc.robot.utils.encoder.Encoder;
 
 import java.util.function.DoubleSupplier;
@@ -21,14 +22,23 @@ public class CTREMotor implements Motor {
     private double currentSetpoint;
     private SimpleMotorFeedforward feedforward;
     private Motor simType;
+    private int id;
+
+    private GenericEntry motorPEntry;
+    private GenericEntry motorIEntry;
+    private GenericEntry motorDEntry;
     
     public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, Motor simType, TalonFXConfiguration talonConfig){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
         this.feedforward = feedForward;
+        this.id = id;
         motor = new TalonFX(id);
         this.simType = simType;
+        motorPEntry = Shuffleboard.getTab("test").add("Motor " + id + " P", 0).getEntry();
+        motorIEntry = Shuffleboard.getTab("test").add("Motor " + id + " I", 0).getEntry();
+        motorDEntry = Shuffleboard.getTab("test").add("Motor " + id + " D", 0).getEntry();
 
         motor.getConfigurator().apply(talonConfig);
         setPosition(0);
@@ -39,7 +49,12 @@ public class CTREMotor implements Motor {
     }
 
     public CTREMotor(int id){
+        this.id = id;
         motor = new TalonFX(id);
+        motorPEntry = Shuffleboard.getTab("test").add("Motor " + id + " P", 0).getEntry();
+        motorIEntry = Shuffleboard.getTab("test").add("Motor " + id + " I", 0).getEntry();
+        motorDEntry = Shuffleboard.getTab("test").add("Motor " + id + " D", 0).getEntry();
+
         setPosition(0);
     }
 
@@ -64,12 +79,12 @@ public class CTREMotor implements Motor {
         if(encoder == null){
             return motor.getPosition().getValueAsDouble() * gearRatio;
         } else{
-            return encoder.getPosition().getDegrees();
+            return encoder.getPosition().getRotations();
         }
     }
         
     
-    public void setSetpoint(double setPoint){
+    public void setSetpoint(double setPoint, boolean useSimFF){
         double pidOutput = pid.calculate(getPosition(), setPoint);
         
         double feedforwardOutput = feedforward != null 
@@ -119,5 +134,10 @@ public class CTREMotor implements Motor {
         if (encoder != null){
             encoder.periodic();
         }
+
+        /*pid = new PIDController(
+            motorPEntry.getDouble(0), 
+            motorIEntry.getDouble(0), 
+            motorDEntry.getDouble(0));*/
     }
 }

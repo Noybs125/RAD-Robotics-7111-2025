@@ -42,7 +42,7 @@ public class ArmSimMotor implements Motor {
         return Units.radiansToDegrees(motor.getAngleRads());
     }
     
-    public void setSetpoint(double setPoint){
+    public void setSetpoint(double setPoint, boolean useSimFF){
 
         double useFeedForward;
         if (feedforward != null) {

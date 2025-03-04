@@ -39,7 +39,7 @@ public interface Motor {
      * Sets the point the motor will try to go to
      * @param setPoint -Type "double". Unknown unit.
      */
-    public void setSetpoint(double setPoint);
+    public void setSetpoint(double setPoint, boolean useSimFF);
 
     /**
      * Sets the PID for the motors.

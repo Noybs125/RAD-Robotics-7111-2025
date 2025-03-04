@@ -188,18 +188,18 @@ public class Constants {
 
     
      public static final SwerveModuleConstants MOD_2_Constants = new SwerveModuleConstants( // BR +x -y
-      7,
-      6,
-      2,
-      -0.261, 
+      11,
+      4,
+      1,
+      -0.392,
       true
     );
 
     public static final SwerveModuleConstants MOD_3_Constants = new SwerveModuleConstants( // BL -x -y
-      11,
-      4,
-      1,
-      -0.392, 
+      7,
+      6,
+      2,
+      -0.261, 
       true
     );
   }
@@ -213,6 +213,9 @@ public class Constants {
     public static final double wristGearRatio = 48.13;
     /** Elevator Max Height in feet */
     public static final double elevatorMaxHeight = 8;
+
+    public static PIDController elevatorPID = new PIDController(34, 0.0, 0.0);
+    public static PIDController armPID = new PIDController(0.05, 0.0, 0.0);
 
     /** Motor Configurations */
 
