@@ -277,6 +277,12 @@ public class Mechanisms extends SubsystemBase {
             elevator.setSetpoint(elevatorSetpoint, false);
             wrist.setSetpoint(wristSetpoint, false);
         }
+        if(elevator.getSpeed() > Constants.kMechanisms.elevatorMaxSpeed){
+            elevator.setSpeed(Constants.kMechanisms.elevatorMaxSpeed);
+        } 
+        else if(elevator.getSpeed() < Constants.kMechanisms.elevatorMaxSpeed * -1){
+            elevator.setSpeed(Constants.kMechanisms.elevatorMaxSpeed * -1);
+        }
 
         elevator.periodic();
         wrist.periodic();
