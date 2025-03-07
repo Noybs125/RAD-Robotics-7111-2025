@@ -34,13 +34,13 @@ public class Vision extends SubsystemBase{
         new EstimatedRobotPose(estPose3d, 0.0, null, PoseStrategy.AVERAGE_BEST_TARGETS), 
         this
         );
-    public final Camera orangepi1 = new Camera(
+    public final Camera frontCamera = new Camera(
         new PhotonCamera("OV9281_1"), 
         Constants.kVision.cameraToRobotCenter2, 
         new EstimatedRobotPose(estPose3d, 0.0, null, PoseStrategy.AVERAGE_BEST_TARGETS), 
         this
         );
-    public final Camera orangepi2 = new Camera(
+    public final Camera backCamera = new Camera(
         new PhotonCamera("OV9281_3"), 
         Constants.kVision.cameraToRobotCenter3, 
         new EstimatedRobotPose(estPose3d, 0.0, null, PoseStrategy.AVERAGE_BEST_TARGETS), 
@@ -48,8 +48,8 @@ public class Vision extends SubsystemBase{
         );
 
     public Camera[] cameraList = new Camera[] {
-        orangepi1,
-        orangepi2,
+        frontCamera,
+        backCamera,
     };
 
     /**
