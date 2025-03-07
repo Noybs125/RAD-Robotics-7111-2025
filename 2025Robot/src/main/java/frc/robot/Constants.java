@@ -186,8 +186,8 @@ public class Constants {
       -0.371,
       true
     );
-   
 
+    
     public static final SwerveModuleConstants MOD_2_Constants = new SwerveModuleConstants( // BL -x -y
       7,
       6,
@@ -261,8 +261,8 @@ public class Constants {
     public static final PathConstraints constraints = new PathConstraints(MAX_VELOCITY_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED, MAX_ANGULAR_RADIANS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED);
 
     public static final int numModules = 4;
-    public static final double massKgs = Units.lbsToKilograms(42); // TODO change this to be what our robot actually is
-    public static final double MOI = massKgs * Math.pow(kSwerve.WHEEL_BASE, 2);
+    public static final double massKgs = Units.lbsToKilograms(92);
+    public static final double MOI = massKgs * (kSwerve.WHEEL_BASE * kSwerve.TRACK_WIDTH);
     public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND,
         0.8, DCMotor.getKrakenX60(1), kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT, 1);
 
