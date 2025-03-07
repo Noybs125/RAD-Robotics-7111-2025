@@ -115,6 +115,8 @@ public class Swerve extends SubsystemBase {
       Shuffleboard.getTab("DeviceOutputs").addDouble("Drive motor " + mod.moduleNumber + " supply voltage", () -> mod.driveMotor.getSupplyVoltage().getValueAsDouble()).withWidget("Text View");
       Shuffleboard.getTab("DeviceOutputs").addDouble("Drive motor " + mod.moduleNumber + " output voltage", () -> mod.driveMotor.getMotorVoltage().getValueAsDouble()).withWidget("Text View");
       Shuffleboard.getTab("DeviceOutputs").addDouble("Drive motor " + mod.moduleNumber + " temp C", () -> mod.driveMotor.getProcessorTemp().getValueAsDouble()).withWidget("Text View");
+
+      Shuffleboard.getTab("test").add("CAN Coder " + mod.moduleNumber + " rotations", mod.getCanCoder());
     }
     
     AutoBuilder.configure(

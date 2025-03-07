@@ -16,6 +16,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Field;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Field.FieldSetpoint;
+import frc.robot.subsystems.Mechanisms.MechanismsState;
 import frc.robot.subsystems.SuperStructure.ControlState;
 import frc.robot.subsystems.Swerve.SwerveState;
 import frc.robot.subsystems.Flywheels;
@@ -113,12 +114,20 @@ public class RobotContainer {
       )
     );
 
-    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0.3)));
-    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-0.1)));
+    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0.3))
+        .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
+
+    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-0.3))
+        .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
+
     elevatorDown.negate().and(elevatorUp.negate()).onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));
 
-    armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.1)));
-    armDown.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(-0.1)));
+    armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.1))
+        .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
+
+    armDown.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(-0.1))
+        .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
+
     armUp.negate().and(armDown.negate()).onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0)));
 
     effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(1)));

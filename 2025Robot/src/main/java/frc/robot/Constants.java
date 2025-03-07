@@ -106,8 +106,8 @@ public class Constants {
   /** All swerve constants. */
   public static class kSwerve {
     /* Constants that apply to the whole drive train. */
-    public static final double TRACK_WIDTH = Units.inchesToMeters(19.65); // Width of the drivetrain measured from the middle of the wheels.
-    public static final double WHEEL_BASE = Units.inchesToMeters(17.42); // Length of the drivetrain measured from the middle of the wheels.
+    public static final double TRACK_WIDTH = Units.inchesToMeters(17.42); // Width of the drivetrain measured from the middle of the wheels.
+    public static final double WHEEL_BASE = Units.inchesToMeters(19.65); // Length of the drivetrain measured from the middle of the wheels.
     public static final double MODULE_TO_CENTER = Units.inchesToMeters(13.95); // Distance from the center of the module to the center of the robot
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
     public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
@@ -185,21 +185,21 @@ public class Constants {
       -0.371,
       true
     );
+   
 
-    
-     public static final SwerveModuleConstants MOD_2_Constants = new SwerveModuleConstants( // BR +x -y
-      11,
-      4,
-      1,
-      -0.392,
-      true
-    );
-
-    public static final SwerveModuleConstants MOD_3_Constants = new SwerveModuleConstants( // BL -x -y
+    public static final SwerveModuleConstants MOD_2_Constants = new SwerveModuleConstants( // BL -x -y
       7,
       6,
       2,
-      -0.261, 
+      0.486,
+      true
+    );
+
+    public static final SwerveModuleConstants MOD_3_Constants = new SwerveModuleConstants( // BR +x -y
+      11,
+      4,
+      1,
+      -0.123,
       true
     );
   }
@@ -260,10 +260,10 @@ public class Constants {
     public static final PathConstraints constraints = new PathConstraints(MAX_VELOCITY_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED, MAX_ANGULAR_RADIANS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED);
 
     public static final int numModules = 4;
-    public static final double massKgs = Units.lbsToKilograms(42);
+    public static final double massKgs = Units.lbsToKilograms(42); // TODO change this to be what our robot actually is
     public static final double MOI = massKgs * Math.pow(kSwerve.WHEEL_BASE, 2);
     public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND,
-     0.7 , DCMotor.getKrakenX60(1), kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT ,1);
+        0.7, DCMotor.getKrakenX60(1), kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT, 1);
 
 
     public static final Translation2d[] moduleLocations = new Translation2d[] {

@@ -51,6 +51,8 @@ public class SuperStructure extends SubsystemBase {
         algaeL2,
         algaeL3,
         deepClimb,
+        stow,
+        stowWithCoral,
         defaultState,
     }
 

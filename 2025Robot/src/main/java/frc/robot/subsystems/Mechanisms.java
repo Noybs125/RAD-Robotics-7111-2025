@@ -55,6 +55,7 @@ public class Mechanisms extends SubsystemBase {
         Store,
         CoralFeeder,
         Climb,
+        Manual,
     };
 
     private double elevatorMinimumLength = 0.14925;
@@ -159,9 +160,8 @@ public class Mechanisms extends SubsystemBase {
      * @param elevatorSetpoint -Type "double", Sets the elevatorSetpoint variable, which directly controls where the elevator should try to go to.TODO: elevatorSetpoint UNIT UNKNOWN.
      */
     public void setAllMechanismsSetpoint(double wristSetpoint, double elevatorSetpoint) {
-        this.elevatorSetpoint = elevatorSetpoint;
-        this.wristSetpoint = wristSetpoint;
-        isManual = false;
+        setWristSetpoint(wristSetpoint);
+        setElevatorSetpoint(elevatorSetpoint);
     }
 
     /**
@@ -182,9 +182,9 @@ public class Mechanisms extends SubsystemBase {
      * @see -isAtSetpoint method is located under: frc.robot.utils.motor.CTREMotor.
      */
     public void moveElevThenArm(double elevatorSetpoint, double wristSetpoint, double deadzone){
-        this.elevatorSetpoint = elevatorSetpoint;
+        setElevatorSetpoint(elevatorSetpoint);
         if(elevator.isAtSetpoint(deadzone)){
-            this.wristSetpoint = wristSetpoint;
+            setWristSetpoint(wristSetpoint);
         }
     }
     /**
@@ -196,9 +196,9 @@ public class Mechanisms extends SubsystemBase {
      * @see -isAtSetpoint method is located under: frc.robot.utils.motor.CTREMotor.
      */
     public void moveArmThenElev(double elevatorSetpoint, double wristSetpoint, double deadzone){
-        this.wristSetpoint = wristSetpoint;
+        setWristSetpoint(wristSetpoint);
         if(wrist.isAtSetpoint(deadzone)){
-            this.elevatorSetpoint = elevatorSetpoint;
+            setElevatorSetpoint(elevatorSetpoint);
         }
     } 
 
@@ -209,60 +209,52 @@ public class Mechanisms extends SubsystemBase {
     private void handleState() {
         switch (state) {
             case ReefL1:
-                elevatorSetpoint = 0.2;
-                wristSetpoint = 0;
+                setAllMechanismsSetpoint(0, 0.2);
                 break;
                 
             case ReefL2:
-                elevatorSetpoint = 0.3;
-                wristSetpoint = 0;
+                setAllMechanismsSetpoint(0, 0.3);
                 break;
 
             case ReefL3:
-                elevatorSetpoint = 0.4;
-                wristSetpoint = 0;
+                setAllMechanismsSetpoint(0, 0.4);
                 break;
 
             case ReefL4:
-                elevatorSetpoint = 0.95;
-                wristSetpoint = 0;
+                setAllMechanismsSetpoint(0, 0.95);
                 break;
 
             case AlgaeL2:
-                elevatorSetpoint = 0;
-                wristSetpoint = 0;
+                setAllMechanismsSetpoint(0, 0);
                 break;
 
             case AlgaeL3:
-                elevatorSetpoint = 0;
-                wristSetpoint = 0;
+                setAllMechanismsSetpoint(0, 0);
                 break;
 
             case AlgaeProcessor:
-                elevatorSetpoint = 0;
-                wristSetpoint = 0;
+                setAllMechanismsSetpoint(0, 0);
                 break;
 
             case AlgaeNet:
-                elevatorSetpoint = 0;
-                wristSetpoint = 0;
+                setAllMechanismsSetpoint(0, 0);
                 break;
 
             case Store:
-                elevatorSetpoint = 0;
-                wristSetpoint = 0;
+                setAllMechanismsSetpoint(0, 0);
                 break;
 
             case CoralFeeder:
-                elevatorSetpoint = 0;
-                wristSetpoint = 0;
+                setAllMechanismsSetpoint(0, 0);
                 break;
 
             case Climb:
-                elevatorSetpoint = 0;
-                wristSetpoint = 0;
+                setAllMechanismsSetpoint(0, 0);
                 break;
-        
+            
+            case Manual:
+                break;
+
             default:
                 elevatorSetpoint = 0;
                 wristSetpoint = 0;
@@ -270,13 +262,14 @@ public class Mechanisms extends SubsystemBase {
         }
     }
     public void periodic() {
-        if (isManual) {
-            
+        if (state == MechanismsState.Manual) {
+            isManual = true;
         }
         else {
             elevator.setSetpoint(elevatorSetpoint, false);
             wrist.setSetpoint(wristSetpoint, false);
         }
+        
         if(elevator.getSpeed() > Constants.kMechanisms.elevatorMaxSpeed){
             elevator.setSpeed(Constants.kMechanisms.elevatorMaxSpeed);
         } 
