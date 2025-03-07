@@ -16,6 +16,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -40,8 +41,8 @@ public class Constants {
   public static class kVision {
     // TODO: change variable names on actual robot
     public static final Transform3d cameraToRobotCenter1 = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
-    public static final Transform3d cameraToRobotCenter2 = new Transform3d(12, 2, 0, new Rotation3d(0, 0.349, 0));
-    public static final Transform3d cameraToRobotCenter3 = new Transform3d(12, 1, 0, new Rotation3d(0, 0.349, -1.57));
+    public static final Transform3d cameraToRobotCenter2 = new Transform3d(-5.625, 11.5, 11.895, new Rotation3d(0, 0, -.261));
+    public static final Transform3d cameraToRobotCenter3 = new Transform3d(-6.5, -4.75, 0, new Rotation3d(0, 0.0, 3.141));
 
     public static final double cameraHeight = Units.inchesToMeters(0);
 
@@ -263,7 +264,7 @@ public class Constants {
     public static final double massKgs = Units.lbsToKilograms(42); // TODO change this to be what our robot actually is
     public static final double MOI = massKgs * Math.pow(kSwerve.WHEEL_BASE, 2);
     public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND,
-        0.7, DCMotor.getKrakenX60(1), kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT, 1);
+        0.8, DCMotor.getKrakenX60(1), kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT, 1);
 
 
     public static final Translation2d[] moduleLocations = new Translation2d[] {
