@@ -11,6 +11,8 @@ public class Deepclimb extends SubsystemBase {
     
     public Motor climbMotor;
     public TalonFXConfiguration climbMotorConfigs;
+
+    private ClimbStates climbstate;
     /**
      * State of robot climb winch, detailing either in the operating state "Climb", and the stowed state "Stow".
      * States include: "Climb" and "Stow".
@@ -38,10 +40,12 @@ public class Deepclimb extends SubsystemBase {
         switch (state) {
             case Retracted:
                 climbMotor.setSetpoint(0, false);
+                climbstate = state;
                 break;
             
             case Extended:
                 climbMotor.setSetpoint(0, false);
+                climbstate = state;
                 break;
             default:
                 break;
