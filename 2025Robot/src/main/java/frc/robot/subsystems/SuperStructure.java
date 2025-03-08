@@ -52,7 +52,8 @@ public class SuperStructure extends SubsystemBase {
         algaeNet,
         algaeL2,
         algaeL3,
-        deepClimb,
+        deepClimbRetracted,
+        DeepClimbExtended,
         stow,
         stowWithCoral,
         defaultState,
@@ -136,10 +137,16 @@ public class SuperStructure extends SubsystemBase {
                     ? ActualState.algaeNet
                     : ActualState.coralL4;
                 break;
-            case DeepClimb:
+            case SelectButton:
     
-                actualRobotState = ActualState.deepClimb;
+                actualRobotState = ActualState.deepClimbRetracted;
                 break;
+        
+            case StartButton:
+
+                actualRobotState = ActualState.DeepClimbExtended;
+                break;
+
             case Default:
             default:
                 actualRobotState = ActualState.defaultState;
@@ -280,8 +287,8 @@ public class SuperStructure extends SubsystemBase {
     /**
      * Sets the mechanismsState to "Climb"
      */
-    private void deepClimb(){
-        mechanisms.setState(Mechanisms.MechanismsState.Climb);
+    private void deepClimbRetracted(){
+        mechanisms.setState(Mechanisms.MechanismsState.deepClimbRetracted);
     }
 
     /**
