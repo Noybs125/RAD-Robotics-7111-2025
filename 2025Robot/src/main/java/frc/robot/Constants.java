@@ -13,6 +13,7 @@ import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -40,9 +41,8 @@ import edu.wpi.first.wpilibj.Joystick;
 public class Constants {
   public static class kVision {
     // TODO: change variable names on actual robot
-    public static final Transform3d cameraToRobotCenter1 = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
     public static final Transform3d cameraToRobotCenter2 = new Transform3d(-5.625, 11.5, 11.895, new Rotation3d(0, 0, -.261));
-    public static final Transform3d cameraToRobotCenter3 = new Transform3d(-6.5, -4.75, 0, new Rotation3d(0, 0.0, 3.141));
+    public static final Transform3d cameraToRobotCenter1 = new Transform3d(-6.5, -4.75, 0, new Rotation3d(0, 0.0873, 3.1416));
 
     public static final double cameraHeight = Units.inchesToMeters(0);
 
@@ -52,7 +52,7 @@ public class Constants {
     public static final double NOISY_DISTANCE_METERS = 2.5;
     public static final double DISTANCE_WEIGHT = 7;
     public static final int TAG_PRESENCE_WEIGHT = 10;
-    public static final Matrix<N3, N1> VISION_MEASUREMENT_STANDARD_DEVIATIONS = MatBuilder.fill(Nat.N3(), Nat.N1(),1,1,1 * Math.PI);
+    public static final Matrix<N3, N1> VISION_MEASUREMENT_STANDARD_DEVIATIONS = MatBuilder.fill(Nat.N3(), Nat.N1(), 1, 1, 1 * Math.PI);
   }
   
   public static class kSimulation {
@@ -223,10 +223,11 @@ public class Constants {
     public static final double maxWristPosition = 1;
     public static final double minWristPosition = -1;
 
-    public static final double maxWristSpeed = 1;
+    public static final double maxWristSpeed = 0.3;
+    public static final SimpleMotorFeedforward wristFF = null;//new SimpleMotorFeedforward(0.12, 5.78, 0.08);
 
     public static PIDController elevatorPID = new PIDController(34, 0.0, 0.0);
-    public static PIDController armPID = new PIDController(0.05, 0.0, 0.0);
+    public static PIDController armPID = new PIDController(25, 0.0, 0.0);
 
     /** Motor Configurations */
 

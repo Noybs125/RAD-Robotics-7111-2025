@@ -53,6 +53,7 @@ public class Mechanisms extends SubsystemBase {
         AlgaeProcessor,
         AlgaeNet,
         Store,
+        StoreCoral,
         CoralFeeder,
         Climb,
         Manual,
@@ -84,7 +85,7 @@ public class Mechanisms extends SubsystemBase {
             new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, 
                 new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), Constants.kMechanisms.elevator2Config()));
 
-        wrist = new CTREMotor(14, null, kMechanisms.wristGearRatio, new PIDController(0.05, 0, 0), null, new ArmSimMotor(null, null, null, null), Constants.kMechanisms.wristConfig());
+        wrist = new CTREMotor(14, null, kMechanisms.wristGearRatio, Constants.kMechanisms.armPID, Constants.kMechanisms.wristFF, new ArmSimMotor(null, null, null, null), Constants.kMechanisms.wristConfig());
     }
 
     /**
@@ -154,6 +155,7 @@ public class Mechanisms extends SubsystemBase {
         }else{
             elevator.setSpeed(speed);
         }
+        isManual = true;
     }
 
     /**
@@ -164,7 +166,7 @@ public class Mechanisms extends SubsystemBase {
      */
     public void setWristSpeed(double speed) {
         wrist.setSpeed(speed);
-
+        isManual = true;
         /*if(wrist.getPosition() >= Constants.kMechanisms.maxWristPosition
             || wrist.getPosition() <= Constants.kMechanisms.minWristPosition){
                 if(speed > Constants.kMechanisms.maxWristSpeed){
@@ -236,7 +238,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
                 
             case ReefL2:
-                setAllMechanismsSetpoint(0, 0.3);
+                setAllMechanismsSetpoint(0.415, 0.42);
                 break;
 
             case ReefL3:
@@ -267,8 +269,12 @@ public class Mechanisms extends SubsystemBase {
                 setAllMechanismsSetpoint(0, 0);
                 break;
 
+            case StoreCoral:
+                moveElevThenArm(0.154, 0.331, 0.05);
+                break;
+
             case CoralFeeder:
-                setAllMechanismsSetpoint(-0.059, 0.159);
+                setAllMechanismsSetpoint(-0.052, 0.18);
                 break;
 
             case Climb:
@@ -294,7 +300,14 @@ public class Mechanisms extends SubsystemBase {
         else {
             if(!isManual){
                 elevator.setSetpoint(elevatorSetpoint, false);
-                wrist.setSetpoint(wristSetpoint, false);
+
+                if(wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) > Constants.kMechanisms.maxWristSpeed){
+                    wrist.setSpeed(Constants.kMechanisms.maxWristSpeed);
+                }else if (wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) < -Constants.kMechanisms.maxWristSpeed){
+                    wrist.setSpeed(-Constants.kMechanisms.maxWristSpeed);
+                }else{
+                    wrist.setSetpoint(wristSetpoint, isManual);
+                }
             }
         }
 

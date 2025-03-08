@@ -144,7 +144,7 @@ public class RobotContainer {
     armUp.negate().and(armDown.negate()).onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0)));
 
     effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(1)));
-    effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(-1)));
+    effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(-0.1)));
     effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
 
 

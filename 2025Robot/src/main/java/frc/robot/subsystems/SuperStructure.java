@@ -100,7 +100,7 @@ public class SuperStructure extends SubsystemBase {
      * Also checks if the robot has coral, algae, or nothing.
      */
     public void periodic() {
-        manageControlState();
+        //manageControlState();
         manageActualState();
 
         if (actualRobotState == ActualState.coralFeeder && sensors.isBeamBroken()) {
@@ -132,7 +132,14 @@ public class SuperStructure extends SubsystemBase {
         switch (controlRobotState) {   
             case XButton:
                 //checks for whether it should align for reef or processor
-                actualRobotState = ActualState.coralFeeder;
+                switch(actualRobotState){
+                    case coralFeeder:
+                        actualRobotState = ActualState.stowWithCoral;
+                        break;
+                    default:
+                        actualRobotState = ActualState.coralFeeder;
+                        break;
+                }
                 break;
             case AButton:
                 //checks for whether it should score coral or intake algae
@@ -210,6 +217,14 @@ public class SuperStructure extends SubsystemBase {
             case defaultState:
                 defaultState();
                 break;
+            case stow:
+                stow();
+                break;
+            case stowWithCoral:
+                stowCoral();
+                break;
+            default:
+                break;
         }
     }
 
@@ -219,6 +234,7 @@ public class SuperStructure extends SubsystemBase {
      */
     private void setRobotState(ControlState state){
         controlRobotState = state;
+        manageControlState();
     }
 
     /**
@@ -297,6 +313,14 @@ public class SuperStructure extends SubsystemBase {
      */
     private void algaeL3(){
         mechanisms.setState(Mechanisms.MechanismsState.AlgaeL3);
+    }
+
+    private void stowCoral(){
+        mechanisms.setState(Mechanisms.MechanismsState.StoreCoral);
+    }
+
+    private void stow(){
+        mechanisms.setState(Mechanisms.MechanismsState.Store);
     }
 
     /**

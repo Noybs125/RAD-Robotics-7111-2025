@@ -27,22 +27,15 @@ public class Vision extends SubsystemBase{
     private Transform2d tagAllignment = new Transform2d();
     private VisionState state = VisionState.Climb;
 
-    // TODO: change variable names on actual robot
-    public final Camera limelight = new Camera(
-        new PhotonCamera("photonvision"), 
-        Constants.kVision.cameraToRobotCenter1, 
-        new EstimatedRobotPose(estPose3d, 0.0, null, PoseStrategy.AVERAGE_BEST_TARGETS), 
-        this
-        );
     public final Camera frontCamera = new Camera(
-        new PhotonCamera("OV9281_1"), 
+        new PhotonCamera("OV9281_2"), 
         Constants.kVision.cameraToRobotCenter2, 
         new EstimatedRobotPose(estPose3d, 0.0, null, PoseStrategy.AVERAGE_BEST_TARGETS), 
         this
         );
     public final Camera backCamera = new Camera(
-        new PhotonCamera("OV9281_3"), 
-        Constants.kVision.cameraToRobotCenter3, 
+        new PhotonCamera("OV9281_1"), 
+        Constants.kVision.cameraToRobotCenter1, 
         new EstimatedRobotPose(estPose3d, 0.0, null, PoseStrategy.AVERAGE_BEST_TARGETS), 
         this
         );
