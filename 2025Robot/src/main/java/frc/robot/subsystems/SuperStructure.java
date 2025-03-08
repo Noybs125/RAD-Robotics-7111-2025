@@ -36,6 +36,16 @@ public class SuperStructure extends SubsystemBase {
         YButton,
         SelectButton,
         StartButton,
+        DPadUp,
+        DPadDown,
+        DPadLeft,
+        DPadRight,
+        LeftStick,
+        RightStick,
+        LeftTrigger,
+        RightTrigger,
+        LeftBumper,
+        RightBumper,
         Default,
     }
 
