@@ -132,7 +132,7 @@ public class SuperStructure extends SubsystemBase {
         switch (controlRobotState) {   
             case XButton:
                 //checks for whether it should align for reef or processor
-                actualRobotState = ActualState.coralL1;
+                actualRobotState = ActualState.coralFeeder;
                 break;
             case AButton:
                 //checks for whether it should score coral or intake algae

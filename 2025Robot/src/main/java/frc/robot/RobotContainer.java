@@ -100,8 +100,8 @@ public class RobotContainer {
     Trigger elevatorDown = driverController.povDown();
     Trigger armUp = driverController.povRight();
     Trigger armDown = driverController.povLeft();
-    Trigger effectorIntake = driverController.rightBumper();
-    Trigger effectorScore = driverController.leftBumper();
+    Trigger effectorIntake = driverController.rightStick();
+    Trigger effectorScore = driverController.leftStick();
 
     Trigger zeroGyro = driverController.start();
     Trigger resetOdometry = driverController.a();

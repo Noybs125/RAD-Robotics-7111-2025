@@ -143,7 +143,6 @@ public class Mechanisms extends SubsystemBase {
             }else if(speed < -Constants.kMechanisms.elevatorMaxSpeed){
                 speed = -Constants.kMechanisms.elevatorMaxSpeed;
             }
-            isManual = true;
             elevator.setSpeed(speed);
         }else if(elevator.getPosition() <= Constants.kMechanisms.elevatorMinPosition){
                 if(speed > Constants.kMechanisms.elevatorMaxSpeed){
@@ -151,10 +150,8 @@ public class Mechanisms extends SubsystemBase {
                 }else if(speed < 0){
                     speed = 0;
                 }
-                isManual = true;
                 elevator.setSpeed(speed);
         }else{
-            isManual = true;
             elevator.setSpeed(speed);
         }
     }
@@ -167,18 +164,16 @@ public class Mechanisms extends SubsystemBase {
      */
     public void setWristSpeed(double speed) {
         wrist.setSpeed(speed);
-        isManual = true;
 
-        if(wrist.getPosition() >= Constants.kMechanisms.maxWristPosition
+        /*if(wrist.getPosition() >= Constants.kMechanisms.maxWristPosition
             || wrist.getPosition() <= Constants.kMechanisms.minWristPosition){
                 if(speed > Constants.kMechanisms.maxWristSpeed){
                     speed = Constants.kMechanisms.maxWristSpeed;
                 }else if(speed < -Constants.kMechanisms.maxWristSpeed){
                     speed = -Constants.kMechanisms.maxWristSpeed;
                 }
-                isManual = true;
                 wrist.setSpeed(speed);
-        }
+        }*/
     }
 
     /**
@@ -273,7 +268,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case CoralFeeder:
-                setAllMechanismsSetpoint(0, 0);
+                setAllMechanismsSetpoint(-0.059, 0.159);
                 break;
 
             case Climb:
@@ -281,6 +276,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
             
             case Manual:
+                isManual = true;
                 break;
 
             default:
@@ -293,18 +289,12 @@ public class Mechanisms extends SubsystemBase {
         handleState();
 
         if (state == MechanismsState.Manual) {
-            isManual = true;
+
         }
         else {
             if(!isManual){
-                if(elevator.getPID().calculate(elevator.getPosition(), elevatorSetpoint) > Constants.kMechanisms.elevatorMaxSpeed){
-                    elevator.setSpeed(Constants.kMechanisms.elevatorMaxSpeed);
-                }else if(elevator.getPID().calculate(elevator.getPosition(), elevatorSetpoint) < -Constants.kMechanisms.elevatorMaxSpeed){
-                    elevator.setSpeed(-Constants.kMechanisms.elevatorMaxSpeed);
-                }else{
-                    elevator.setSetpoint(elevatorSetpoint, false);
-                    wrist.setSetpoint(wristSetpoint, false);
-                }
+                elevator.setSetpoint(elevatorSetpoint, false);
+                wrist.setSetpoint(wristSetpoint, false);
             }
         }
 

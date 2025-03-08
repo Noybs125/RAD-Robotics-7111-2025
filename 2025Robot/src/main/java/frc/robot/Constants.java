@@ -218,7 +218,7 @@ public class Constants {
     public static final double elevatorMaxHeight = 8;
 
     public static final double elevatorMaxPosition = 0.99;
-    public static final double elevatorMinPosition = 0.05;
+    public static final double elevatorMinPosition = 0.01;
 
     public static final double maxWristPosition = 1;
     public static final double minWristPosition = -1;

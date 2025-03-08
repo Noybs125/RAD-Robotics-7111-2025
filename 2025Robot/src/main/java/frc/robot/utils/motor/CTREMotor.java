@@ -70,14 +70,14 @@ public class CTREMotor implements Motor {
         if(encoder != null){
             encoder.setPosition(Rotation2d.fromDegrees(position));
         } else {
-            motor.setPosition(position / gearRatio);
+            motor.setPosition(position * gearRatio);
         }
     }
 
     
     public double getPosition(){
         if(encoder == null){
-            return motor.getPosition().getValueAsDouble() * gearRatio;
+            return motor.getPosition().getValueAsDouble() / gearRatio;
         } else{
             return encoder.getPosition().getRotations();
         }
