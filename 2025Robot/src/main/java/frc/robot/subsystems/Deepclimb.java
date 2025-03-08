@@ -1,12 +1,16 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utils.motor.CTREMotor;
 import frc.robot.utils.motor.Motor;
 
 public class Deepclimb extends SubsystemBase {
     
     public Motor climbMotor;
-
+    public TalonFXConfiguration climbMotorConfigs;
     /**
      * State of robot climb winch, detailing either in the operating state "Climb", and the stowed state "Stow".
      * States include: "Climb" and "Stow".
@@ -20,8 +24,10 @@ public class Deepclimb extends SubsystemBase {
      * Initilizes the end effector motor object and constructor to class "Deepclimb".
      * @param climbMotor -Motor that operates winch for the Deepclimb mechanism.
      */
-    public Deepclimb(Motor climbMotor){
-        this.climbMotor = climbMotor;
+    public Deepclimb(){
+        this.climbMotorConfigs = new TalonFXConfiguration();
+        climbMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        this.climbMotor = new CTREMotor(0, null, 64, null, null, climbMotor, climbMotorConfigs);
     }
 
     /**
