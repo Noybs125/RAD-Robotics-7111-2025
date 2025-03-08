@@ -92,8 +92,8 @@ public class RobotContainer {
     // all of these bindings will be correctly defined when we decide controls
     Trigger elevatorUp = driverController.povUp();
     Trigger elevatorDown = driverController.povDown();
-    Trigger armUp = driverController.povRight();
-    Trigger armDown = driverController.povLeft();
+    //Trigger armUp = driverController.povRight();
+    //Trigger armDown = driverController.povLeft();
     Trigger effectorIntake = driverController.rightBumper();
     Trigger effectorScore = driverController.leftBumper();
 
@@ -122,13 +122,13 @@ public class RobotContainer {
 
     elevatorDown.negate().and(elevatorUp.negate()).onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));
 
-    armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.1))
+    /*armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.1))
         .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
 
     armDown.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(-0.1))
         .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
 
-    armUp.negate().and(armDown.negate()).onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0)));
+    armUp.negate().and(armDown.negate()).onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0)));*/
 
     effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(1)));
     effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(-1)));
