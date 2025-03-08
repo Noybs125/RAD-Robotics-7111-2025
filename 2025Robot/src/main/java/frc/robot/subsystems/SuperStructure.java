@@ -26,15 +26,15 @@ public class SuperStructure extends SubsystemBase {
 
     /**
      * States for what constrolstate we need.
-     * States include; "ReefL1Processor", "ReefL2", "ReefL3", "ReefL4Net", "ReefFeeder", "DeepClimb", and "Default"
+     * States include; "XButton", "AButton", "BButton", "YButton", "ReefFeeder", "DeepClimb", and "Default"
      */
     public enum ControlState {
-        ReefL1Processor,
-        ReefL2,
-        ReefL3,
-        ReefL4Net,
-        ReefFeeder,
-        DeepClimb,
+        XButton,
+        AButton,
+        BButton,
+        YButton,
+        SelectButton,
+        StartButton,
         Default,
     }
 
@@ -117,31 +117,27 @@ public class SuperStructure extends SubsystemBase {
      */
     private void manageControlState(){
         switch (controlRobotState) {   
-            case ReefL1Processor:
+            case XButton:
                 //checks for whether it should align for reef or processor
                 actualRobotState = ActualState.coralL1;
                 break;
-            case ReefL2:
+            case AButton:
                 //checks for whether it should score coral or intake algae
                 actualRobotState = ActualState.coralL2;
                 break;
-            case ReefL3:
+            case BButton:
                 //checks for whether it should score coral or intake algae
                 actualRobotState = ActualState.coralL3;
                 break;
-            case ReefL4Net:
+            case YButton:
                 //checks for whether it should score coral on L4 or score algae in net
                 boolean isNet = false; //true if we have algae
                 actualRobotState = isNet
                     ? ActualState.algaeNet
                     : ActualState.coralL4;
                 break;
-            case ReefFeeder:
-                //
-                actualRobotState = ActualState.coralFeeder;
-                break;
             case DeepClimb:
-                //
+    
                 actualRobotState = ActualState.deepClimb;
                 break;
             case Default:
