@@ -176,7 +176,7 @@ public class Swerve extends SubsystemBase {
   }
   /**
      * The SwerveState of robot, which should be determined on field position & the beam break.
-     * States include: "DefaultState", "Intaking", "Scoring", "RobotRelative", "VisionGyro", "Vision", & "LowerSpeed".
+     * States include: "DefaultState", "Intaking", "Scoring", "RobotRelative", "VisionGyro", "Vision", "LowerSpeed", "leftAlignment", "rightAlignment", & "centerAlignment".
      */
   public enum SwerveState{
     DefaultState,
@@ -184,8 +184,10 @@ public class Swerve extends SubsystemBase {
     Scoring,
     RobotRelative,
     VisionGyro,
-    Vision,
     lowerSpeed,
+    leftAlignment,
+    rightAlignment,
+    centerAlignment,
   }
 
   /**
@@ -267,7 +269,7 @@ public class Swerve extends SubsystemBase {
         isFieldRelative = true;
         break;
 
-      case Vision:
+      case centerAlignment:
         if (vision.canSeeTarget(18, vision.frontCamera)){
           var rotMeasure = vision.getAlignmentToTarget(18, vision.frontCamera).getRotation().getDegrees();
           if(rotMeasure < 0){
@@ -283,6 +285,38 @@ public class Swerve extends SubsystemBase {
         }
         isFieldRelative = false;
         break;
+
+        case rightAlignment:
+        if (vision.canSeeTarget(18, vision.frontCamera)){
+          var rotMeasure = vision.getAlignmentToTarget(18, vision.frontCamera).getRotation().getDegrees();
+          if(rotMeasure < 0){
+            rotMeasure += 360;
+          }
+          translateX = translationVisionPID.calculate(vision.getAlignmentToTarget(18, vision.frontCamera).getX(), 0.59);
+          translateY = translationVisionPID.calculate(vision.getAlignmentToTarget(18, vision.frontCamera).getY(), 0.06);
+          rotationZ = rotVisionPID.calculate(rotMeasure, 20.55);
+        } else {
+          translateX = 0;
+          translateY = 0;
+          rotationZ = 0;
+        }
+          break;
+
+        case leftAlignment:
+        if (vision.canSeeTarget(18, vision.frontCamera)){
+          var rotMeasure = vision.getAlignmentToTarget(18, vision.frontCamera).getRotation().getDegrees();
+          if(rotMeasure < 0){
+            rotMeasure += 360;
+          }
+          translateX = translationVisionPID.calculate(vision.getAlignmentToTarget(18, vision.frontCamera).getX(), 0.68);
+          translateY = translationVisionPID.calculate(vision.getAlignmentToTarget(18, vision.frontCamera).getY(), -0.12);
+          rotationZ = rotVisionPID.calculate(rotMeasure, 23.3);
+        } else {
+          translateX = 0;
+          translateY = 0;
+          rotationZ = 0;
+        }
+          break;
     }
   }
   /** To be used by auto. Use the drive method during teleop. */
