@@ -54,7 +54,7 @@ public class RobotContainer {
   public final Flywheels flywheels;
   public final SuperStructure superStructure;
   public final Sensors sensors;
-  public final Deepclimb deepClimb;
+  //public final Deepclimb deepClimb;
 
   public final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
@@ -70,8 +70,8 @@ public class RobotContainer {
     field = new Field(swerve);
     mechanisms = new Mechanisms();
     flywheels = new Flywheels();
-    deepClimb = new Deepclimb();
-    superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels, deepClimb);
+    //deepClimb = new Deepclimb();
+    superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels, null);
   
 
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -113,7 +113,7 @@ public class RobotContainer {
 
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(),
-      () -> swerve.getTransX(),  
+      () -> swerve.getTransX(),
       () -> swerve.getRotationZ(),
       () -> swerve.getFieldRelative(), 
       false
@@ -127,10 +127,10 @@ public class RobotContainer {
 
     leftReefAlign.negate().and(rightReefAlign.negate()).onTrue(superStructure.setSwerveState(SwerveState.DefaultState));
 
-    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0.3))
+    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0.1))
         .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
 
-    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-0.3))
+    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-0.1))
         .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
 
     elevatorDown.negate().and(elevatorUp.negate()).onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));
@@ -150,10 +150,10 @@ public class RobotContainer {
 
     
 
-    /*l1.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL1Processor));
-    l2.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL2));
-    l3.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL3));
-    l4.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL4Net));*/
+    l1.onTrue(superStructure.setRobotStateCommand(ControlState.XButton));
+    l2.onTrue(superStructure.setRobotStateCommand(ControlState.AButton));
+    l3.onTrue(superStructure.setRobotStateCommand(ControlState.BButton));
+    l4.onTrue(superStructure.setRobotStateCommand(ControlState.YButton));
 
     // change or remove each of these when we decide controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());

@@ -12,6 +12,7 @@ import com.studica.frc.AHRS;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -81,6 +82,36 @@ public class Camera extends PhotonCamera{
             }
             estRobotPose = estPose.get();
         }
+    }
+
+    public boolean canSeeTarget(int id){
+        boolean canSee = false;
+        if(updatePose()){
+            if(latestResult.hasTargets()){
+                for(var target : latestResult.getTargets()){
+                    if(target.getFiducialId() == id){
+                        canSee = true;
+                    }
+                }
+            }
+        }
+        return canSee;
+    }
+
+    public Transform3d getAlignmentToTarget(int id){
+        Transform3d transform = null;
+        if(canSeeTarget(id)){
+            for(var target : latestResult.getTargets()){
+                if(target.getFiducialId() == id){
+                    transform = target.getBestCameraToTarget();
+                }
+            }
+        }
+        return transform;
+    }
+
+    public Pose3d getCameraPose(){
+        return new Pose3d(cameraToRobotCenter.getTranslation(), cameraToRobotCenter.getRotation());
     }
 
     /**

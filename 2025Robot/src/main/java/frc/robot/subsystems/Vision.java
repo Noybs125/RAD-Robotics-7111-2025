@@ -188,21 +188,11 @@ public class Vision extends SubsystemBase{
      * @return Type "Transform2d", If no apriltag found, returns null. if an apriltag is found, updates SmartDashboard and returns a transform2d to allign with the apriltag
      */
     public Transform2d getAlignmentToTarget(int id, Camera camera){
-        if (camera.latestResult != null) {
-            List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
-            if(latest != null){
-                for(PhotonTrackedTarget target : latest){
-                    if(canSeeTarget(id, camera) && target.fiducialId == id){
-                        Transform3d cameraToTarget = target.getBestCameraToTarget();
-                        SmartDashboard.putNumber("Vision Rot CamtoTarget", cameraToTarget.getRotation().toRotation2d().getDegrees());
-                        SmartDashboard.putNumber("Vision Rot Rotations", cameraToTarget.getRotation().toRotation2d().getRotations());
-                        SmartDashboard.putNumber("Vision Rot getYaw", Rotation2d.fromDegrees(target.getYaw()).getDegrees());
-                        return new Transform2d(cameraToTarget.getY(), cameraToTarget.getX(), cameraToTarget.getRotation().toRotation2d());
-                    }
-                }
-            }
-        }
-        return null;
+        Transform2d alignment;
+        Pose3d pose;
+        pose = camera.getCameraPose().transformBy(camera.getAlignmentToTarget(id));
+        alignment = new Transform2d(new Pose2d(), pose.toPose2d());
+        return alignment;
     }
 
     /**

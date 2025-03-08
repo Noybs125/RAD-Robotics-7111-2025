@@ -137,8 +137,26 @@ public class Mechanisms extends SubsystemBase {
      * @see -Link to set(double) method: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#set(double).
      */
     public void setElevatorSpeed(double speed) {
-        elevator.setSpeed(speed);
-        isManual = true;
+        if(elevator.getPosition() >= Constants.kMechanisms.elevatorMaxPosition){
+            if(speed > 0){
+                speed = 0;
+            }else if(speed < -Constants.kMechanisms.elevatorMaxSpeed){
+                speed = -Constants.kMechanisms.elevatorMaxSpeed;
+            }
+            isManual = true;
+            elevator.setSpeed(speed);
+        }else if(elevator.getPosition() <= Constants.kMechanisms.elevatorMinPosition){
+                if(speed > Constants.kMechanisms.elevatorMaxSpeed){
+                    speed = Constants.kMechanisms.elevatorMaxSpeed;
+                }else if(speed < 0){
+                    speed = 0;
+                }
+                isManual = true;
+                elevator.setSpeed(speed);
+        }else{
+            isManual = true;
+            elevator.setSpeed(speed);
+        }
     }
 
     /**
@@ -150,6 +168,17 @@ public class Mechanisms extends SubsystemBase {
     public void setWristSpeed(double speed) {
         wrist.setSpeed(speed);
         isManual = true;
+
+        if(wrist.getPosition() >= Constants.kMechanisms.maxWristPosition
+            || wrist.getPosition() <= Constants.kMechanisms.minWristPosition){
+                if(speed > Constants.kMechanisms.maxWristSpeed){
+                    speed = Constants.kMechanisms.maxWristSpeed;
+                }else if(speed < -Constants.kMechanisms.maxWristSpeed){
+                    speed = -Constants.kMechanisms.maxWristSpeed;
+                }
+                isManual = true;
+                wrist.setSpeed(speed);
+        }
     }
 
     /**
@@ -261,40 +290,26 @@ public class Mechanisms extends SubsystemBase {
         }
     }
     public void periodic() {
+        handleState();
+
         if (state == MechanismsState.Manual) {
             isManual = true;
         }
         else {
-            elevator.setSetpoint(elevatorSetpoint, false);
-            wrist.setSetpoint(wristSetpoint, false);
-        }
-        
-        if(elevator.getSpeed() > Constants.kMechanisms.elevatorMaxSpeed){
-            elevator.setSpeed(Constants.kMechanisms.elevatorMaxSpeed);
-        } 
-        else if(elevator.getSpeed() < Constants.kMechanisms.elevatorMaxSpeed * -1){
-            elevator.setSpeed(Constants.kMechanisms.elevatorMaxSpeed * -1);
-        }
-        
-        if(elevator.getPosition() > 0.95)
-        {
-            if(elevator.getSpeed() > 0)
-            {
-                elevator.setSpeed(0);
-            }
-        }
-        if(elevator.getPosition() < 0.01)
-        {
-            if(elevator.getSpeed() < 0)
-            {
-                elevator.setSpeed(0);
+            if(!isManual){
+                if(elevator.getPID().calculate(elevator.getPosition(), elevatorSetpoint) > Constants.kMechanisms.elevatorMaxSpeed){
+                    elevator.setSpeed(Constants.kMechanisms.elevatorMaxSpeed);
+                }else if(elevator.getPID().calculate(elevator.getPosition(), elevatorSetpoint) < -Constants.kMechanisms.elevatorMaxSpeed){
+                    elevator.setSpeed(-Constants.kMechanisms.elevatorMaxSpeed);
+                }else{
+                    elevator.setSetpoint(elevatorSetpoint, false);
+                    wrist.setSetpoint(wristSetpoint, false);
+                }
             }
         }
 
         elevator.periodic();
         wrist.periodic();
-        
-        handleState();
 
         SmartDashboard.putNumber("elevator Position", elevator.getPosition());
         SmartDashboard.putNumber("wrist Position", wrist.getPosition());

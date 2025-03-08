@@ -217,6 +217,14 @@ public class Constants {
     /** Elevator Max Height in feet */
     public static final double elevatorMaxHeight = 8;
 
+    public static final double elevatorMaxPosition = 0.99;
+    public static final double elevatorMinPosition = 0.05;
+
+    public static final double maxWristPosition = 1;
+    public static final double minWristPosition = -1;
+
+    public static final double maxWristSpeed = 1;
+
     public static PIDController elevatorPID = new PIDController(34, 0.0, 0.0);
     public static PIDController armPID = new PIDController(0.05, 0.0, 0.0);
 
