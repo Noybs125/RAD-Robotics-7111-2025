@@ -403,6 +403,7 @@ public class Swerve extends SubsystemBase {
    */
   private void zeroGyro() {
     gyro.zeroYaw();
+    gyro.setAngleAdjustment(180);
   }
   /**
    * @return The current Estimated Position of the swerveOdometry
