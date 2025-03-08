@@ -21,7 +21,7 @@ public class SuperStructure extends SubsystemBase {
     private ControlState controlRobotState;
     public boolean hasCoral;
     public boolean hasAlgae;
-    public Deepclimb deepclimb;
+    public Deepclimb deepClimb;
 
     public SwerveState swerveState = SwerveState.DefaultState;
 
@@ -69,13 +69,14 @@ public class SuperStructure extends SubsystemBase {
      * @param mechanisms -Type "Mechanisms", sets equal to local mechanisms.
      * @param flywheels -Type "Flywheels", sets equal to local flywheels.
      */
-    public SuperStructure(Swerve swerve, Vision vision, Field field, Sensors sensors, Mechanisms mechanisms, Flywheels flywheels){
+    public SuperStructure(Swerve swerve, Vision vision, Field field, Sensors sensors, Mechanisms mechanisms, Flywheels flywheels, Deepclimb deepClimb){
         this.swerve = swerve;
         this.vision = vision;
         this.field = field;
         this.sensors = sensors;
         this.mechanisms = mechanisms;
         this.flywheels = flywheels;
+        this.deepClimb = deepClimb;
 
         controlRobotState = ControlState.Default;
         actualRobotState = ActualState.defaultState;
@@ -292,10 +293,10 @@ public class SuperStructure extends SubsystemBase {
      * Sets the mechanismsState to "Climb"
      */
     private void deepClimbRetracted(){
-        deepclimb.setState(Deepclimb.ClimbStates.Retracted);
+        deepClimb.setState(Deepclimb.ClimbStates.Retracted);
     }
     private void deepClimbExtended(){
-        deepclimb.setState(Deepclimb.ClimbStates.Extended);
+        deepClimb.setState(Deepclimb.ClimbStates.Extended);
     }
 
     /**

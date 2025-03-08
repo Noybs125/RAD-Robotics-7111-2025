@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Deepclimb;
 import frc.robot.subsystems.Field;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Field.FieldSetpoint;
@@ -53,6 +54,7 @@ public class RobotContainer {
   public final Flywheels flywheels;
   public final SuperStructure superStructure;
   public final Sensors sensors;
+  public final Deepclimb deepClimb;
 
   public final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
@@ -68,7 +70,9 @@ public class RobotContainer {
     field = new Field(swerve);
     mechanisms = new Mechanisms();
     flywheels = new Flywheels();
-    superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels);
+    deepClimb = new Deepclimb();
+    superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels, deepClimb);
+  
 
     autoChooser = AutoBuilder.buildAutoChooser();
     autoChooser.addOption("Custom", new PathPlannerAuto(field.generateAutoRoutine(field.getAutoCycles())));
