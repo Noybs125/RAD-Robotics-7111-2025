@@ -22,6 +22,8 @@ public class SuperStructure extends SubsystemBase {
     public boolean hasCoral;
     public boolean hasAlgae;
 
+    public SwerveState swerveState = SwerveState.DefaultState;
+
     /**
      * States for what constrolstate we need.
      * States include; "ReefL1Processor", "ReefL2", "ReefL3", "ReefL4Net", "ReefFeeder", "DeepClimb", and "Default"
@@ -214,7 +216,7 @@ public class SuperStructure extends SubsystemBase {
      */
     private void coralL1(){
         mechanisms.setState(Mechanisms.MechanismsState.ReefL1);
-        //swerve.setState(SwerveState.Vision);
+        swerve.setState(swerveState);
     }
 
     /**
@@ -222,6 +224,7 @@ public class SuperStructure extends SubsystemBase {
      */
     private void coralL2(){
         mechanisms.setState(Mechanisms.MechanismsState.ReefL2);
+        swerve.setState(swerveState);
         //if(vision.isAtTarget(0, null, null, 0));
     }
 
@@ -230,6 +233,7 @@ public class SuperStructure extends SubsystemBase {
      */
     private void coralL3(){
         mechanisms.setState(Mechanisms.MechanismsState.ReefL3);
+        swerve.setState(swerveState);
     }
 
     /**
@@ -237,6 +241,7 @@ public class SuperStructure extends SubsystemBase {
      */
     private void coralL4(){
         mechanisms.setState(Mechanisms.MechanismsState.ReefL4);
+        swerve.setState(swerveState);
     }
 
     /**
@@ -293,6 +298,10 @@ public class SuperStructure extends SubsystemBase {
         else{
             swerve.setState(SwerveState.DefaultState);
         }
+    }
+
+    public Command setSwerveState(SwerveState swerveState) {
+        return new InstantCommand(() -> this.swerveState = swerveState);
     }
 
     

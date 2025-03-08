@@ -90,6 +90,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // all of these bindings will be correctly defined when we decide controls
+    Trigger leftReefAlign = driverController.leftTrigger();
+    Trigger rightReefAlign = driverController.rightTrigger();
     Trigger elevatorUp = driverController.povUp();
     Trigger elevatorDown = driverController.povDown();
     //Trigger armUp = driverController.povRight();
@@ -113,6 +115,13 @@ public class RobotContainer {
       false
       )
     );
+
+    leftReefAlign.onTrue(superStructure.setSwerveState(SwerveState.leftAlignment));
+    rightReefAlign.onTrue(superStructure.setSwerveState(SwerveState.rightAlignment));
+
+    leftReefAlign.and(rightReefAlign).onTrue(superStructure.setSwerveState(SwerveState.centerAlignment));
+
+    leftReefAlign.negate().and(rightReefAlign.negate()).onTrue(superStructure.setSwerveState(SwerveState.DefaultState));
 
     elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0.3))
         .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
