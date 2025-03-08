@@ -94,8 +94,8 @@ public class RobotContainer {
     Trigger rightReefAlign = driverController.rightTrigger();
     Trigger elevatorUp = driverController.povUp();
     Trigger elevatorDown = driverController.povDown();
-    //Trigger armUp = driverController.povRight();
-    //Trigger armDown = driverController.povLeft();
+    Trigger armUp = driverController.povRight();
+    Trigger armDown = driverController.povLeft();
     Trigger effectorIntake = driverController.rightBumper();
     Trigger effectorScore = driverController.leftBumper();
 
@@ -129,15 +129,15 @@ public class RobotContainer {
     elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-0.3))
         .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
 
-    elevatorDown.negate().and(elevatorUp.negate()).onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));
+    elevatorDown.negate().and(elevatorUp.negate()).onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));*/
 
-    /*armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.1))
+    armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.1))
         .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
 
     armDown.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(-0.1))
         .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
 
-    armUp.negate().and(armDown.negate()).onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0)));*/
+    armUp.negate().and(armDown.negate()).onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0)));
 
     effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(1)));
     effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(-1)));
@@ -146,10 +146,10 @@ public class RobotContainer {
 
     
 
-    l1.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL1Processor));
+    /*l1.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL1Processor));
     l2.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL2));
     l3.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL3));
-    l4.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL4Net));
+    l4.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL4Net));*/
 
     // change or remove each of these when we decide controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());

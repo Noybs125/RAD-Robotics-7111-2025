@@ -105,8 +105,10 @@ public class SuperStructure extends SubsystemBase {
             hasCoral = false;
         }
 
+        swerve.setSubtractedSpeed(mechanisms.getElevatorHeight());
 
-        
+
+
     }
 
     /**
@@ -287,12 +289,12 @@ public class SuperStructure extends SubsystemBase {
     }
 
     /**
-     * Checks if the elevator height is greater that 2 feet, setting SwerveState to "lowerSpeed" if the case, otherwise set to "DefaultState"
+     * Checks if the elevator height is greater 20% max height, setting SwerveState to "lowerSpeed" if the case, otherwise set to "DefaultState"
      */
     private void defaultState(){
         //mechanisms.setState(Mechanisms.MechanismsState.Store);
         
-        if(mechanisms.getElevatorHeight() < 2 /* ft */){
+        if(mechanisms.getElevatorHeight() < 0.2){
             swerve.setState(SwerveState.lowerSpeed);
         }
         else{

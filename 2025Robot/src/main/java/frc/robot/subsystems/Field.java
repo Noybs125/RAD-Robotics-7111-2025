@@ -13,6 +13,8 @@ import com.pathplanner.lib.commands.PathfindThenFollowPath;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPoint;
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
@@ -119,6 +121,8 @@ public class Field extends SubsystemBase {
         this.swerve = swerve;
         fieldPublisher = Shuffleboard.getTab("Odometry").add("field odometry", field).withWidget("Field");
 
+        Pathfinding.ensureInitialized();
+
         driverLocation.addOption("1", 1);
         driverLocation.addOption("2", 2);
         driverLocation.addOption("3", 3);
@@ -133,7 +137,6 @@ public class Field extends SubsystemBase {
         }
 
         Shuffleboard.getTab("Autonomous").add("DriverStation", driverLocation);
-        
 
         cycleAmountEntry = Shuffleboard.getTab("Autonomous").add("Apply Cycle Amount", false).getEntry();
         
@@ -337,6 +340,7 @@ public class Field extends SubsystemBase {
      */
     public void periodic() {
         field.setRobotPose(swerve.getPose());
+        
         if (Pathfinding.isNewPathAvailable()){
             path = Pathfinding.getCurrentPath(Constants.kAuto.constraints, endState);
         }

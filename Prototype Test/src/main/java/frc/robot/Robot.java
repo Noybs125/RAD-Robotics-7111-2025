@@ -5,7 +5,10 @@
 package frc.robot;
 
 import com.revrobotics.spark.SparkMax;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -18,7 +21,9 @@ public class Robot extends TimedRobot {
   private int divID = 21;
   private SparkMax neoTestMotor = new SparkMax(divID, MotorType.kBrushless);
   private Command m_autonomousCommand;
- 
+  
+  private int krakenID = 0;
+  private TalonFX krakenTestMotor = new TalonFX(krakenID);
 
   private XboxController controller = new XboxController(0);
 
@@ -45,6 +50,14 @@ public class Robot extends TimedRobot {
     }
     else{
       neoTestMotor.set(0);
+    }
+
+    if(controller.getRightBumper()){
+      krakenTestMotor.set(.5);
+    } else if(controller.getLeftBumper()){
+      krakenTestMotor.set(-.5);
+    }else{
+      krakenTestMotor.set(0);
     }
 
     SmartDashboard.putNumber("Can Bus Voltage", neoVoltage);

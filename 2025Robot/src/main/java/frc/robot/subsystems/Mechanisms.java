@@ -128,7 +128,6 @@ public class Mechanisms extends SubsystemBase {
         }
         
         return elevatorHeight;
-    
     }
 
     /**
@@ -275,6 +274,21 @@ public class Mechanisms extends SubsystemBase {
         } 
         else if(elevator.getSpeed() < Constants.kMechanisms.elevatorMaxSpeed * -1){
             elevator.setSpeed(Constants.kMechanisms.elevatorMaxSpeed * -1);
+        }
+        
+        if(elevator.getPosition() > 0.95)
+        {
+            if(elevator.getSpeed() > 0)
+            {
+                elevator.setSpeed(0);
+            }
+        }
+        if(elevator.getPosition() < 0.01)
+        {
+            if(elevator.getSpeed() < 0)
+            {
+                elevator.setSpeed(0);
+            }
         }
 
         elevator.periodic();
