@@ -12,8 +12,8 @@ public class Deepclimb extends SubsystemBase {
      * States include: "Climb" and "Stow".
      */
     private enum ClimbStates{
-        Climb,
-        Stow,
+        Retracted,
+        Extended,
     }
 
     /**
@@ -30,12 +30,12 @@ public class Deepclimb extends SubsystemBase {
      */
     public void setState(ClimbStates state){
         switch (state) {
-            case Climb:
-                climbMotor.setSpeed(.5);
+            case Retracted:
+                climbMotor.setSetpoint(0, false);
                 break;
             
-            case Stow:
-                climbMotor.setSpeed(-.5);
+            case Extended:
+                climbMotor.setSetpoint(0, false);
                 break;
             default:
                 break;
