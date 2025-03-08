@@ -44,7 +44,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
   public final XboxController xbox;
-  public final CommandXboxController commXbox;
+  public final CommandXboxController driverController;
 
   public final Swerve swerve;
   public final Field field;
@@ -60,7 +60,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     xbox = new XboxController(0);
-    commXbox = new CommandXboxController(0);
+    driverController = new CommandXboxController(0);
     
     sensors = new Sensors();
     vision = new Vision(gyro);
@@ -90,20 +90,20 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // all of these bindings will be correctly defined when we decide controls
-    Trigger elevatorUp = commXbox.rightTrigger(0.05);
-    Trigger elevatorDown = commXbox.leftTrigger(0.05);
-    Trigger armUp = commXbox.leftBumper();
-    Trigger armDown = commXbox.rightBumper();
-    Trigger effectorIntake = commXbox.povDown();
-    Trigger effectorScore = commXbox.povUp();
+    Trigger elevatorUp = driverController.povUp();
+    Trigger elevatorDown = driverController.povDown();
+    Trigger armUp = driverController.povRight();
+    Trigger armDown = driverController.povLeft();
+    Trigger effectorIntake = driverController.rightBumper();
+    Trigger effectorScore = driverController.leftBumper();
 
-    Trigger zeroGyro = commXbox.start();
-    Trigger resetOdometry = commXbox.a();
+    Trigger zeroGyro = driverController.start();
+    Trigger resetOdometry = driverController.a();
 
-    Trigger l1 = commXbox.x();
-    Trigger l2 = commXbox.a();
-    Trigger l3 = commXbox.b();
-    Trigger l4 = commXbox.y();
+    Trigger l1 = driverController.x();
+    Trigger l2 = driverController.a();
+    Trigger l3 = driverController.b();
+    Trigger l4 = driverController.y();
 
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(),
@@ -135,15 +135,15 @@ public class RobotContainer {
     effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
 
 
+    
+
     l1.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL1Processor));
     l2.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL2));
     l3.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL3));
     l4.onTrue(superStructure.setRobotStateCommand(ControlState.ReefL4Net));
 
-    // change or remove each of these when we deside controls
+    // change or remove each of these when we decide controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());
     resetOdometry.onTrue(swerve.resetOdometryCommand());
-    commXbox.povLeft().onTrue(field.pathfindToSetpoint(FieldSetpoint.Reef2));
-    commXbox.povLeft().onTrue(field.pathfindToSetpoint(FieldSetpoint.Reef1));
-    }
   }
+}

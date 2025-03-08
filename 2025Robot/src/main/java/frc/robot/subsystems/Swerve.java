@@ -268,13 +268,13 @@ public class Swerve extends SubsystemBase {
         break;
 
       case Vision:
-        if (vision.canSeeTarget(18, vision.orangepi1)){
-          var rotMeasure = vision.getAlignmentToTarget(18, vision.orangepi1).getRotation().getDegrees();
+        if (vision.canSeeTarget(18, vision.frontCamera)){
+          var rotMeasure = vision.getAlignmentToTarget(18, vision.frontCamera).getRotation().getDegrees();
           if(rotMeasure < 0){
             rotMeasure += 360;
           }
-          translateX = translationVisionPID.calculate(vision.getAlignmentToTarget(18, vision.orangepi1).getX(), 0);
-          translateY = translationVisionPID.calculate(vision.getAlignmentToTarget(18, vision.orangepi1).getY(),0.35);
+          translateX = translationVisionPID.calculate(vision.getAlignmentToTarget(18, vision.frontCamera).getX(), 0);
+          translateY = translationVisionPID.calculate(vision.getAlignmentToTarget(18, vision.frontCamera).getY(), 0.35);
           rotationZ = rotVisionPID.calculate(rotMeasure, 180);
         } else {
           translateX = 0;
@@ -434,10 +434,9 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
       }
     }
-    if(vision.canSeeTarget(18, vision.orangepi1)){
-      SmartDashboard.putNumber("Vison TranslateY", vision.getAlignmentToTarget(18, vision.orangepi1).getY());
-      SmartDashboard.putNumber("Vison TranslateX", vision.getAlignmentToTarget(18, vision.orangepi1).getX());
-
+    if(vision.canSeeTarget(18, vision.frontCamera)){
+      SmartDashboard.putNumber("Vison TranslateY", vision.getAlignmentToTarget(18, vision.frontCamera).getY());
+      SmartDashboard.putNumber("Vison TranslateX", vision.getAlignmentToTarget(18, vision.frontCamera).getX());
     }
     //sets max speed to 100% - % of elevator height.
     maxSpeed = 1 - difference;
