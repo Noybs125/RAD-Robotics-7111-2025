@@ -21,6 +21,7 @@ public class SuperStructure extends SubsystemBase {
     private ControlState controlRobotState;
     public boolean hasCoral;
     public boolean hasAlgae;
+    public Deepclimb deepclimb;
 
     public SwerveState swerveState = SwerveState.DefaultState;
 
@@ -53,7 +54,7 @@ public class SuperStructure extends SubsystemBase {
         algaeL2,
         algaeL3,
         deepClimbRetracted,
-        DeepClimbExtended,
+        deepClimbExtended,
         stow,
         stowWithCoral,
         defaultState,
@@ -144,7 +145,7 @@ public class SuperStructure extends SubsystemBase {
         
             case StartButton:
 
-                actualRobotState = ActualState.DeepClimbExtended;
+                actualRobotState = ActualState.deepClimbExtended;
                 break;
 
             case Default:
@@ -189,8 +190,11 @@ public class SuperStructure extends SubsystemBase {
             case algaeL3:
                 algaeL3();
                 break;
-            case deepClimb:
-                deepClimb();
+            case deepClimbRetracted:
+                deepClimbRetracted();
+                break;
+            case deepClimbExtended:
+                deepClimbExtended();
                 break;
             case defaultState:
                 defaultState();
@@ -288,7 +292,10 @@ public class SuperStructure extends SubsystemBase {
      * Sets the mechanismsState to "Climb"
      */
     private void deepClimbRetracted(){
-        mechanisms.setState(Mechanisms.MechanismsState.deepClimbRetracted);
+        deepclimb.setState(Deepclimb.ClimbStates.Retracted);
+    }
+    private void deepClimbExtended(){
+        deepclimb.setState(Deepclimb.ClimbStates.Extended);
     }
 
     /**

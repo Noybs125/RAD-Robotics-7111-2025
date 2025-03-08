@@ -15,7 +15,7 @@ public class Deepclimb extends SubsystemBase {
      * State of robot climb winch, detailing either in the operating state "Climb", and the stowed state "Stow".
      * States include: "Climb" and "Stow".
      */
-    private enum ClimbStates{
+    public enum ClimbStates{
         Retracted,
         Extended,
     }
