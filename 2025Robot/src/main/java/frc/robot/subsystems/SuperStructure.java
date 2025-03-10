@@ -71,6 +71,7 @@ public class SuperStructure extends SubsystemBase {
         stow,
         stowWithCoral,
         defaultState,
+        Manual,
     }
 
     /**
@@ -129,6 +130,7 @@ public class SuperStructure extends SubsystemBase {
      */
     private void manageControlState(){
         switch (controlRobotState) {   
+
             case XButton:
                 //checks for whether it should align for reef or processor
                 switch(actualRobotState){
@@ -219,6 +221,9 @@ public class SuperStructure extends SubsystemBase {
             case stowWithCoral:
                 stowCoral();
                 break;
+            case Manual:
+                Manual();
+                break;
             default:
                 break;
         }
@@ -237,7 +242,7 @@ public class SuperStructure extends SubsystemBase {
      * Sets the actualRobotState, this is used only in Auto
      * @param state -Type "ActualState", actualRobotState is set equal to this
      */
-    private void setActualState(ActualState state){
+    public void setActualState(ActualState state){
         actualRobotState = state;
 
     }
@@ -261,6 +266,10 @@ public class SuperStructure extends SubsystemBase {
         return new InstantCommand(() -> setActualState(state));
     }
 
+    private void Manual(){
+        mechanisms.setState(Mechanisms.MechanismsState.Manual);
+        swerve.setState(swerveState);
+    }
     /**
      * Sets the SwerveState to the "Vision" state
      */
