@@ -28,6 +28,7 @@ public class Mechanisms extends SubsystemBase {
     private double lowerLimit;
     private double upperLimit;
     private MechanismsState state = MechanismsState.Store;
+    private double elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
 
     /**
      * States for choosing what position to set mechanisms to.
@@ -112,7 +113,7 @@ public class Mechanisms extends SubsystemBase {
         double elevatorHeight;
 
         if ( elevator != null) {
-            elevatorHeight = ((Math.PI * kMechanisms.elevatorWinchDiameter * elevator.getPosition()) / kMechanisms.elevatorMaxHeight);
+            elevatorHeight = elevator.getPosition();
         }
         else {
             elevatorHeight = 0;
@@ -128,6 +129,7 @@ public class Mechanisms extends SubsystemBase {
      * @see -Link to set(double) method: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#set(double).
      */
     public void setElevatorSpeed(double speed) {
+        isManual = true;
         if(elevator.getPosition() >= Constants.kMechanisms.elevatorMaxPosition){
             if(speed > 0){
                 speed = 0;
@@ -146,7 +148,6 @@ public class Mechanisms extends SubsystemBase {
             isManual = false;
         }
         elevator.setSpeed(speed);
-        isManual = true;
     }
 
     /**
@@ -214,7 +215,7 @@ public class Mechanisms extends SubsystemBase {
      * @param deadzone -Type "double", amount of error allowed to determine if the wrist is in position.
      * @see -isAtSetpoint method is located under: frc.robot.utils.motor.CTREMotor.
      */
-    public void moveArmThenElev(double elevatorSetpoint, double wristSetpoint, double deadzone){
+    public void moveArmThenElev(double wristSetpoint, double elevatorSetpoint, double deadzone){
         setWristSetpoint(wristSetpoint);
         if(wrist.isAtSetpoint(deadzone)){
             setElevatorSetpoint(elevatorSetpoint);
@@ -228,58 +229,83 @@ public class Mechanisms extends SubsystemBase {
     private void handleState() {
         switch (state) {
             case ReefL1:
-                setAllMechanismsSetpoint(0, 0.2);
+                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
+                setAllMechanismsSetpoint(0.31325, 0.154);
                 break;
                 
             case ReefL2:
-                setAllMechanismsSetpoint(0.415, 0.42);
+                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
+                setAllMechanismsSetpoint(0.39725, 0.425);
                 break;
 
             case ReefL3:
-                setAllMechanismsSetpoint(0, 0.4);
+                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
+                setAllMechanismsSetpoint(0.39725, 0.645);
                 break;
 
             case ReefL4:
-                setAllMechanismsSetpoint(0, 0.95);
+                setAllMechanismsSetpoint(0.40122, 1.01);
+                if(elevator.isAtSetpoint(0.35)){
+                    elevatorMaxSpeed = 0.1;
+                }else{
+                    elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
+                }
                 break;
 
             case AlgaeL2:
+                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 setAllMechanismsSetpoint(0, 0);
                 break;
 
             case AlgaeL3:
+                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 setAllMechanismsSetpoint(0, 0);
                 break;
 
             case AlgaeProcessor:
-                setAllMechanismsSetpoint(0, 0);
+                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
+                setAllMechanismsSetpoint(0.31325, 0.154);
                 break;
 
             case AlgaeNet:
+                setAllMechanismsSetpoint(0.38, 0.85);
+                if(elevator.isAtSetpoint(0.04)){
+                    elevatorMaxSpeed = 0.1;
+                    moveElevThenArm(1.0178, -0.25, 0.02);
+                }
                 setAllMechanismsSetpoint(0, 0);
                 break;
 
             case Store:
-                setAllMechanismsSetpoint(0, 0);
+                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
+                if(elevator.getPosition() <= 0.55){
+                    moveArmThenElev(0, 0, 0.01);
+                }else{
+                    setAllMechanismsSetpoint(0, 0.5);
+                }
                 break;
 
             case StoreCoral:
-                moveElevThenArm(0.154, 0.331, 0.05);
+                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
+                moveElevThenArm(0.148, 0.31325, 0.05);
                 break;
 
             case CoralFeeder:
-                setAllMechanismsSetpoint(-0.052, 0.18);
+                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
+                setAllMechanismsSetpoint(-0.06975, 0.18);
                 break;
 
             case Climb:
+                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 setAllMechanismsSetpoint(0, 0);
                 break;
             
             case Manual:
-                isManual = true;
+                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 break;
 
             default:
+                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 elevatorSetpoint = 0;
                 wristSetpoint = 0;
                 break;
@@ -288,9 +314,15 @@ public class Mechanisms extends SubsystemBase {
     public void periodic() {
         handleState();
         if (!isManual){
-            elevator.setSetpoint(elevatorSetpoint, false);
-        }
-        if (!isManual){
+
+            if(elevator.getPID().calculate(elevator.getPosition(), elevatorSetpoint) > Constants.kMechanisms.elevatorMaxSpeed){
+                elevator.setSpeed(Constants.kMechanisms.elevatorMaxSpeed);
+            }else if(elevator.getPID().calculate(elevator.getPosition(), elevatorSetpoint) < -Constants.kMechanisms.elevatorMaxSpeed){
+                elevator.setSpeed(-Constants.kMechanisms.elevatorMaxSpeed);
+            }else{
+                elevator.setSetpoint(elevatorSetpoint, false);   
+            }
+
             if(wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) > Constants.kMechanisms.maxWristSpeed){
                 wrist.setSpeed(Constants.kMechanisms.maxWristSpeed);
             }else if (wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) < -Constants.kMechanisms.maxWristSpeed){

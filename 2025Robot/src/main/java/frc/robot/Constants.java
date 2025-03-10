@@ -213,11 +213,11 @@ public class Constants {
     public static final double elevatorWinchDiameter = 2;
     public static final double wristGearRatio = 48.13;
     /** Elevator max speed allowed, in percent. 0 = 0%, 1 = 100% */
-    public static final double elevatorMaxSpeed = 1;
+    public static final double elevatorMaxSpeed = 0.55;
     /** Elevator Max Height in feet */
     public static final double elevatorMaxHeight = 8;
 
-    public static final double elevatorMaxPosition = 0.99;
+    public static final double elevatorMaxPosition = 1.15;
     public static final double elevatorMinPosition = 0.01;
 
     public static final double maxWristPosition = 1;
@@ -226,7 +226,7 @@ public class Constants {
     public static final double maxWristSpeed = 0.4;
     public static final SimpleMotorFeedforward wristFF = null;//new SimpleMotorFeedforward(0.12, 5.78, 0.08);
 
-    public static PIDController elevatorPID = new PIDController(34, 0.0, 0.0);
+    public static PIDController elevatorPID = new PIDController(34, 0.65, 0.0);
     public static PIDController armPID = new PIDController(25, 0.0, 0.0);
 
     /** Motor Configurations */

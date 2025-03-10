@@ -433,12 +433,14 @@ public class Swerve extends SubsystemBase {
 		}
 
 		//threshold
-		if(difference >= 0.15){
+		if(difference <= 0.15){
 			difference = 0;
+		}else if(difference >= 0.9){
+			difference = 0.9;
 		}
 		//determines the max speed from 100% - x%
 		maxSpeed = 1 - difference;
-		maxAngularVelocity = 1 - (difference * 0.5);
+		maxAngularVelocity = 1 - (difference);
 
 		//failsafe preventing robot from ever setting the swerve drive to less than 7.5% max speed.
 		if(maxSpeed < 0.075 || maxSpeed > 1){

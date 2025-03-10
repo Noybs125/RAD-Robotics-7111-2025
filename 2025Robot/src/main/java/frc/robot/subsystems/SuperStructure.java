@@ -258,7 +258,7 @@ public class SuperStructure extends SubsystemBase {
      * @see -Link to runOnce method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/Subsystem.html#runOnce(java.lang.Runnable).
      */
     public Command setActualStateCommand(ActualState state) {
-        return runOnce(() -> setActualState(state));
+        return new InstantCommand(() -> setActualState(state));
     }
 
     /**
@@ -299,7 +299,6 @@ public class SuperStructure extends SubsystemBase {
      */
     private void coralFeeder(){
         mechanisms.setState(Mechanisms.MechanismsState.CoralFeeder);
-        flywheels.setSpeedState(Flywheels.WheelsStates.CoralIntake);
     }
 
     /**

@@ -140,16 +140,16 @@ public class RobotContainer {
 
     elevatorDown.negate().and(elevatorUp.negate()).onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));
 
-    armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.1))
+    armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.15))
         .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
 
-    armDown.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(-0.1))
+    armDown.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(-0.15))
         .alongWith(new InstantCommand(() -> mechanisms.setState(MechanismsState.Manual))));
 
     armUp.negate().and(armDown.negate()).onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0)));
 
     effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(1)));
-    effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(-0.25)));
+    effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(-0.6)));
     effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
     
 
