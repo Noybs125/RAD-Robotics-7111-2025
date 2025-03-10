@@ -3,9 +3,11 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Mechanisms.MechanismsState;
 import frc.robot.subsystems.Swerve.SwerveState;
+import frc.robot.subsystems.Vision.VisionState;
 
 import com.ctre.phoenix6.mechanisms.MechanismState;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,6 +21,7 @@ public class SuperStructure extends SubsystemBase {
     private Flywheels flywheels; 
     private ActualState actualRobotState;
     private ControlState controlRobotState;
+    private Pose2d nearestZone;
     public boolean hasCoral;
     public boolean hasAlgae;
     public Deepclimb deepClimb;
@@ -90,6 +93,7 @@ public class SuperStructure extends SubsystemBase {
 
         controlRobotState = ControlState.Default;
         actualRobotState = ActualState.defaultState;
+        nearestZone = field.getNearestZone(swerve.getPose());
     }
 
 
@@ -102,26 +106,21 @@ public class SuperStructure extends SubsystemBase {
     public void periodic() {
         //manageControlState();
         manageActualState();
+        nearestZone = field.getNearestZone(swerve.getPose());
 
         if (actualRobotState == ActualState.coralFeeder && sensors.isBeamBroken()) {
             hasCoral = true;
             hasAlgae = false;
-        }
-
-        else if (actualRobotState == ActualState.algaeL2 && sensors.isBeamBroken() || actualRobotState == ActualState.algaeL3 && sensors.isBeamBroken()) {
+        }else if (actualRobotState == ActualState.algaeL2 && sensors.isBeamBroken() || actualRobotState == ActualState.algaeL3 && sensors.isBeamBroken()) {
             hasAlgae = true;
             hasCoral = false;
-        }
-
-        else {
+        }else {
             hasAlgae = false;
             hasCoral = false;
         }
 
         swerve.setSubtractedSpeed(mechanisms.getElevatorHeight());
-
-
-
+        swerve.setRotationSetpoint(field.getNearestZone(swerve.getPose()).getRotation().getDegrees());
     }
 
     /**
@@ -157,12 +156,10 @@ public class SuperStructure extends SubsystemBase {
                     : ActualState.coralL4;
                 break;
             case SelectButton:
-    
                 actualRobotState = ActualState.deepClimbRetracted;
                 break;
         
             case StartButton:
-
                 actualRobotState = ActualState.deepClimbExtended;
                 break;
 
@@ -177,10 +174,8 @@ public class SuperStructure extends SubsystemBase {
      * Calls the state functions for the set state.
      * @see -{@link #coralL1()} {@link #coralL2()} {@link #coralL3()} {@link #coralL4()} {@link #coralFeeder()} {@link #algaeL2()} {@link #algaeProcessor()} {@link #algaeNet()} {@link #deepClimb()} {@link #defaultState()}
      */
-    private void manageActualState()
-    {
-        switch(actualRobotState)
-        {
+    private void manageActualState(){
+        switch(actualRobotState){
             case coralL1:
                 coralL1();
                 break;
@@ -329,6 +324,7 @@ public class SuperStructure extends SubsystemBase {
     private void deepClimbRetracted(){
         deepClimb.setState(Deepclimb.ClimbStates.Retracted);
     }
+
     private void deepClimbExtended(){
         deepClimb.setState(Deepclimb.ClimbStates.Extended);
     }
@@ -337,19 +333,34 @@ public class SuperStructure extends SubsystemBase {
      * Checks if the elevator height is greater 20% max height, setting SwerveState to "lowerSpeed" if the case, otherwise set to "DefaultState"
      */
     private void defaultState(){
-        //mechanisms.setState(Mechanisms.MechanismsState.Store);
-        
-        if(mechanisms.getElevatorHeight() < 0.2){
-            swerve.setState(SwerveState.lowerSpeed);
-        }
-        else{
-            swerve.setState(SwerveState.DefaultState);
-        }
+
     }
 
     public Command setSwerveState(SwerveState swerveState) {
         return new InstantCommand(() -> this.swerveState = swerveState);
     }
 
-    
+    public Command useLeftAlignment(){
+        return runOnce(() -> {
+            vision.setState(VisionState.LeftReef);
+            swerveState = SwerveState.VisionWithGyro;
+        });
+    }
+    public Command useRightAlignment(){
+        return runOnce(() -> {
+            vision.setState(VisionState.RightReef);
+            swerveState = SwerveState.VisionWithGyro;
+        });
+    }
+    public Command useCenterAlignment(){
+        return runOnce(() -> {
+            vision.setState(VisionState.LeftReef);
+            swerveState = SwerveState.VisionWithGyro;
+        });
+    }
+    public Command useNoAlignment(){
+        return runOnce(() -> {
+            swerveState = SwerveState.DefaultState;
+        });
+    }
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -336,7 +337,7 @@ public class Field extends SubsystemBase {
     }
     
     /**
-     * Periodic function called 50 times per second, currently completely empty.
+     * Periodic function called 50 times per second
      */
     public void periodic() {
         field.setRobotPose(swerve.getPose());

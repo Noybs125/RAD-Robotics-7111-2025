@@ -114,6 +114,13 @@ public class Camera extends PhotonCamera{
         return new Pose3d(cameraToRobotCenter.getTranslation(), cameraToRobotCenter.getRotation());
     }
 
+    public PhotonTrackedTarget getBestTarget(){
+        if(latestResult != null && latestResult.hasTargets()){
+            return latestResult.getBestTarget();
+        }
+        return null;
+    }
+
     /**
      * Updates the photonPoseEstimator with the newest apriltags.
      * @return The updated photonPoseEstimator.

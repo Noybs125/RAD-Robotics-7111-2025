@@ -56,6 +56,7 @@ public class Vision extends SubsystemBase{
         FeederStation,
         Processor,
         Climb,
+        CenterReef,
     }
 
     /**
@@ -84,6 +85,9 @@ public class Vision extends SubsystemBase{
                 break;
 
             case RightReef:
+                tagAllignment = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
+                break;
+            case CenterReef:
                 tagAllignment = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
                 break;
 
@@ -118,7 +122,6 @@ public class Vision extends SubsystemBase{
      * @see -getCameraToRobot is located under frc.robot.utils.Camera.
      */
     public void periodic(){
-
         Optional<EstimatedRobotPose> estPose = null;
 
          for(Camera camera : cameraList){
@@ -138,69 +141,58 @@ public class Vision extends SubsystemBase{
     }
 
     /**
-     * Checks if a specified camera can see a specified apriltag.
-     * @param id -Type "int", apriltag id
-     * @param camera -Type "Camera", specified camera object
-     * @return -True if id seen by camera, false otherwise.
+     * Gets the camera with the lowest ambiguity that can see the specified target
+     * @param id The ID of the specified target
+     * @param ambiguityThreshold Value from 0-1 determining the maximum uncertainty (ambiguity) allowed. 1 allowing for more error
+     * @return The camera that can see the target with the lowest ambiguity. null if none meet the condition
      */
-    public boolean canSeeTarget(int id, Camera camera) {
-        if (camera.latestResult != null) {
-            List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
-            if(latest != null){
-                for(PhotonTrackedTarget target : latest){
+    public Camera getBestCameraFromTarget(int id, double ambiguityThreshold) {
+        Camera bestCamera = null;
+        double bestAmbiguity = ambiguityThreshold;
+        for(Camera camera : cameraList){
+            if(camera.canSeeTarget(id)){
+                for(PhotonTrackedTarget target : camera.latestResult.getTargets()){
                     if(target.getFiducialId() == id){
-                        return true;
+                        if(target.poseAmbiguity <= bestAmbiguity){
+                            bestCamera = camera;
+                            bestAmbiguity = target.poseAmbiguity;
+                        }
                     }
                 }
             }
         }
-        return false;
+        return bestCamera;
     }
 
     /**
-     * Calculates the speed required to rotate to a specified target.
+     * Gets the translation needed to align to the aprilTag.
      * @param id -Type "int", the specified apriltag.
-     * @param camera -Type "Camera", the camera object to check for the target.
-     * @param speed -Type "double", the speed to turn toward the target
-     * @return -Speed if target is identified in the camera, 0 otherwise.
-     */
-    public double rotateToTarget(int id, Camera camera, double speed){
-        if (camera.latestResult != null) {
-            List<PhotonTrackedTarget> latest = camera.latestResult.getTargets();
-                if(canSeeTarget(id, camera)){
-                 return speed;
-               } 
-            }
-        return 0;
-    }
-
-    /**
-     * returns the translation needed to align to the aprilTag.
-     * @param id -Type "int", the specified apriltag.
-     * @param camera -Type "Camera", the camera object to check for the target
      * @return Type "Transform2d", If no apriltag found, returns null. if an apriltag is found, updates SmartDashboard and returns a transform2d to allign with the apriltag
      */
-    public Transform2d getAlignmentToTarget(int id, Camera camera){
-        Transform2d alignment;
+    public Transform3d getRobotToTarget(int id){
+        Camera camera = getBestCameraFromTarget(id, 1);
+        Transform3d alignment = null;
         Pose3d pose;
-        pose = camera.getCameraPose().transformBy(camera.getAlignmentToTarget(id));
-        alignment = new Transform2d(new Pose2d(), pose.toPose2d());
+        if(camera != null){
+            pose = camera.getCameraPose().transformBy(camera.getAlignmentToTarget(id));
+            alignment = new Transform3d(new Pose3d(), pose);
+        }
         return alignment;
     }
 
     /**
      * Checks if the robot is aligned at the target or not.
      * @param id -Type "int", the specified apriltag.
-     * @param camera -Type "Camera", the camera object to check for the target.
      * @param setpoints -Type "Transform2d", used as a destination for the robot to sit at
      * @param deadzone -Type "double", used to allow clearance greater that 0 in where the robot is considered "at the setpoint".
      * @return Type "boolean", true if aligned with the target, false otherwise.
      */
-    public boolean isAtTarget(int id, Camera camera, Transform2d setpoints, double deadzone){
-        if(canSeeTarget(id, camera)){
-            double x = getAlignmentToTarget(id, camera).getX();
-            double y = getAlignmentToTarget(id, camera).getY();
-            double rot = getAlignmentToTarget(id, camera).getRotation().getDegrees() - setpoints.getRotation().getDegrees();
+    public boolean isRobotAlignedWithTarget(int id, Transform2d setpoints, double deadzone){
+        Camera camera = getBestCameraFromTarget(id, 1);
+        if (camera != null){
+            double x = camera.getAlignmentToTarget(id).getX();
+            double y = camera.getAlignmentToTarget(id).getY();
+            double rot = camera.getAlignmentToTarget(id).getRotation().toRotation2d().getDegrees() - setpoints.getRotation().getDegrees();
 
             if(x <= setpoints.getX() + deadzone && x >= setpoints.getX() - deadzone){
                 if(y <= setpoints.getY() + deadzone && y >= setpoints.getY() - deadzone){
@@ -211,5 +203,9 @@ public class Vision extends SubsystemBase{
             }
         }
         return false;
+    }
+
+    public Transform2d getTagAlignment(){
+        return tagAllignment;
     }
 }
