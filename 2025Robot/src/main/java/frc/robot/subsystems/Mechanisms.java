@@ -138,23 +138,23 @@ public class Mechanisms extends SubsystemBase {
      * @see -Link to set(double) method: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#set(double).
      */
     public void setElevatorSpeed(double speed) {
+        if (speed == 0){
+            elevatorSetpoint = elevator.getPosition();
+        }
         if(elevator.getPosition() >= Constants.kMechanisms.elevatorMaxPosition){
             if(speed > 0){
                 speed = 0;
             }else if(speed < -Constants.kMechanisms.elevatorMaxSpeed){
                 speed = -Constants.kMechanisms.elevatorMaxSpeed;
             }
-            elevator.setSpeed(speed);
         }else if(elevator.getPosition() <= Constants.kMechanisms.elevatorMinPosition){
                 if(speed > Constants.kMechanisms.elevatorMaxSpeed){
                     speed = Constants.kMechanisms.elevatorMaxSpeed;
                 }else if(speed < 0){
                     speed = 0;
                 }
-                elevator.setSpeed(speed);
-        }else{
-            elevator.setSpeed(speed);
         }
+        elevator.setSpeed(speed);
         isManual = true;
     }
 
@@ -165,17 +165,19 @@ public class Mechanisms extends SubsystemBase {
      * @see -Link to set(double) method: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#set(double).
      */
     public void setWristSpeed(double speed) {
-        wrist.setSpeed(speed);
         isManual = true;
-        /*if(wrist.getPosition() >= Constants.kMechanisms.maxWristPosition
+        if(wrist.getPosition() >= Constants.kMechanisms.maxWristPosition
             || wrist.getPosition() <= Constants.kMechanisms.minWristPosition){
                 if(speed > Constants.kMechanisms.maxWristSpeed){
                     speed = Constants.kMechanisms.maxWristSpeed;
                 }else if(speed < -Constants.kMechanisms.maxWristSpeed){
                     speed = -Constants.kMechanisms.maxWristSpeed;
                 }
-                wrist.setSpeed(speed);
-        }*/
+        }
+        if(speed == 0){
+            wristSetpoint = wrist.getPosition();
+        }
+        wrist.setSpeed(speed);
     }
 
     /**
@@ -293,22 +295,16 @@ public class Mechanisms extends SubsystemBase {
     }
     public void periodic() {
         handleState();
-
-        if (state == MechanismsState.Manual) {
-
-        }
-        else {
-            if(!isManual){
-                elevator.setSetpoint(elevatorSetpoint, false);
-
-                if(wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) > Constants.kMechanisms.maxWristSpeed){
-                    wrist.setSpeed(Constants.kMechanisms.maxWristSpeed);
-                }else if (wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) < -Constants.kMechanisms.maxWristSpeed){
-                    wrist.setSpeed(-Constants.kMechanisms.maxWristSpeed);
-                }else{
-                    wrist.setSetpoint(wristSetpoint, isManual);
-                }
+        elevator.setSetpoint(elevatorSetpoint, false);
+        if (isManual == false || wrist.isAtSetpoint(0.01) == false){
+            if(wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) > Constants.kMechanisms.maxWristSpeed){
+                wrist.setSpeed(Constants.kMechanisms.maxWristSpeed);
+            }else if (wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) < -Constants.kMechanisms.maxWristSpeed){
+                wrist.setSpeed(-Constants.kMechanisms.maxWristSpeed);
+            }else{
+                wrist.setSetpoint(wristSetpoint, false);
             }
+    
         }
 
         elevator.periodic();
