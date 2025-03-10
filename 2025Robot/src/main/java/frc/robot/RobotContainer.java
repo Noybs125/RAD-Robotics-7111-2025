@@ -4,6 +4,7 @@ import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -54,6 +55,7 @@ public class RobotContainer {
     xbox = new XboxController(0);
     driverController = new CommandXboxController(0);
     
+
     sensors = new Sensors();
     vision = new Vision(gyro);
     swerve = new Swerve(gyro, vision);
@@ -62,7 +64,25 @@ public class RobotContainer {
     flywheels = new Flywheels();
     //deepClimb = new Deepclimb();
     superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels, null);
-  
+
+    
+    NamedCommands.registerCommand("Coral Feeder", superStructure.setActualStateCommand(SuperStructure.ActualState.coralFeeder));
+    NamedCommands.registerCommand("L1 Center", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1).alongWith(superStructure.useCenterAlignment()));
+    NamedCommands.registerCommand("L2 Left", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2).alongWith(superStructure.useLeftAlignment()));
+    NamedCommands.registerCommand("L2 Right", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2).alongWith(superStructure.useRightAlignment()));
+    NamedCommands.registerCommand("L3 Left", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3).alongWith(superStructure.useLeftAlignment()));
+    NamedCommands.registerCommand("L3 Right", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3).alongWith(superStructure.useRightAlignment()));
+    NamedCommands.registerCommand("L4 Left", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4).alongWith(superStructure.useLeftAlignment()));
+    NamedCommands.registerCommand("L4 Right", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4).alongWith(superStructure.useRightAlignment()));
+
+    NamedCommands.registerCommand("L2 Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL2).alongWith(superStructure.useCenterAlignment()));
+    NamedCommands.registerCommand("L3 Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL3).alongWith(superStructure.useCenterAlignment()));
+    NamedCommands.registerCommand("Processor Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeProcessor));
+    NamedCommands.registerCommand("Net Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeNet));
+    
+    
+
+    
 
     autoChooser = AutoBuilder.buildAutoChooser();
     autoChooser.addOption("Custom", new PathPlannerAuto(field.generateAutoRoutine(field.getAutoCycles())));

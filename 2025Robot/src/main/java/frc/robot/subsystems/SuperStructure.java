@@ -233,13 +233,31 @@ public class SuperStructure extends SubsystemBase {
     }
 
     /**
-     * Runs the robotstate input. Uses runOnce, and {@link #setRobotState(ControlState)}.
+     * Sets the actualRobotState, this is used only in Auto
+     * @param state -Type "ActualState", actualRobotState is set equal to this
+     */
+    private void setActualState(ActualState state){
+        actualRobotState = state;
+
+    }
+
+    /**
+     * Runs the controlRobotState input. Uses runOnce, and {@link #setRobotState(ControlState)}.
      * @param state -The state used for setRobotState.
      * @return -Type "Command", an object used to run a command.
      * @see -Link to runOnce method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/Subsystem.html#runOnce(java.lang.Runnable).
      */
     public Command setRobotStateCommand(ControlState state){
         return runOnce(() -> setRobotState(state));
+    }
+    /**
+     * Runs the actualRobotState input. Uses runOnce, and {@link #setActualState(ActualState)}.
+     * @param state -The state used for setActualState.
+     * @return -Type "Command", an object used to run a command.
+     * @see -Link to runOnce method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/Subsystem.html#runOnce(java.lang.Runnable).
+     */
+    public Command setActualStateCommand(ActualState state) {
+        return runOnce(() -> setActualState(state));
     }
 
     /**
