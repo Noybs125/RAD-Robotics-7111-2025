@@ -1,15 +1,7 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorOutputStatusValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -17,8 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.kMechanisms;
-import frc.robot.utils.encoder.Encoder;
-import frc.robot.utils.encoder.RevEncoder;
 import frc.robot.utils.encoder.WpiEncoder;
 import frc.robot.utils.motor.ArmSimMotor;
 import frc.robot.utils.motor.CTREMotor;
@@ -138,9 +128,6 @@ public class Mechanisms extends SubsystemBase {
      * @see -Link to set(double) method: https://api.ctr-electronics.com/phoenix6/release/java/com/ctre/phoenix6/hardware/TalonFX.html#set(double).
      */
     public void setElevatorSpeed(double speed) {
-        if (speed == 0){
-            elevatorSetpoint = elevator.getPosition();
-        }
         if(elevator.getPosition() >= Constants.kMechanisms.elevatorMaxPosition){
             if(speed > 0){
                 speed = 0;
@@ -153,6 +140,10 @@ public class Mechanisms extends SubsystemBase {
                 }else if(speed < 0){
                     speed = 0;
                 }
+        }
+        if (speed == 0){
+            elevatorSetpoint = elevator.getPosition();
+            isManual = false;
         }
         elevator.setSpeed(speed);
         isManual = true;
@@ -176,6 +167,7 @@ public class Mechanisms extends SubsystemBase {
         }
         if(speed == 0){
             wristSetpoint = wrist.getPosition();
+            isManual = false;
         }
         wrist.setSpeed(speed);
     }
@@ -295,10 +287,10 @@ public class Mechanisms extends SubsystemBase {
     }
     public void periodic() {
         handleState();
-        if (isManual == false || elevator.isAtSetpoint(0.1) == false){
+        if (!isManual){
             elevator.setSetpoint(elevatorSetpoint, false);
         }
-        if (isManual == false || wrist.isAtSetpoint(0.01) == false){
+        if (!isManual){
             if(wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) > Constants.kMechanisms.maxWristSpeed){
                 wrist.setSpeed(Constants.kMechanisms.maxWristSpeed);
             }else if (wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) < -Constants.kMechanisms.maxWristSpeed){

@@ -223,7 +223,7 @@ public class Constants {
     public static final double maxWristPosition = 1;
     public static final double minWristPosition = -1;
 
-    public static final double maxWristSpeed = 0.3;
+    public static final double maxWristSpeed = 0.4;
     public static final SimpleMotorFeedforward wristFF = null;//new SimpleMotorFeedforward(0.12, 5.78, 0.08);
 
     public static PIDController elevatorPID = new PIDController(34, 0.0, 0.0);

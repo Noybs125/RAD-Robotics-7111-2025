@@ -156,7 +156,8 @@ public class SuperStructure extends SubsystemBase {
                     : ActualState.coralL4;
                 break;
             case SelectButton:
-                actualRobotState = ActualState.deepClimbRetracted;
+                //actualRobotState = ActualState.deepClimbRetracted;
+                actualRobotState = ActualState.stow;
                 break;
         
             case StartButton:
@@ -298,6 +299,7 @@ public class SuperStructure extends SubsystemBase {
      */
     private void coralFeeder(){
         mechanisms.setState(Mechanisms.MechanismsState.CoralFeeder);
+        flywheels.setSpeedState(Flywheels.WheelsStates.CoralIntake);
     }
 
     /**
@@ -330,10 +332,12 @@ public class SuperStructure extends SubsystemBase {
 
     private void stowCoral(){
         mechanisms.setState(Mechanisms.MechanismsState.StoreCoral);
+        flywheels.setSpeedState(Flywheels.WheelsStates.Custom);
     }
 
     private void stow(){
         mechanisms.setState(Mechanisms.MechanismsState.Store);
+        flywheels.setSpeedState(Flywheels.WheelsStates.Custom);
     }
 
     /**

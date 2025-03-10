@@ -121,6 +121,7 @@ public class RobotContainer {
     Trigger l2 = driverController.a();
     Trigger l3 = driverController.b();
     Trigger l4 = driverController.y();
+    Trigger stow = driverController.back();
 
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(),
@@ -148,7 +149,7 @@ public class RobotContainer {
     armUp.negate().and(armDown.negate()).onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0)));
 
     effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(1)));
-    effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(-0.1)));
+    effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(-0.25)));
     effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
     
 
@@ -156,6 +157,7 @@ public class RobotContainer {
     l2.onTrue(superStructure.setRobotStateCommand(ControlState.AButton));
     l3.onTrue(superStructure.setRobotStateCommand(ControlState.BButton));
     l4.onTrue(superStructure.setRobotStateCommand(ControlState.YButton));
+    stow.onTrue(superStructure.setRobotStateCommand(ControlState.SelectButton));
 
     leftReefAlign.onTrue(superStructure.useLeftAlignment());
     rightReefAlign.onTrue(superStructure.useRightAlignment());

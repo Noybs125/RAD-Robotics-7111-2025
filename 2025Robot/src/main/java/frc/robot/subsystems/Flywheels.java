@@ -12,11 +12,13 @@ public class Flywheels extends SubsystemBase {
      * State enum for the flywheels, states include "CoralIntake", "CoralOutake", "AlgaeIntake", "AlgaeOutake".
      * These states activate what motors on the end effector do what.
      */
-    private enum WheelsStates{
+    public enum WheelsStates{
         CoralIntake,
         CoralOutake,
         AlgaeIntake,
-        AlgaeOutake
+        AlgaeOutake,
+        Zero,
+        Custom,
     };
 
     /**
@@ -71,7 +73,11 @@ public class Flywheels extends SubsystemBase {
             case AlgaeOutake:
                 effectorWheels.setSpeed(-.5);
                 break;
-
+            case Zero:
+                effectorWheels.setSpeed(0);
+                break;
+            case Custom:
+                break;
             default:
                 break;
         }
