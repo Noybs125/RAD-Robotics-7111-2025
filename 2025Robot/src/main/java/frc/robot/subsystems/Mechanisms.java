@@ -295,7 +295,8 @@ public class Mechanisms extends SubsystemBase {
     }
     public void periodic() {
         handleState();
-        elevator.setSetpoint(elevatorSetpoint, false);
+        if (isManual == false || elevator.isAtSetpoint(0.1) == false){
+            elevator.setSetpoint(elevatorSetpoint, false);
         if (isManual == false || wrist.isAtSetpoint(0.01) == false){
             if(wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) > Constants.kMechanisms.maxWristSpeed){
                 wrist.setSpeed(Constants.kMechanisms.maxWristSpeed);
