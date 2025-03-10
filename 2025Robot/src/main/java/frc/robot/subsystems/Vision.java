@@ -81,14 +81,14 @@ public class Vision extends SubsystemBase{
     private void handleState(){
         switch (state) {
             case LeftReef:
-                tagAllignment = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
+                tagAllignment = new Transform2d(0.1, -1.2954, Rotation2d.fromDegrees(0));
                 break;
 
             case RightReef:
-                tagAllignment = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
+                tagAllignment = new Transform2d(0.1, 1.2954, Rotation2d.fromDegrees(0));
                 break;
             case CenterReef:
-                tagAllignment = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
+                tagAllignment = new Transform2d(0.1, 0, Rotation2d.fromDegrees(0));
                 break;
 
             case ReefL1:
@@ -96,11 +96,11 @@ public class Vision extends SubsystemBase{
                 break;
 
             case FeederStation:
-                tagAllignment = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
+                tagAllignment = new Transform2d(0, 0.1, Rotation2d.fromDegrees(0));
                 break;
 
             case Processor:
-                tagAllignment = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
+                tagAllignment = new Transform2d(0, 0.1, Rotation2d.fromDegrees(0));
                 break;
 
             case Climb:
