@@ -120,7 +120,7 @@ public class SuperStructure extends SubsystemBase {
             hasCoral = false;
         }
 
-        swerve.setSubtractedSpeed(mechanisms.getElevatorHeight());
+        swerve.setSubtractedSpeed(9);
         swerve.setRotationSetpoint(field.getNearestZone(swerve.getPose()).getRotation().getDegrees());
     }
 
