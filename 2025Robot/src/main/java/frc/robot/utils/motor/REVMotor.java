@@ -17,10 +17,13 @@ public class REVMotor implements Motor {
     private double gearRatio = 1;
     private SimpleMotorFeedforward feedForward;
     private double setPoint;
-    private Motor simType; 
-
+    private Motor simType;
+    private double currentSetpoint; 
+    private double positiveSpeedLimit = 1;
+    private double negativeSpeedLimit = -1;
+    
     public REVMotor (int id) {
-        motor = new SparkMax(id,MotorType.kBrushless);
+        motor = new SparkMax(id, MotorType.kBrushless);
 
     }
     
@@ -70,8 +73,16 @@ public class REVMotor implements Motor {
         double feedforwardOutput = feedForward != null
             ? feedForward.calculate(pid.getErrorDerivative())
             : 0;
-        motor.setVoltage(pidOutput + feedforwardOutput); //Needs velocity for feedforward
+        double output = pidOutput + feedforwardOutput;
+
         this.setPoint = setPoint;
+        if(output > positiveSpeedLimit){
+            output = positiveSpeedLimit;
+        }else if(output < negativeSpeedLimit){
+            output = negativeSpeedLimit;
+        }
+        motor.setVoltage(pidOutput + feedforwardOutput); //Needs velocity for feedforward
+        
     }
 
     public void periodic(){
@@ -109,6 +120,11 @@ public class REVMotor implements Motor {
 
     public void setFeedFoward(double kS, double kV, double kA){
         feedForward = new SimpleMotorFeedforward(kS, kV, kA);
+    }
+
+    public void setSpeedLimits(double positiveSpeedLimit, double negativeSpeedLimit){
+        this.positiveSpeedLimit = positiveSpeedLimit;
+        this.negativeSpeedLimit = negativeSpeedLimit;
     }
     
 }

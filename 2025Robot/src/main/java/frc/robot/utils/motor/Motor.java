@@ -55,6 +55,13 @@ public interface Motor {
     public PIDController getPID();
 
     /**
+     * Sets positive and negative speed limits to the motor
+     * @param positiveSpeed -Type "double", the speed limit in the positive direction
+     * @param negativeSpeed -Type "double", the speed limit in the negative direction
+     */
+    public void setSpeedLimits(double positiveSpeed, double negativeSpeed);
+
+    /**
      * Gets the motor encoder.
      * @return -Type "Encoder", gets the encoder object containing all of its parameters as an object.
      */

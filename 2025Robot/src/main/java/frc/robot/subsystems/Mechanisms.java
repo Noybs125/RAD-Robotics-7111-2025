@@ -77,6 +77,8 @@ public class Mechanisms extends SubsystemBase {
                 new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), Constants.kMechanisms.elevator2Config()));
 
         wrist = new CTREMotor(14, null, kMechanisms.wristGearRatio, Constants.kMechanisms.armPID, Constants.kMechanisms.wristFF, new ArmSimMotor(null, null, null, null), Constants.kMechanisms.wristConfig());
+
+        wrist.setSpeedLimits(Constants.kMechanisms.maxWristSpeed, -Constants.kMechanisms.maxWristSpeed);
     }
 
     /**
@@ -227,44 +229,36 @@ public class Mechanisms extends SubsystemBase {
      * States include: "ReefL1" through "ReefL4", "AlgaeL2" and "AlgaeL3", "AlgaeProcessor", "AlgaeNet", "Store", "CoralFeeder", and "Climb".
      */
     private void handleState() {
+        defaultState();
         switch (state) {
             case ReefL1:
-                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 setAllMechanismsSetpoint(0.31325, 0.154);
                 break;
                 
             case ReefL2:
-                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 setAllMechanismsSetpoint(0.39725, 0.425);
                 break;
 
             case ReefL3:
-                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 setAllMechanismsSetpoint(0.39725, 0.645);
                 break;
 
             case ReefL4:
-                moveElevThenArm(1.01, 0.40122, 0.3);
-                if(elevator.isAtSetpoint(0.15)){
-                    //elevatorMaxSpeed = 0.1;
-                    elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
-                }else{
-                    elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
+                moveElevThenArm(1.01, 0.40122, 0.2);
+                if(elevator.isAtSetpoint(0.25)){
+                    elevatorMaxSpeed = 0.1;
                 }
                 break;
 
             case AlgaeL2:
-                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 setAllMechanismsSetpoint(0, 0);
                 break;
 
             case AlgaeL3:
-                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 setAllMechanismsSetpoint(0, 0);
                 break;
 
             case AlgaeProcessor:
-                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 setAllMechanismsSetpoint(0.31325, 0.154);
                 break;
 
@@ -278,7 +272,6 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case Store:
-                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 if(elevator.getPosition() <= 0.55){
                     moveArmThenElev(0, 0, 0.01);
                 }else{
@@ -287,22 +280,18 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case StoreCoral:
-                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 moveElevThenArm(0.148, 0.31325, 0.05);
                 break;
 
             case CoralFeeder:
-                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 setAllMechanismsSetpoint(-0.06975, 0.18);
                 break;
 
             case Climb:
-                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 setAllMechanismsSetpoint(0, 0);
                 break;
             
             case Manual:
-                elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 break;
 
             default:
@@ -314,24 +303,10 @@ public class Mechanisms extends SubsystemBase {
     }
     public void periodic() {
         handleState();
+        elevator.setSpeedLimits(elevatorMaxSpeed, -elevatorMaxSpeed);
         if (!isManual){
-
-            if(elevator.getPID().calculate(elevator.getPosition(), elevatorSetpoint) > elevatorMaxSpeed){
-                elevator.setSpeed(elevatorMaxSpeed);
-            }else if(elevator.getPID().calculate(elevator.getPosition(), elevatorSetpoint) < -elevatorMaxSpeed){
-                elevator.setSpeed(-elevatorMaxSpeed);
-            }else{
-                elevator.setSetpoint(elevatorSetpoint, false);
-            }
-
-            if(wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) > Constants.kMechanisms.maxWristSpeed){
-                wrist.setSpeed(Constants.kMechanisms.maxWristSpeed);
-            }else if (wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) < -Constants.kMechanisms.maxWristSpeed){
-                wrist.setSpeed(-Constants.kMechanisms.maxWristSpeed);
-            }else{
-                wrist.setSetpoint(wristSetpoint, false);
-            }
-    
+            elevator.setSetpoint(elevatorSetpoint, false);
+            wrist.setSetpoint(wristSetpoint, false);
         }
 
         elevator.periodic();
@@ -339,6 +314,8 @@ public class Mechanisms extends SubsystemBase {
 
         SmartDashboard.putNumber("elevator Position", elevator.getPosition());
         SmartDashboard.putNumber("wrist Position", wrist.getPosition());
+        SmartDashboard.putBoolean("elevator isAtSetpoint", elevator.isAtSetpoint(0.01));
+        SmartDashboard.putBoolean("wrist isAtSetpoint", wrist.isAtSetpoint(0.01));
     }
 
     public void simulationPeriodic(){
@@ -348,5 +325,9 @@ public class Mechanisms extends SubsystemBase {
         SmartDashboard.putData("Mech2d", mech2d);
         SmartDashboard.putNumber("Elevator Pos", elevator.getPosition());
         SmartDashboard.putNumber("Wrist", wrist.getPosition());
+    }
+
+    private void defaultState(){
+        elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
     }
 }

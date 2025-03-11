@@ -6,12 +6,9 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import frc.robot.utils.encoder.Encoder;
-
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CTREMotor implements Motor {
     private TalonFX motor;
@@ -20,6 +17,8 @@ public class CTREMotor implements Motor {
     private Encoder encoder = null;
     private double gearRatio;
     private double currentSetpoint;
+    private double positiveSpeedLimit = 1;
+    private double negativeSpeedLimit = -1;
     private SimpleMotorFeedforward feedforward;
     private Motor simType;
     private int id;
@@ -85,14 +84,18 @@ public class CTREMotor implements Motor {
         
     
     public void setSetpoint(double setPoint, boolean useSimFF){
+        currentSetpoint = setPoint;
         double pidOutput = pid.calculate(getPosition(), setPoint);
-        
         double feedforwardOutput = feedforward != null 
             ? feedforward.calculate(pid.getErrorDerivative())
             : 0;
-
-        motor.setVoltage(pidOutput + feedforwardOutput); //Needs velocity for feedforward
-        currentSetpoint = setPoint;
+        double totalOutput = pidOutput + feedforwardOutput;
+        if(totalOutput > positiveSpeedLimit){
+            totalOutput = positiveSpeedLimit;
+        }else if(totalOutput < negativeSpeedLimit){
+            totalOutput = negativeSpeedLimit;
+        }
+        motor.setVoltage(totalOutput);
     }
 
     public void setPID(double p, double i, double d){
@@ -134,10 +137,16 @@ public class CTREMotor implements Motor {
         if (encoder != null){
             encoder.periodic();
         }
+        SmartDashboard.putNumber("Motor " + id + " setpoint", currentSetpoint);
 
         /*pid = new PIDController(
             motorPEntry.getDouble(0), 
             motorIEntry.getDouble(0), 
             motorDEntry.getDouble(0));*/
+    }
+
+    public void setSpeedLimits(double positiveSpeed, double negativeSpeed) {
+        positiveSpeedLimit = positiveSpeed;
+        negativeSpeedLimit = negativeSpeed;
     }
 }

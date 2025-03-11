@@ -73,4 +73,9 @@ public class TwoMotors implements Motor {
         motor1.setFeedFoward(kS, kV, kA);
         motor2.setFeedFoward(kS, kV, kA);
     }
+
+    public void setSpeedLimits(double positiveSpeed, double negativeSpeed) {
+        motor1.setSpeedLimits(positiveSpeed, negativeSpeed);
+        motor2.setSpeedLimits(positiveSpeed, negativeSpeed);
+    }
 }

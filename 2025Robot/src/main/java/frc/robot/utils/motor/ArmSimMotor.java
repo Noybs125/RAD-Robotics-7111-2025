@@ -89,4 +89,10 @@ public class ArmSimMotor implements Motor {
     public void setFeedFoward(double kS, double kV, double kA){
         feedforward = new ArmFeedforward(kS, feedforward.getKg(), kV, kA);
     }
+
+    @Override
+    public void setSpeedLimits(double positiveSpeed, double negativeSpeed) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setSpeedLimits'");
+    }
 }
