@@ -122,7 +122,7 @@ public class SuperStructure extends SubsystemBase {
 
         swerve.setSubtractedSpeed(.1);
         swerve.setRotationSetpoint(field.getNearestZone(swerve.getPose()).getRotation().getDegrees());
-        vision.getNearestReefTag(swerve.getPose());
+        //vision.getNearestReefTag(swerve.getPose());
     }
 
     /**
