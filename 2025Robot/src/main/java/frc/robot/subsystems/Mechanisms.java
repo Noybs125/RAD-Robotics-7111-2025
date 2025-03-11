@@ -244,9 +244,10 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case ReefL4:
-                setAllMechanismsSetpoint(0.40122, 1.01);
-                if(elevator.isAtSetpoint(0.35)){
-                    elevatorMaxSpeed = 0.1;
+                moveElevThenArm(1.01, 0.40122, 0.3);
+                if(elevator.isAtSetpoint(0.15)){
+                    //elevatorMaxSpeed = 0.1;
+                    elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 }else{
                     elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
                 }
@@ -315,12 +316,12 @@ public class Mechanisms extends SubsystemBase {
         handleState();
         if (!isManual){
 
-            if(elevator.getPID().calculate(elevator.getPosition(), elevatorSetpoint) > Constants.kMechanisms.elevatorMaxSpeed){
-                elevator.setSpeed(Constants.kMechanisms.elevatorMaxSpeed);
-            }else if(elevator.getPID().calculate(elevator.getPosition(), elevatorSetpoint) < -Constants.kMechanisms.elevatorMaxSpeed){
-                elevator.setSpeed(-Constants.kMechanisms.elevatorMaxSpeed);
+            if(elevator.getPID().calculate(elevator.getPosition(), elevatorSetpoint) > elevatorMaxSpeed){
+                elevator.setSpeed(elevatorMaxSpeed);
+            }else if(elevator.getPID().calculate(elevator.getPosition(), elevatorSetpoint) < -elevatorMaxSpeed){
+                elevator.setSpeed(-elevatorMaxSpeed);
             }else{
-                elevator.setSetpoint(elevatorSetpoint, false);   
+                elevator.setSetpoint(elevatorSetpoint, false);
             }
 
             if(wrist.getPID().calculate(wrist.getPosition(), wristSetpoint) > Constants.kMechanisms.maxWristSpeed){
