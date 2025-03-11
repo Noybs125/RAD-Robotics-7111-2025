@@ -68,16 +68,21 @@ public class RobotContainer {
 
     
     NamedCommands.registerCommand("Coral Feeder", superStructure.setActualStateCommand(SuperStructure.ActualState.coralFeeder));
-    NamedCommands.registerCommand("L1 Center", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1).alongWith(superStructure.useCenterAlignment()));
-    NamedCommands.registerCommand("L2 Left", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2).alongWith(superStructure.useLeftAlignment()));
-    NamedCommands.registerCommand("L2 Right", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2).alongWith(superStructure.useRightAlignment()));
-    NamedCommands.registerCommand("L3 Left", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3).alongWith(superStructure.useLeftAlignment()));
-    NamedCommands.registerCommand("L3 Right", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3).alongWith(superStructure.useRightAlignment()));
-    NamedCommands.registerCommand("L4 Left", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4).alongWith(superStructure.useLeftAlignment()));
-    NamedCommands.registerCommand("L4 Right", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4).alongWith(superStructure.useRightAlignment()));
+    NamedCommands.registerCommand("L1 Center", superStructure.useCenterAlignment().alongWith(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1)));
+    NamedCommands.registerCommand("L2 Left", superStructure.useLeftAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
+    NamedCommands.registerCommand("L2 Right", superStructure.useRightAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
+    NamedCommands.registerCommand("L3 Left", superStructure.useLeftAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3)));
+    NamedCommands.registerCommand("L3 Right", superStructure.useRightAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3)));
+    NamedCommands.registerCommand("L4 Left", superStructure.useLeftAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
+    NamedCommands.registerCommand("L4 Right", superStructure.useRightAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
 
-    NamedCommands.registerCommand("L2 Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL2).alongWith(superStructure.useCenterAlignment()));
-    NamedCommands.registerCommand("L3 Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL3).alongWith(superStructure.useCenterAlignment()));
+    NamedCommands.registerCommand("Score", new InstantCommand(() -> flywheels.setSpeed(-0.6)));
+    NamedCommands.registerCommand("Intake", new InstantCommand(() -> flywheels.setSpeed(1)));
+    NamedCommands.registerCommand("Stop Wheels", new InstantCommand(() -> flywheels.setSpeed(0)));
+
+
+    NamedCommands.registerCommand("L2 Algae", superStructure.useCenterAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL2)));
+    NamedCommands.registerCommand("L3 Algae", superStructure.useCenterAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL3)));
     NamedCommands.registerCommand("Processor Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeProcessor));
     NamedCommands.registerCommand("Net Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeNet));
     

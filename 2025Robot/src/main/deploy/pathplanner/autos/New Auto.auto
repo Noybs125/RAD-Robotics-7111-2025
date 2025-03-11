@@ -7,7 +7,73 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef 5 from 3"
+            "pathName": "Reef 3 from 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4 Right"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Wheels "
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Feeder"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef 3 to intake L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
           }
         }
       ]
