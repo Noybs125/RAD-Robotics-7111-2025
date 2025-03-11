@@ -346,6 +346,7 @@ public class SuperStructure extends SubsystemBase {
 
     private void stow(){
         mechanisms.setState(Mechanisms.MechanismsState.Store);
+        swerve.setState(swerveState);
     }
 
     /**
