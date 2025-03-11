@@ -122,6 +122,7 @@ public class SuperStructure extends SubsystemBase {
 
         swerve.setSubtractedSpeed(.1);
         swerve.setRotationSetpoint(field.getNearestZone(swerve.getPose()).getRotation().getDegrees());
+        vision.getNearestReefTag(swerve.getPose());
     }
 
     /**
@@ -340,12 +341,11 @@ public class SuperStructure extends SubsystemBase {
 
     private void stowCoral(){
         mechanisms.setState(Mechanisms.MechanismsState.StoreCoral);
-        flywheels.setSpeedState(Flywheels.WheelsStates.Custom);
+        swerve.setState(swerveState);
     }
 
     private void stow(){
         mechanisms.setState(Mechanisms.MechanismsState.Store);
-        flywheels.setSpeedState(Flywheels.WheelsStates.Custom);
     }
 
     /**
