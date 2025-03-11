@@ -35,7 +35,7 @@ public class Camera extends PhotonCamera{
     private Transform3d bestCameraToTarget;
     public EstimatedRobotPose estRobotPose;
     public int bestTargetId;
-    private AprilTagFieldLayout apriltagMap;
+    public AprilTagFieldLayout apriltagMap;
     private Pose2d newPose = new Pose2d();
     {
         try {
@@ -189,6 +189,15 @@ public class Camera extends PhotonCamera{
 
     public Transform3d getCameraToRobot(){
         return cameraToRobotCenter;
+    }
+
+    public PhotonTrackedTarget getTarget(int id){
+        for (PhotonTrackedTarget target : latestResult.getTargets()) {
+            if (target.getFiducialId() == id) {
+                return target;
+            }
+        }
+        return null;
     }
 }
 

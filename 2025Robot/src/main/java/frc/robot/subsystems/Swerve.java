@@ -223,10 +223,10 @@ public class Swerve extends SubsystemBase {
 		case Vision:
 			double rotMeasure = 0;
 			if(vision.frontCamera.getBestTarget() != null){
-			rotMeasure = vision.getRobotToTarget(vision.frontCamera.getBestTarget().getFiducialId()).getRotation().toRotation2d().getDegrees();
-			if(rotMeasure < 0){
-				rotMeasure += 360;
-			}
+				rotMeasure = vision.getRobotToTarget(vision.frontCamera.getTarget(vision.getWantedTarget()).getFiducialId()).getRotation().toRotation2d().getDegrees();
+				if(rotMeasure < 0){
+					rotMeasure += 360;
+				}
 			}
 			translateX = vision.frontCamera.getBestTarget() != null 
 				? translationVisionPID.calculate(vision.getRobotToTarget(vision.frontCamera.getBestTarget().getFiducialId()).getX(), vision.getTagAlignment().getX())

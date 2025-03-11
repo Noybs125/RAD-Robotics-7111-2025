@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,7 @@ public class Vision extends SubsystemBase{
     public Pose3d estPose3d = new Pose3d();
     private Transform2d tagAllignment = new Transform2d();
     private VisionState state = VisionState.Climb;
+    private int wantedTarget = 0;
 
     public final Camera frontCamera = new Camera(
         new PhotonCamera("OV9281_2"), 
@@ -44,6 +46,8 @@ public class Vision extends SubsystemBase{
         frontCamera,
         backCamera,
     };
+
+    public int[] reefTags = new int[]{6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
 
     /**
      * States for the vision state machine
@@ -207,5 +211,27 @@ public class Vision extends SubsystemBase{
 
     public Transform2d getTagAlignment(){
         return tagAllignment;
+    }
+
+    public void setWantedTarget(int id){
+        wantedTarget = id;
+    }
+    public int getWantedTarget(){
+        return wantedTarget;
+    }
+
+    public int getNearestReefTag(Pose2d pose){
+        List<Pose2d> poseList = new ArrayList<>();
+        for(int id : reefTags){
+            if(frontCamera.apriltagMap.getTagPose(id).isPresent())
+                poseList.add(frontCamera.apriltagMap.getTagPose(id).get().toPose2d());
+        }    
+        pose.nearest(poseList);
+        for(int tag : reefTags){
+            if(frontCamera.apriltagMap.getTagPose(frontCamera.apriltagMap.getTags().get(tag).ID).get().toPose2d().getTranslation().equals(pose.getTranslation())){
+                return tag;
+            }
+        }
+        return 0;
     }
 }
