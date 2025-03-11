@@ -19,7 +19,7 @@ public class SuperStructure extends SubsystemBase {
     private Sensors sensors;
     private Mechanisms mechanisms;
     private Flywheels flywheels; 
-    private ActualState actualRobotState;
+    private ActualState actualRobotState = ActualState.stow;
     private ControlState controlRobotState;
     private Pose2d nearestZone;
     public boolean hasCoral;
