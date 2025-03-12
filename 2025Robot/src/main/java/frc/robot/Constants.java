@@ -226,9 +226,9 @@ public class Constants {
     public static final double elevatorMaxHeight = 8;
 
     /** Minimum safe height for the elevator so that the wrist can move to  mechanical limits, in scale of percent of max height */
-    public static final double elevatorMinSafeWristHeight = 0.38; //currently set to 3 ft high
+    public static final double elevatorMinSafeWristHeight = (1+2/3) / elevatorMaxHeight; //currently set to 20 inches high, theoretical limit is 16 inches
 
-    /** Maximum height the elevator can be before restricting the wrist rotation speed */
+    /** Maximum height the elevator can be before restricting the wrist max rotation speed */
     public static final double elevatorMaxSafeWristHeight = 0.65; //currently set to 5.2 ft
 
     /** Max height elevator will be allowed to move full speed */
@@ -236,17 +236,22 @@ public class Constants {
 
     // Safe rotation range at any height is between these two variables, min being away from deep climb module and max being towards it.
     /** Min safe rotation for the wrist before the elevator could let it hit the robot, going past this variable (in rotations) is a risk for hitting the robot's frame */
-    public static final double wristMinSafeRotation = -0.25; //-90 digrees of rotation
-    /** Max safe rotation for the wrist before the elevator could let it hit the robot, going past this variable (in rotations) is a risk for hitting the deep climb module or robot's frame */
-    public static final double wristMaxSafeRotation = 0.2; //70 digrees of rotation
+    public static final double wristMinSafeRotation = -0.2; //-90 digrees of rotation
 
-    //mechanical limits of elevator
+    /** Max safe rotation for the wrist before the elevator could let it hit the robot, going past this variable (in rotations) is a risk for hitting the deep climb module or robot's frame */
+    public static final double wristMaxSafeRotation = 0.15; //70 digrees of rotation
+
+    // Multiplier for the maximum speed of the wrist and elevator, in percent of max speed
+    public static final double maxWristReducedSpeed = 0.30; //30% currently
+    public static final double maxElevReducedSpeed = 0.30; //30% currently
+
+    //mechanical limits of elevator, multiply by elevatorMaxHeight to get the height of the robot in feet
     public static final double elevatorMaxPosition = 1.15;
     public static final double elevatorMinPosition = 0.01;
 
-    //mechanical limits of wrist
-    public static final double maxWristPosition = 1;
-    public static final double minWristPosition = -1;
+    //mechanical limits of wrist in rotations
+    public static final double maxWristPosition = 0.25; //90 digrees toward deep climb module
+    public static final double minWristPosition = -0.5; //180 digrees away from deep climb module
 
     public static final double maxWristSpeed = 0.34;
     public static final SimpleMotorFeedforward wristFF = null;//new SimpleMotorFeedforward(0.12, 5.78, 0.08);

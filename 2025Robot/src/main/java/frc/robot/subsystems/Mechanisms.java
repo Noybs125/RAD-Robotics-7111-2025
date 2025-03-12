@@ -29,6 +29,8 @@ public class Mechanisms extends SubsystemBase {
     private double upperLimit;
     private MechanismsState state = MechanismsState.Store;
     private double elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
+    private double maxWristSpeed;
+    private double maxElevatorSpeed;
 
     /**
      * States for choosing what position to set mechanisms to.
@@ -172,7 +174,15 @@ public class Mechanisms extends SubsystemBase {
             wristSetpoint = wrist.getPosition();
             isManual = false;
         }
-        wrist.setSpeed(speed);
+        
+        if(speed <= kMechanisms.maxWristSpeed * maxWristSpeed)
+        {
+            wrist.setSpeed(speed);
+        }
+        else
+        {
+            wrist.setSpeed(kMechanisms.maxWristSpeed * maxWristSpeed);
+        }
     }
 
     /**
@@ -309,6 +319,9 @@ public class Mechanisms extends SubsystemBase {
             wrist.setSetpoint(wristSetpoint, false);
         }
 
+        // Full speed for wrist and elevator default
+        maxWristSpeed = 1;
+        maxElevatorSpeed = 1;
         // Safety booleans for safty logic
         // Order of what moves and if it should reduce maximum speed
         boolean unsafeWrist = false;
@@ -404,6 +417,23 @@ public class Mechanisms extends SubsystemBase {
             //move the arm first, letting it get out of the way, and let the elevator move after.
             moveArmThenElev(wristSetpoint, elevatorSetpoint, 0);
         }
+
+        //if the wrist is high enough to cause issues at max speed,
+        if(unsafeWristSpeeds == true)
+        {
+            //reduce it to the reduced speed limit.
+            maxWristSpeed = kMechanisms.maxWristReducedSpeed;
+        }
+        //if the elevator is high enough to cause issues at max speed,
+        if(unsafeElevSpeeds == true)
+        {
+            //reduce it to the reduced speed limit.
+            maxElevatorSpeed = kMechanisms.maxElevReducedSpeed;
+        }
+
+        // Sets the speed of the wrist and elevator to the decided max speed
+        wrist.setSpeedLimits(maxWristSpeed, -maxWristSpeed);
+        elevator.setSpeedLimits(maxElevatorSpeed, -maxElevatorSpeed);
 
         /*NOTE:
          *if the elevator or wrist is denied from moving, the setpoint for them will be equal to the current position they are in.
