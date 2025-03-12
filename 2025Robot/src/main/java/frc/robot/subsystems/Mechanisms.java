@@ -27,7 +27,7 @@ public class Mechanisms extends SubsystemBase {
     private boolean isManual = false;
     private double lowerLimit;
     private double upperLimit;
-    private MechanismsState state = MechanismsState.Store;
+    private MechanismsState state = MechanismsState.Default;
     private double elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
     private double maxWristSpeed = kMechanisms.maxWristSpeed;
     private double maxElevatorSpeed = kMechanisms.elevatorMaxSpeed;
@@ -50,6 +50,7 @@ public class Mechanisms extends SubsystemBase {
         CoralFeeder,
         Climb,
         Manual,
+        Default,
     };
 
     private double elevatorMinimumLength = 0.14925;
@@ -234,7 +235,7 @@ public class Mechanisms extends SubsystemBase {
         if(wrist.isAtSetpoint(deadzone)){
             setElevatorSetpoint(elevatorSetpoint);
         }else{
-            setWristSetpoint(this.elevatorSetpoint);
+            setElevatorSetpoint(this.elevatorSetpoint);
         }
     } 
 
@@ -262,13 +263,13 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case ReefL3:
-                moveElevThenArm(0.645, 0.39725, 0.05);
+                moveElevThenArm(0.645, 0.39725, 0.01);
                 break;
 
             case ReefL4:
                 moveElevThenArm(1.01, 0.40122, 0.2);
-                if(elevator.isAtSetpoint(0.25)){
-                    elevatorMaxSpeed = 0.1;
+                if(elevator.isAtSetpoint(0.2)){
+                    elevatorMaxSpeed = 0.25;
                 }else{
                     elevatorMaxSpeed = kMechanisms.elevatorMaxSpeed;
                 }

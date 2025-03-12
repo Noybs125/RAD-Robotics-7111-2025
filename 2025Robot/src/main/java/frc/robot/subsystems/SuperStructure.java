@@ -19,7 +19,7 @@ public class SuperStructure extends SubsystemBase {
     private Sensors sensors;
     private Mechanisms mechanisms;
     private Flywheels flywheels; 
-    private ActualState actualRobotState = ActualState.stow;
+    private ActualState actualRobotState = ActualState.defaultState;
     private ControlState controlRobotState;
     private Pose2d nearestZone;
     public boolean hasCoral;
@@ -93,7 +93,7 @@ public class SuperStructure extends SubsystemBase {
         this.deepClimb = deepClimb;
 
         controlRobotState = ControlState.Default;
-        actualRobotState = ActualState.stow;
+        actualRobotState = ActualState.defaultState;
         nearestZone = field.getNearestZone(swerve.getPose());
     }
 

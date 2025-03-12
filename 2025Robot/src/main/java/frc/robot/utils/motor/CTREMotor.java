@@ -140,6 +140,7 @@ public class CTREMotor implements Motor {
             encoder.periodic();
         }
         SmartDashboard.putNumber("Motor " + id + " setpoint", currentSetpoint);
+        SmartDashboard.putBoolean("Motor " + id + " isAtSetpoint", isAtSetpoint(0.05));
 
         /*pid = new PIDController(
             motorPEntry.getDouble(0), 

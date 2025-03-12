@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.motor.CTREMotor;
@@ -54,5 +55,10 @@ public class Deepclimb extends SubsystemBase {
     }
     public void setSpeed(double speed) {
         climbMotor.setSpeed(speed);
+    }
+
+    public void periodic()
+    {
+        SmartDashboard.putNumber("DeepClimbPose", climbMotor.getPosition());
     }
 }

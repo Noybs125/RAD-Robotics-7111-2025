@@ -354,12 +354,12 @@ public class Field extends SubsystemBase {
      * Periodic function called 50 times per second
      */
     public void periodic() {
-        //field.setRobotPose(swerve.getPose());
+        field.setRobotPose(swerve.getPose());
         SmartDashboard.putNumber("robot x", swerve.getPose().getX());
         SmartDashboard.putNumber("robot y", swerve.getPose().getY());
         SmartDashboard.putNumber("robot yaw", swerve.getPose().getRotation().getDegrees());
 
-        field.setRobotPose(xEntry.getDouble(0), yEntry.getDouble(0), Rotation2d.fromDegrees(yawEntry.getDouble(0)));
+        //field.setRobotPose(xEntry.getDouble(0), yEntry.getDouble(0), Rotation2d.fromDegrees(yawEntry.getDouble(0)));
         
         if (Pathfinding.isNewPathAvailable()){
             path = Pathfinding.getCurrentPath(Constants.kAuto.constraints, endState);
