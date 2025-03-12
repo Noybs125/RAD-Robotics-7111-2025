@@ -41,8 +41,16 @@ import edu.wpi.first.wpilibj.Joystick;
 public class Constants {
   public static class kVision {
     // TODO: change variable names on actual robot
-    public static final Transform3d cameraToRobotCenter2 = new Transform3d(-5.625, 11.5, 11.895, new Rotation3d(0, 0, -.261));
-    public static final Transform3d cameraToRobotCenter1 = new Transform3d(-6.5, -4.75, 0, new Rotation3d(0, 0.0873, 3.1416));
+    public static final Transform3d cameraToRobotCenter2 = new Transform3d(
+        Units.inchesToMeters(-5.625), 
+        Units.inchesToMeters(11.5), 
+        Units.inchesToMeters(11.895), 
+        new Rotation3d(0, 0, Units.degreesToRadians(-22.8)));
+    public static final Transform3d cameraToRobotCenter1 = new Transform3d(
+        Units.inchesToMeters(-6.5), 
+        Units.inchesToMeters(-4.75), 
+        0, 
+        new Rotation3d(0, 0.0873, 3.1416));
 
     public static final double cameraHeight = Units.inchesToMeters(0);
 
@@ -107,8 +115,8 @@ public class Constants {
   /** All swerve constants. */
   public static class kSwerve {
     /* Constants that apply to the whole drive train. */
-    public static final double TRACK_WIDTH = Units.inchesToMeters(17.42); // Width of the drivetrain measured from the middle of the wheels.
-    public static final double WHEEL_BASE = Units.inchesToMeters(19.65); // Length of the drivetrain measured from the middle of the wheels.
+    public static final double TRACK_WIDTH = Units.inchesToMeters(21.25); // Width of the drivetrain measured from the middle of the wheels.
+    public static final double WHEEL_BASE = Units.inchesToMeters(23.25); // Length of the drivetrain measured from the middle of the wheels.
     public static final double MODULE_TO_CENTER = Units.inchesToMeters(13.95); // Distance from the center of the module to the center of the robot
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
     public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
@@ -287,8 +295,8 @@ public class Constants {
     public static final PathConstraints constraints = new PathConstraints(MAX_VELOCITY_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED, MAX_ANGULAR_RADIANS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED);
 
     public static final int numModules = 4;
-    public static final double massKgs = Units.lbsToKilograms(92);
-    public static final double MOI = massKgs * (kSwerve.WHEEL_BASE * kSwerve.TRACK_WIDTH);
+    public static final double massKgs = Units.lbsToKilograms(138);
+    public static final double MOI = massKgs * (Units.inchesToMeters(28) * Units.inchesToMeters(30));
     public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND,
         0.8, DCMotor.getKrakenX60(1), kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT, 1);
 
@@ -303,8 +311,10 @@ public class Constants {
     public static final RobotConfig config = new RobotConfig(massKgs, MOI, moduleConfig, moduleLocations);
 
     public static final PPHolonomicDriveController cont = new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(13, 0.0001, 0.022), // Translation PID constants
-                    new PIDConstants(9.15, 0.09, 0.9) // Rotation PID constants
+                    //new PIDConstants(13, 0.0001, 0.022), // Translation PID constants
+                    //new PIDConstants(9.15, 0.09, 0.9) // Rotation PID constants
+                    new PIDConstants(8, 0.0, 0.0001),
+                    new PIDConstants(5, 0.0, 0.0)
             );
 
     

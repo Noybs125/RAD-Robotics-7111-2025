@@ -6,7 +6,10 @@ import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.commands.PathfindThenFollowPath;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -14,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Field;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Field.FieldSetpoint;
 import frc.robot.subsystems.Mechanisms.MechanismsState;
 import frc.robot.subsystems.SuperStructure.ActualState;
 import frc.robot.subsystems.SuperStructure.ControlState;
@@ -129,6 +133,8 @@ public class RobotContainer {
     Trigger l4 = driverController.y();
     Trigger stow = driverController.back();
 
+    Command reef4Right = field.pathfindToSetpoint(FieldSetpoint.Reef4);
+
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(),
       () -> swerve.getTransX(),
@@ -165,10 +171,11 @@ public class RobotContainer {
     l4.onTrue(superStructure.setRobotStateCommand(ControlState.YButton));
     stow.onTrue(superStructure.setRobotStateCommand(ControlState.SelectButton));
 
-    leftReefAlign.onTrue(superStructure.useLeftAlignment());
-    rightReefAlign.onTrue(superStructure.useRightAlignment());
-    centerReefAlign.onTrue(superStructure.useCenterAlignment());
-    leftReefAlign.negate().and(rightReefAlign.negate()).and(centerReefAlign.negate()).onTrue(superStructure.useNoAlignment());
+    //leftReefAlign.onTrue(superStructure.useLeftAlignment());
+    //rightReefAlign.onTrue(superStructure.useRightAlignment());
+    //centerReefAlign.onTrue(superStructure.useCenterAlignment());
+    //leftReefAlign.negate().and(rightReefAlign.negate()).and(centerReefAlign.negate()).onTrue(superStructure.useNoAlignment());
+    rightReefAlign.onTrue(reef4Right.until(() -> reef4Right.isFinished())).onFalse(new InstantCommand(() -> reef4Right.cancel()));
 
     // change or remove each of these when we decide controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());

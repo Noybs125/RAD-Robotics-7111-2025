@@ -82,6 +82,8 @@ public class Camera extends PhotonCamera{
             }
             estRobotPose = estPose.get();
         }
+
+        SmartDashboard.putNumber("camera " + getName() + " yaw", photonPoseEstimator.getRobotToCameraTransform().getRotation().getZ());
     }
 
     public boolean canSeeTarget(int id){
@@ -146,7 +148,7 @@ public class Camera extends PhotonCamera{
      * @return The Robot Pose transformed by the distance from camera to Robot Center.
      */
     public Pose2d getRobotPose(){
-        newPose = estRobotPose.estimatedPose.transformBy(cameraToRobotCenter).toPose2d();
+        newPose = estRobotPose.estimatedPose.toPose2d();
         return newPose;
     }
     /**

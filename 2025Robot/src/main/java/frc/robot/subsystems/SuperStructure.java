@@ -93,7 +93,7 @@ public class SuperStructure extends SubsystemBase {
         this.deepClimb = deepClimb;
 
         controlRobotState = ControlState.Default;
-        actualRobotState = ActualState.defaultState;
+        actualRobotState = ActualState.stow;
         nearestZone = field.getNearestZone(swerve.getPose());
     }
 
@@ -120,7 +120,7 @@ public class SuperStructure extends SubsystemBase {
             hasCoral = false;
         }
 
-        swerve.setSubtractedSpeed(.1);
+        swerve.setSubtractedSpeed(mechanisms.getElevatorHeight());
         swerve.setRotationSetpoint(field.getNearestZone(swerve.getPose()).getRotation().getDegrees());
         //vision.getNearestReefTag(swerve.getPose());
     }

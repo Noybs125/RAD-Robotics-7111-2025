@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -171,7 +172,7 @@ public class Field extends SubsystemBase {
                 poseSetpoint = new Pose2d(5.09, 5.11, Rotation2d.fromDegrees(-120));
                 break;
             case Reef4:
-                poseSetpoint = new Pose2d(5.71, 4.02, Rotation2d.fromDegrees(-180));
+                poseSetpoint = new Pose2d(5.786, 4.147, Rotation2d.fromDegrees(-179.8));
                 break;
             case Reef5:
                 poseSetpoint = new Pose2d(5.11, 2.99, Rotation2d.fromDegrees(120));
@@ -330,10 +331,14 @@ public class Field extends SubsystemBase {
      */
     public void periodic() {
         field.setRobotPose(swerve.getPose());
+        SmartDashboard.putNumber("robot x", swerve.getPose().getX());
+        SmartDashboard.putNumber("robot y", swerve.getPose().getY());
+        SmartDashboard.putNumber("robot yaw", swerve.getPose().getRotation().getDegrees());
         
         if (Pathfinding.isNewPathAvailable()){
             path = Pathfinding.getCurrentPath(Constants.kAuto.constraints, endState);
-        }
+            swerve.setUseVisionPose(false);
+        }else swerve.setUseVisionPose(true);
     
         if (path != null) {
             fieldObjectPose.setPoses(path.getPathPoses());

@@ -71,9 +71,51 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Reef 2 from intake R"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": null
+            "name": "L4 Left"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Wheels "
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Feeder"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         }
       ]

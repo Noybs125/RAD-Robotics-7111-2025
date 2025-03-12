@@ -85,14 +85,16 @@ public class Vision extends SubsystemBase{
     private void handleState(){
         switch (state) {
             case LeftReef:
-                tagAllignment = new Transform2d(0.1, -1.2954, Rotation2d.fromDegrees(0));
+                tagAllignment = new Transform2d(0.53, -0.133, Rotation2d.fromDegrees(0));
+                //tagAllignment = new Transform2d();
                 break;
 
             case RightReef:
-                tagAllignment = new Transform2d(0.1, 1.2954, Rotation2d.fromDegrees(0));
+                tagAllignment = new Transform2d(0.489, 0.188, Rotation2d.fromDegrees(0));
                 break;
+
             case CenterReef:
-                tagAllignment = new Transform2d(0.1, 0, Rotation2d.fromDegrees(0));
+                tagAllignment = new Transform2d(0.51, 0.029, Rotation2d.fromDegrees(0));
                 break;
 
             case ReefL1:
@@ -126,13 +128,14 @@ public class Vision extends SubsystemBase{
      * @see -getCameraToRobot is located under frc.robot.utils.Camera.
      */
     public void periodic(){
+        SmartDashboard.putNumber("tag y", tagAllignment.getY());
         Optional<EstimatedRobotPose> estPose = null;
 
          for(Camera camera : cameraList){
             if(camera.getEstimatedGlobalPose(robotPose) != null){
                 estPose = camera.getEstimatedGlobalPose(robotPose);
             }
-            robotPose = camera.estRobotPose.estimatedPose.transformBy(camera.getCameraToRobot()).toPose2d();
+            robotPose = camera.estRobotPose.estimatedPose.toPose2d();
             if(estPose != null){
                 if(estPose.isPresent()){
                     camera.estRobotPose = estPose.get();
@@ -140,6 +143,16 @@ public class Vision extends SubsystemBase{
             }
 
             camera.periodic();
+        }
+        
+        if (frontCamera.latestResult != null) {
+            if(frontCamera.latestResult.hasTargets()){
+                Pose3d cameraPose = frontCamera.getCameraPose().transformBy(frontCamera.getBestTarget().getBestCameraToTarget());
+                SmartDashboard.putNumber("target x", cameraPose.getX());
+                SmartDashboard.putNumber("target y", cameraPose.getY());
+                SmartDashboard.putNumber("target z", cameraPose.getZ());
+                SmartDashboard.putNumber("target yaw", frontCamera.getBestTarget().yaw); 
+            }
         }
         handleState();
     }

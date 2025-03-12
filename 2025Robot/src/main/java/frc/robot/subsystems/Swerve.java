@@ -6,6 +6,7 @@ import java.util.function.DoubleSupplier;
 import com.studica.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -62,8 +63,9 @@ public class Swerve extends SubsystemBase {
 	private double difference = 0;
 
 	private boolean isFieldRelative = true;
+	private boolean useVisionPose = true;
 
-	/**
+		/**
 		 * The SwerveState of robot, which should be determined on field position & the beam break.
 		 * States include: "DefaultState", "Intaking", "Scoring", "RobotRelative", "VisionGyro", "Vision", "LowerSpeed", "leftAlignment", "rightAlignment", & "centerAlignment".
 		 */
@@ -231,8 +233,8 @@ public class Swerve extends SubsystemBase {
 			translateX = vision.frontCamera.getBestTarget() != null 
 				? translationVisionPID.calculate(vision.getRobotToTarget(vision.frontCamera.getBestTarget().getFiducialId()).getX(), vision.getTagAlignment().getX())
 				: 0;
-			translateY = vision.frontCamera.getBestTarget() != null 
-				? translationVisionPID.calculate(vision.getRobotToTarget(vision.frontCamera.getBestTarget().getFiducialId()).getY(), vision.getTagAlignment().getY())
+			translateY = vision.frontCamera.getBestTarget() != null
+				? -translationVisionPID.calculate(vision.getRobotToTarget(vision.frontCamera.getBestTarget().getFiducialId()).getY(), vision.getTagAlignment().getY())
 				: 0;
 			rotationZ = rotVisionPID.calculate(rotMeasure, vision.getTagAlignment().getRotation().getDegrees());
 			isFieldRelative = false;
@@ -243,9 +245,10 @@ public class Swerve extends SubsystemBase {
 				? translationVisionPID.calculate(vision.getRobotToTarget(vision.frontCamera.getBestTarget().getFiducialId()).getX(), vision.getTagAlignment().getX())
 				: 0;
 			translateY = vision.frontCamera.getBestTarget() != null 
-				? translationVisionPID.calculate(vision.getRobotToTarget(vision.frontCamera.getBestTarget().getFiducialId()).getY(), vision.getTagAlignment().getY())
+				? -translationVisionPID.calculate(vision.getRobotToTarget(vision.frontCamera.getBestTarget().getFiducialId()).getY(), vision.getTagAlignment().getY())
 				: 0;
 			rotationZ = gyroPID.calculate(gyro.getYaw(), rotationSetpoint);
+			rotationZ = 0;
 			isFieldRelative = false;
 			break;
 
@@ -426,11 +429,13 @@ public class Swerve extends SubsystemBase {
 	@Override 
 	public void periodic() {
 		swerveOdometry.update(getAngle(), getInvertedPositions());
-		for(Camera camera : vision.cameraList){
-			if(camera.updatePose()){
-				swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
+		if(useVisionPose){
+			for(Camera camera : vision.cameraList){
+				if(camera.updatePose()){
+					swerveOdometry.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp(), camera.getPoseAmbiguity());
+				}
 			}
-		}
+		}	
 
 		//threshold
 		if(difference <= 0.15){
@@ -500,5 +505,8 @@ public class Swerve extends SubsystemBase {
 
 	public void setRotationSetpoint(double setpoint){
 		rotationSetpoint = setpoint;
+	}
+	public void setUseVisionPose(boolean bool){
+		useVisionPose = bool;
 	}
 }
