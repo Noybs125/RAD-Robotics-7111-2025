@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Deepclimb;
 import frc.robot.subsystems.Field;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Field.FieldSetpoint;
@@ -50,7 +51,7 @@ public class RobotContainer {
   public final Flywheels flywheels;
   public final SuperStructure superStructure;
   public final Sensors sensors;
-  //public final Deepclimb deepClimb;
+  public final Deepclimb deepClimb;
 
   public final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
@@ -67,8 +68,8 @@ public class RobotContainer {
     field = new Field(swerve);
     mechanisms = new Mechanisms();
     flywheels = new Flywheels();
-    //deepClimb = new Deepclimb();
-    superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels, null);
+    deepClimb = new Deepclimb();
+    superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels, deepClimb);
 
     
     NamedCommands.registerCommand("Coral Feeder", superStructure.setActualStateCommand(SuperStructure.ActualState.coralFeeder));
@@ -123,6 +124,8 @@ public class RobotContainer {
     Trigger armDown = operatorController.povLeft();
     Trigger effectorIntake = operatorController.rightStick();
     Trigger effectorScore = operatorController.leftStick();
+    Trigger climbUp = driverController.povUp();
+    Trigger climbDown = driverController.povDown();
 
     Trigger zeroGyro = driverController.start();
 
@@ -162,6 +165,10 @@ public class RobotContainer {
     effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(1)));
     effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(-0.6)));
     effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
+
+    climbUp.onTrue(new InstantCommand(() -> deepClimb.setSpeed(1)));
+    climbDown.onTrue(new InstantCommand(() -> deepClimb.setSpeed(-1)));
+    climbDown.negate().and(climbUp.negate()).onTrue(new InstantCommand(() -> deepClimb.setSpeed(0)));
     
 
     l1.onTrue(superStructure.setRobotStateCommand(ControlState.XButton));

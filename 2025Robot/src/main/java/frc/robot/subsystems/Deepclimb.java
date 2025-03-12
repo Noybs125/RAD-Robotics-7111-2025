@@ -4,12 +4,13 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.utils.motor.CTREMotor;
 import frc.robot.utils.motor.Motor;
 
 public class Deepclimb extends SubsystemBase {
     
-    public Motor climbMotor;
+    public CTREMotor climbMotor;
     public TalonFXConfiguration climbMotorConfigs;
 
     private ClimbStates climbstate;
@@ -29,7 +30,7 @@ public class Deepclimb extends SubsystemBase {
     public Deepclimb(){
         this.climbMotorConfigs = new TalonFXConfiguration();
         climbMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        this.climbMotor = new CTREMotor(0, null, 64, null, null, climbMotor, climbMotorConfigs);
+        this.climbMotor = new CTREMotor(5, null, 64, Constants.kMechanisms.deepClimbPID, Constants.kMechanisms.deepClimbFF, climbMotor, climbMotorConfigs);
     }
 
     /**
@@ -50,5 +51,8 @@ public class Deepclimb extends SubsystemBase {
             default:
                 break;
         }
+    }
+    public void setSpeed(double speed) {
+        climbMotor.setSpeed(speed);
     }
 }

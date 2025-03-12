@@ -255,9 +255,11 @@ public class Constants {
 
     public static final double maxWristSpeed = 0.34;
     public static final SimpleMotorFeedforward wristFF = null;//new SimpleMotorFeedforward(0.12, 5.78, 0.08);
+    public static final SimpleMotorFeedforward deepClimbFF = null;
 
     public static PIDController elevatorPID = new PIDController(34, 0.65, 0.0);
     public static PIDController armPID = new PIDController(25, 0.0, 0.0);
+    public static PIDController deepClimbPID = new PIDController(0, 0, 0);
 
     /** Motor Configurations */
 
