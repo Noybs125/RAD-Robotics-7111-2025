@@ -40,7 +40,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
-  public final XboxController xbox;
+  public final CommandXboxController operatorController;
   public final CommandXboxController driverController;
 
   public final Swerve swerve;
@@ -57,7 +57,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
-    xbox = new XboxController(0);
+    operatorController = new CommandXboxController(1);
     driverController = new CommandXboxController(0);
     
 
@@ -117,21 +117,20 @@ public class RobotContainer {
     Trigger leftReefAlign = driverController.leftTrigger().and(driverController.rightTrigger().negate());
     Trigger rightReefAlign = driverController.rightTrigger().and(leftReefAlign.negate());
     Trigger centerReefAlign = leftReefAlign.and(rightReefAlign);
-    Trigger elevatorUp = driverController.povUp();
-    Trigger elevatorDown = driverController.povDown();
-    Trigger armUp = driverController.povRight();
-    Trigger armDown = driverController.povLeft();
-    Trigger effectorIntake = driverController.rightStick();
-    Trigger effectorScore = driverController.leftStick();
+    Trigger elevatorUp = operatorController.povUp();
+    Trigger elevatorDown = operatorController.povDown();
+    Trigger armUp = operatorController.povRight();
+    Trigger armDown = operatorController.povLeft();
+    Trigger effectorIntake = operatorController.rightStick();
+    Trigger effectorScore = operatorController.leftStick();
 
     Trigger zeroGyro = driverController.start();
-    Trigger resetOdometry = driverController.a();
 
-    Trigger l1 = driverController.x();
-    Trigger l2 = driverController.a();
-    Trigger l3 = driverController.b();
-    Trigger l4 = driverController.y();
-    Trigger stow = driverController.back();
+    Trigger l1 = operatorController.x();
+    Trigger l2 = operatorController.a();
+    Trigger l3 = operatorController.b();
+    Trigger l4 = operatorController.y();
+    Trigger stow = operatorController.back();
 
     Command reef4Right = field.pathfindToSetpoint(FieldSetpoint.Reef4, false, true);
 
@@ -179,6 +178,5 @@ public class RobotContainer {
 
     // change or remove each of these when we decide controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());
-    resetOdometry.onTrue(swerve.resetOdometryCommand());
   }
 }
