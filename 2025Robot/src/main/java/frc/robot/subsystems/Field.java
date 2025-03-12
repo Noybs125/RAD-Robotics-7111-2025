@@ -181,27 +181,27 @@ public class Field extends SubsystemBase {
     public Command pathfindToSetpoint(FieldSetpoint state, boolean left, boolean right) {
         switch (state) {
             case Reef1:
-                poseSetpoint = new Pose2d(3.18, 4.05, Rotation2d.fromDegrees(0));
+                poseSetpoint = new Pose2d(3.16, 4.05, Rotation2d.fromDegrees(0));
                 transformBy(poseSetpoint, left, right);
                 break;
             case Reef2:
-                poseSetpoint = new Pose2d(3.85, 5.11, Rotation2d.fromDegrees(-60));
+                poseSetpoint = new Pose2d(3.87, 5.20, Rotation2d.fromDegrees(-60));
                 transformBy(poseSetpoint, left, right);
                 break;
             case Reef3:
-                poseSetpoint = new Pose2d(5.09, 5.11, Rotation2d.fromDegrees(-120));
+                poseSetpoint = new Pose2d(5.15, 5.18, Rotation2d.fromDegrees(-120));
                 transformBy(poseSetpoint, left, right);
                 break;
             case Reef4:
-                poseSetpoint = new Pose2d(5.786, 4.147, Rotation2d.fromDegrees(-179.8));
+                poseSetpoint = new Pose2d(5.86, 4.00, Rotation2d.fromDegrees(-180));
                 transformBy(poseSetpoint, left, right);
                 break;
             case Reef5:
-                poseSetpoint = new Pose2d(5.11, 2.99, Rotation2d.fromDegrees(120));
+                poseSetpoint = new Pose2d(5.08, 2.85, Rotation2d.fromDegrees(120));
                 transformBy(poseSetpoint, left, right);
                 break;
             case Reef6:
-                poseSetpoint = new Pose2d(3.88, 2.99, Rotation2d.fromDegrees(60));
+                poseSetpoint = new Pose2d(3.16, 4.05, Rotation2d.fromDegrees(60));
                 transformBy(poseSetpoint, left, right);
                 break;
             case SourceLeft:
