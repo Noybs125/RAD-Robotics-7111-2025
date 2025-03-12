@@ -145,18 +145,36 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case AButton:
                 //checks for whether it should score coral or intake algae
-                actualRobotState = ActualState.coralL2;
+                switch(actualRobotState){
+                    case coralFeeder:
+                        actualRobotState = ActualState.coralL1Stow;
+                        break;
+                    default:
+                        actualRobotState = ActualState.coralL2;
+                        break;
+                    }       
                 break;
             case BButton:
                 //checks for whether it should score coral or intake algae
-                actualRobotState = ActualState.coralL3;
+                switch(actualRobotState){
+                    case coralFeeder:
+                        actualRobotState = ActualState.coralL1Stow;
+                        break;
+                    default:
+                        actualRobotState = ActualState.coralL3;
+                        break;
+                    }
                 break;
             case YButton:
                 //checks for whether it should score coral on L4 or score algae in net
-                boolean isNet = false; //true if we have algae
-                actualRobotState = isNet
-                    ? ActualState.algaeNet
-                    : ActualState.coralL4;
+                switch(actualRobotState){
+                    case coralFeeder:
+                        actualRobotState = ActualState.coralL1Stow;
+                        break;
+                    default:
+                        actualRobotState = ActualState.coralL4;
+                        break;
+                    }
                 break;
             case SelectButton:
                 //actualRobotState = ActualState.deepClimbRetracted;
