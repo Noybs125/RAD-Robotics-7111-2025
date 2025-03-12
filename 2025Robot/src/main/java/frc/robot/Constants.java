@@ -218,19 +218,19 @@ public class Constants {
     public static final double elevatorMaxHeight = 8;
 
     /** Minimum safe height for the elevator so that the wrist can move to  mechanical limits, in scale of percent of max height */
-    public static final double elevatorMinSafeWristHeight = 0.00;
+    public static final double elevatorMinSafeWristHeight = 0.38; //currently set to 3 ft high
 
     /** Maximum height the elevator can be before restricting the wrist rotation speed */
-    public static final double elevatorMaxSafeWristHeight = 1.00;
+    public static final double elevatorMaxSafeWristHeight = 0.65; //currently set to 5.2 ft
 
     /** Max height elevator will be allowed to move full speed */
-    public static final double elevatorMaxSafeHeight = 0.5;
+    public static final double elevatorMaxSafeHeight = 0.9; //currently set to 7.2 ft
 
     // Safe rotation range at any height is between these two variables, min being away from deep climb module and max being towards it.
     /** Min safe rotation for the wrist before the elevator could let it hit the robot, going past this variable (in rotations) is a risk for hitting the robot's frame */
-    public static final double wristMinSafeRotation = -0.25;
+    public static final double wristMinSafeRotation = -0.25; //-90 digrees of rotation
     /** Max safe rotation for the wrist before the elevator could let it hit the robot, going past this variable (in rotations) is a risk for hitting the deep climb module or robot's frame */
-    public static final double wristMaxSafeRotation = 0.2;
+    public static final double wristMaxSafeRotation = 0.2; //70 digrees of rotation
 
     //mechanical limits of elevator
     public static final double elevatorMaxPosition = 1.15;
