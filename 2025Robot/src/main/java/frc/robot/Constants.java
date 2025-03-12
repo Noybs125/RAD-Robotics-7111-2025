@@ -253,7 +253,7 @@ public class Constants {
     public static final double maxWristPosition = 0.25; //90 digrees toward deep climb module
     public static final double minWristPosition = -0.5; //180 digrees away from deep climb module
 
-    public static final double maxWristSpeed = 0.34;
+    public static final double maxWristSpeed = 0.3;
     public static final SimpleMotorFeedforward wristFF = null;//new SimpleMotorFeedforward(0.12, 5.78, 0.08);
     public static final SimpleMotorFeedforward deepClimbFF = null;
 

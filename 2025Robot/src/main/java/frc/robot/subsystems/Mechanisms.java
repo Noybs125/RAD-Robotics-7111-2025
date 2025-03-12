@@ -217,6 +217,8 @@ public class Mechanisms extends SubsystemBase {
         setElevatorSetpoint(elevatorSetpoint);
         if(elevator.isAtSetpoint(deadzone)){
             setWristSetpoint(wristSetpoint);
+        }else{
+            setWristSetpoint(this.wristSetpoint);
         }
     }
     /**
@@ -231,6 +233,8 @@ public class Mechanisms extends SubsystemBase {
         setWristSetpoint(wristSetpoint);
         if(wrist.isAtSetpoint(deadzone)){
             setElevatorSetpoint(elevatorSetpoint);
+        }else{
+            setWristSetpoint(this.elevatorSetpoint);
         }
     } 
 
@@ -248,7 +252,6 @@ public class Mechanisms extends SubsystemBase {
                     if(wrist.isAtSetpoint(0.05)){
                         moveElevThenArm(0.148, 0.31325, 0.05);
                     }else{
-                        setAllMechanismsSetpoint(0.31325, 0.58);
                         moveArmThenElev(0.31325, 0.58, 0.05);
                     }
                 }
@@ -350,7 +353,7 @@ public class Mechanisms extends SubsystemBase {
          * 
          * if the elevator is high enough that the elevator max speed could be a danger, limit the max elevator speed. (in the case of near max elev height, ect. may not be used)
          */
-         
+         /* 
         // If the elevator wants to move down beyond where the wrist can move where ever
         if(elevatorSetpoint < kMechanisms.elevatorMinSafeWristHeight)
         {
