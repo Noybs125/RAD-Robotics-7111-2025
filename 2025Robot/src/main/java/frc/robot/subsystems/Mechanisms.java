@@ -242,21 +242,32 @@ public class Mechanisms extends SubsystemBase {
         defaultState();
         switch (state) {
             case ReefL1:
-                setAllMechanismsSetpoint(0.31325, 0.154);
+                if(elevator.getPosition() >= 0.6){
+                    moveElevThenArm(0.58, 0.31325, 0.05);
+                }else{
+                    if(wrist.isAtSetpoint(0.05)){
+                        moveElevThenArm(0.148, 0.31325, 0.05);
+                    }else{
+                        setAllMechanismsSetpoint(0.31325, 0.58);
+                        moveArmThenElev(0.31325, 0.58, 0.05);
+                    }
+                }
                 break;
                 
             case ReefL2:
-                setAllMechanismsSetpoint(0.39725, 0.425);
+                moveElevThenArm(0.425, 0.39725, 0.01);
                 break;
 
             case ReefL3:
-                setAllMechanismsSetpoint(0.39725, 0.645);
+                moveElevThenArm(0.645, 0.39725, 0.05);
                 break;
 
             case ReefL4:
                 moveElevThenArm(1.01, 0.40122, 0.2);
                 if(elevator.isAtSetpoint(0.25)){
                     elevatorMaxSpeed = 0.1;
+                }else{
+                    elevatorMaxSpeed = kMechanisms.elevatorMaxSpeed;
                 }
                 break;
 
@@ -282,13 +293,6 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case Store:
-                if(elevator.getPosition() <= 0.55){
-                    moveArmThenElev(0, 0, 0.01);
-                }else {
-                    moveElevThenArm(0, 0.5, 0.05);
-                }
-                break;
-
             case StoreCoral:
                 moveElevThenArm(0.148, 0.31325, 0.05);
                 break;

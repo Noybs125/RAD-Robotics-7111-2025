@@ -91,11 +91,13 @@ public class CTREMotor implements Motor {
             : 0;
         double totalOutput = pidOutput + feedforwardOutput;
         if(totalOutput > positiveSpeedLimit){
-            totalOutput = positiveSpeedLimit;
+            motor.set(positiveSpeedLimit);
         }else if(totalOutput < negativeSpeedLimit){
-            totalOutput = negativeSpeedLimit;
+            motor.set(negativeSpeedLimit);
+        }else{
+            motor.setVoltage(totalOutput);
         }
-        motor.setVoltage(totalOutput);
+        
     }
 
     public void setPID(double p, double i, double d){
