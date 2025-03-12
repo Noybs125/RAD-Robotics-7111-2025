@@ -72,7 +72,7 @@ public class RobotContainer {
 
     
     NamedCommands.registerCommand("Coral Feeder", superStructure.setActualStateCommand(SuperStructure.ActualState.coralFeeder));
-    NamedCommands.registerCommand("L1 Center", superStructure.useCenterAlignment().alongWith(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1)));
+    NamedCommands.registerCommand("L1 Center", superStructure.useCenterAlignment().alongWith(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow)));
     NamedCommands.registerCommand("L2 Left", superStructure.useLeftAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
     NamedCommands.registerCommand("L2 Right", superStructure.useRightAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
     NamedCommands.registerCommand("L3 Left", superStructure.useLeftAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3)));

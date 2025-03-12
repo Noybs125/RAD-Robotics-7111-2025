@@ -54,10 +54,10 @@ public class SuperStructure extends SubsystemBase {
 
     /**
      * States for what state the robot is actively in.
-     * States include; "coralL1" through "coralL4", "coralFeeder", "algaeProcessor", "algaeNet", "algaeL2", "algaeL3", "deepClimb" and "defaultState"
+     * States include; "coralL1Stow" through "coralL4", "coralFeeder", "algaeProcessor", "algaeNet", "algaeL2", "algaeL3", "deepClimb" and "defaultState"
      */
     public enum ActualState {
-        coralL1,
+        coralL1Stow,
         coralL2,
         coralL3,
         coralL4,
@@ -135,11 +135,11 @@ public class SuperStructure extends SubsystemBase {
             case XButton:
                 //checks for whether it should align for reef or processor
                 switch(actualRobotState){
-                    case coralFeeder:
-                        actualRobotState = ActualState.stowWithCoral;
+                    case stow:
+                        actualRobotState = ActualState.coralFeeder;
                         break;
                     default:
-                        actualRobotState = ActualState.coralFeeder;
+                        actualRobotState = ActualState.coralL1Stow;
                         break;
                 }
                 break;
@@ -176,12 +176,12 @@ public class SuperStructure extends SubsystemBase {
 
     /**
      * Calls the state functions for the set state.
-     * @see -{@link #coralL1()} {@link #coralL2()} {@link #coralL3()} {@link #coralL4()} {@link #coralFeeder()} {@link #algaeL2()} {@link #algaeProcessor()} {@link #algaeNet()} {@link #deepClimb()} {@link #defaultState()}
+     * @see -{@link #coralL1Stow()} {@link #coralL2()} {@link #coralL3()} {@link #coralL4()} {@link #coralFeeder()} {@link #algaeL2()} {@link #algaeProcessor()} {@link #algaeNet()} {@link #deepClimb()} {@link #defaultState()}
      */
     private void manageActualState(){
         switch(actualRobotState){
-            case coralL1:
-                coralL1();
+            case coralL1Stow:
+                coralL1Stow();
                 break;
             case coralL2:
                 coralL2();
@@ -274,7 +274,7 @@ public class SuperStructure extends SubsystemBase {
     /**
      * Sets the SwerveState to the "Vision" state
      */
-    private void coralL1(){
+    private void coralL1Stow(){
         mechanisms.setState(Mechanisms.MechanismsState.ReefL1);
         swerve.setState(swerveState);
     }
