@@ -29,8 +29,8 @@ public class Mechanisms extends SubsystemBase {
     private double upperLimit;
     private MechanismsState state = MechanismsState.Store;
     private double elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
-    private double maxWristSpeed;
-    private double maxElevatorSpeed;
+    private double maxWristSpeed = kMechanisms.maxWristSpeed;
+    private double maxElevatorSpeed = kMechanisms.elevatorMaxSpeed;
 
     /**
      * States for choosing what position to set mechanisms to.
@@ -284,8 +284,8 @@ public class Mechanisms extends SubsystemBase {
             case Store:
                 if(elevator.getPosition() <= 0.55){
                     moveArmThenElev(0, 0, 0.01);
-                }else{
-                    setAllMechanismsSetpoint(0, 0.5);
+                }else {
+                    moveElevThenArm(0, 0.5, 0.05);
                 }
                 break;
 
@@ -320,8 +320,8 @@ public class Mechanisms extends SubsystemBase {
         }
 
         // Full speed for wrist and elevator default
-        maxWristSpeed = 1;
-        maxElevatorSpeed = 1;
+        maxWristSpeed = kMechanisms.maxWristSpeed;
+        maxElevatorSpeed = elevatorMaxSpeed;
         // Safety booleans for safty logic
         // Order of what moves and if it should reduce maximum speed
         boolean unsafeWrist = false;
@@ -346,7 +346,7 @@ public class Mechanisms extends SubsystemBase {
          * 
          * if the elevator is high enough that the elevator max speed could be a danger, limit the max elevator speed. (in the case of near max elev height, ect. may not be used)
          */
-
+        /* 
         // If the elevator wants to move down beyond where the wrist can move where ever
         if(elevatorSetpoint < kMechanisms.elevatorMinSafeWristHeight)
         {
@@ -429,11 +429,11 @@ public class Mechanisms extends SubsystemBase {
         {
             //reduce it to the reduced speed limit.
             maxElevatorSpeed = kMechanisms.maxElevReducedSpeed;
-        }
+        }*/
 
         // Sets the speed of the wrist and elevator to the decided max speed
         wrist.setSpeedLimits(maxWristSpeed, -maxWristSpeed);
-        elevator.setSpeedLimits(maxElevatorSpeed, -maxElevatorSpeed);
+        elevator.setSpeedLimits(elevatorMaxSpeed, -elevatorMaxSpeed);
 
         /*NOTE:
          *if the elevator or wrist is denied from moving, the setpoint for them will be equal to the current position they are in.
@@ -457,6 +457,11 @@ public class Mechanisms extends SubsystemBase {
         SmartDashboard.putNumber("wrist Position", wrist.getPosition());
         SmartDashboard.putBoolean("elevator isAtSetpoint", elevator.isAtSetpoint(0.01));
         SmartDashboard.putBoolean("wrist isAtSetpoint", wrist.isAtSetpoint(0.01));
+
+        SmartDashboard.putBoolean("denied wrist", deniedWrist);
+        SmartDashboard.putBoolean("denied elevator", deniedElev);
+        SmartDashboard.putBoolean("unsafe wrist", unsafeWrist);
+        SmartDashboard.putBoolean("unsafe elevator", unsafeElev);
     }
 
     public void simulationPeriodic(){
