@@ -133,7 +133,7 @@ public class RobotContainer {
     Trigger l4 = driverController.y();
     Trigger stow = driverController.back();
 
-    Command reef4Right = field.pathfindToSetpoint(FieldSetpoint.Reef4);
+    Command reef4Right = field.pathfindToSetpoint(FieldSetpoint.Reef4, false, true);
 
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(),

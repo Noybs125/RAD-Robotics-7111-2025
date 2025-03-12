@@ -154,31 +154,52 @@ public class Field extends SubsystemBase {
         else return AutoBuilder.pathfindToPose(pose, Constants.kAuto.constraints, 0);
     }
 
+    public Pose2d transformBy(Pose2d pose, boolean left, boolean right) {
+        if (left) {
+            var relativePose = pose.relativeTo(new Pose2d(pose.getX(), pose.getY() - Constants.kAuto.relativeBy, pose.getRotation()));
+            var poseTransform = new Transform2d(relativePose.getX(), relativePose.getY(), relativePose.getRotation());
+            pose.plus(poseTransform);
+            }
+        else if (right) {
+            var relativePose = pose.relativeTo(new Pose2d(pose.getX(), pose.getY() + Constants.kAuto.relativeBy, pose.getRotation()));
+            var poseTransform = new Transform2d(relativePose.getX(), relativePose.getY(), relativePose.getRotation());
+            pose.plus(poseTransform);
+        }
+
+        return pose;
+    }
+
     /**
      * States for setting destination for the robot, using the FieldSetpoint as the specified states.
      * @see -Link to Pose2d object class: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose2d.html.
      * @param state -Type FieldSetpoint enum. Options include "Reef1" through "Reef6", SourceLeft and "SourceRight", "Barge" and "Climb".
      * @return -A command to the state's position, being a point on the field. Uses method "pathfindToPose", defined in this class.
      */
-    public Command pathfindToSetpoint(FieldSetpoint state) {
+    public Command pathfindToSetpoint(FieldSetpoint state, boolean left, boolean right) {
         switch (state) {
             case Reef1:
-                poseSetpoint = new Pose2d(3.32, 4.02, Rotation2d.fromDegrees(0));
+                poseSetpoint = new Pose2d(3.18, 4.05, Rotation2d.fromDegrees(0));
+                transformBy(poseSetpoint, left, right);
                 break;
             case Reef2:
                 poseSetpoint = new Pose2d(3.85, 5.11, Rotation2d.fromDegrees(-60));
+                transformBy(poseSetpoint, left, right);
                 break;
             case Reef3:
                 poseSetpoint = new Pose2d(5.09, 5.11, Rotation2d.fromDegrees(-120));
+                transformBy(poseSetpoint, left, right);
                 break;
             case Reef4:
                 poseSetpoint = new Pose2d(5.786, 4.147, Rotation2d.fromDegrees(-179.8));
+                transformBy(poseSetpoint, left, right);
                 break;
             case Reef5:
                 poseSetpoint = new Pose2d(5.11, 2.99, Rotation2d.fromDegrees(120));
+                transformBy(poseSetpoint, left, right);
                 break;
             case Reef6:
                 poseSetpoint = new Pose2d(3.88, 2.99, Rotation2d.fromDegrees(60));
+                transformBy(poseSetpoint, left, right);
                 break;
             case SourceLeft:
                 poseSetpoint = new Pose2d(1.07, 7.15, Rotation2d.fromDegrees(126));
@@ -250,10 +271,10 @@ public class Field extends SubsystemBase {
         Command command;
         switch (cycle.feederStation) {
             case 2:
-                command = new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToSetpoint(FieldSetpoint.SourceLeft), NamedCommands.getCommand("Intake"));
+                command = new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToSetpoint(FieldSetpoint.SourceLeft, false, false), NamedCommands.getCommand("Intake"));
                 break;
             case 1:
-                command = new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToSetpoint(FieldSetpoint.SourceRight), NamedCommands.getCommand("Intake"));
+                command = new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToSetpoint(FieldSetpoint.SourceRight, false, false), NamedCommands.getCommand("Intake"));
                 break;
             case 0:    
             default:
