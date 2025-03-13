@@ -135,8 +135,6 @@ public class RobotContainer {
     Trigger l4 = operatorController.y();
     Trigger stow = operatorController.back();
 
-    Command reef4Right = field.pathfindToSetpoint(FieldSetpoint.Reef4, false, true);
-
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(),
       () -> swerve.getTransX(),
@@ -181,7 +179,9 @@ public class RobotContainer {
     //rightReefAlign.onTrue(superStructure.useRightAlignment());
     //centerReefAlign.onTrue(superStructure.useCenterAlignment());
     //leftReefAlign.negate().and(rightReefAlign.negate()).and(centerReefAlign.negate()).onTrue(superStructure.useNoAlignment());
-    rightReefAlign.onTrue(reef4Right.until(() -> reef4Right.isFinished())).onFalse(new InstantCommand(() -> reef4Right.cancel()));
+    rightReefAlign.onTrue(field.alignToNearestSetpoint(false, true));
+    leftReefAlign.onTrue(field.alignToNearestSetpoint(true, false));
+    centerReefAlign.onTrue(field.alignToNearestSetpoint(false, false));
 
     // change or remove each of these when we decide controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -58,17 +59,16 @@ public class Field extends SubsystemBase {
 
     public List<Pose2d> zoneMap = new ArrayList<>();
     private Pose2d[] zoneArray = new Pose2d[] {
-        new Pose2d(1.20, 7.03, Rotation2d.fromDegrees(306.59)),
-        new Pose2d(1.20, 1.03, Rotation2d.fromDegrees(50.60)),
-        new Pose2d(3.27, 4.03, Rotation2d.fromDegrees(0.00)),
-        new Pose2d(3.87, 5.08, Rotation2d.fromDegrees(300.69)),
-        new Pose2d(5.12, 5.11, Rotation2d.fromDegrees(237.01)),
-        new Pose2d(5.72, 4.03, Rotation2d.fromDegrees(180)), 
-        new Pose2d(5.18, 2.78, Rotation2d.fromDegrees(119.01)),
-        new Pose2d(3.76, 2.80, Rotation2d.fromDegrees(60.01)),
-        new Pose2d(6.21, 0.39, Rotation2d.fromDegrees(270)),
-        new Pose2d(7.90, 6.10, Rotation2d.fromDegrees(0.00)),
-        new Pose2d(0,0, Rotation2d.fromDegrees(0))
+        new Pose2d(3.16, 4.05, Rotation2d.fromDegrees(0)),
+        new Pose2d(3.87, 5.20, Rotation2d.fromDegrees(-60)),
+        new Pose2d(5.15, 5.18, Rotation2d.fromDegrees(-120)),
+        new Pose2d(5.86, 4.00, Rotation2d.fromDegrees(-180)),
+        new Pose2d(5.08, 2.85, Rotation2d.fromDegrees(120)),
+        new Pose2d(3.16, 4.05, Rotation2d.fromDegrees(60)),
+        //new Pose2d(5.18, 2.78, Rotation2d.fromDegrees(119.01)),
+        //new Pose2d(3.76, 2.80, Rotation2d.fromDegrees(60.01)),
+        //new Pose2d(6.21, 0.39, Rotation2d.fromDegrees(270)),
+        //new Pose2d(7.90, 6.10, Rotation2d.fromDegrees(0.00)),
     };
     public Map<FieldSetpoint, Pose2d> fieldSetpointMap = new HashMap<>();
     private FieldSetpoint[] fieldSetpoints = new FieldSetpoint[] {
@@ -78,11 +78,11 @@ public class Field extends SubsystemBase {
         FieldSetpoint.Reef4,
         FieldSetpoint.Reef5,
         FieldSetpoint.Reef6,
-        FieldSetpoint.Processor,
-        FieldSetpoint.SourceLeft,
-        FieldSetpoint.SourceRight,
-        FieldSetpoint.Barge,
-        FieldSetpoint.Climb,
+        //FieldSetpoint.Processor,
+        //FieldSetpoint.SourceLeft,
+        //FieldSetpoint.SourceRight,
+        //FieldSetpoint.Barge,
+        //FieldSetpoint.Climb,
     };
 
     private List<AutoCycle> autoCycles = new ArrayList<>();
@@ -151,10 +151,10 @@ public class Field extends SubsystemBase {
     public Command pathfindToPose(Pose2d pose) {
         if (DriverStation.getAlliance().isPresent()) {
             return DriverStation.getAlliance().get() == Alliance.Blue 
-                ? AutoBuilder.pathfindToPose(pose, Constants.kAuto.constraints, 0)
-                : AutoBuilder.pathfindToPoseFlipped(pose, Constants.kAuto.constraints, 0);
+                ? AutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0)
+                : AutoBuilder.pathfindToPoseFlipped(pose, Constants.kAuto.reefConstraints, 0);
         }
-        else return AutoBuilder.pathfindToPose(pose, Constants.kAuto.constraints, 0);
+        else return AutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0);
     }
 
     public Pose2d transformBy(Pose2d pose, boolean left, boolean right) {
@@ -178,8 +178,8 @@ public class Field extends SubsystemBase {
      * @param state -Type FieldSetpoint enum. Options include "Reef1" through "Reef6", SourceLeft and "SourceRight", "Barge" and "Climb".
      * @return -A command to the state's position, being a point on the field. Uses method "pathfindToPose", defined in this class.
      */
-    public Command pathfindToSetpoint(FieldSetpoint state, boolean left, boolean right) {
-        switch (state) {
+    public Command pathfindToSetpoint(Supplier<FieldSetpoint> state, boolean left, boolean right) {
+        switch (state.get()) {
             case Reef1:
                 poseSetpoint = new Pose2d(3.16, 4.05, Rotation2d.fromDegrees(0));
                 transformBy(poseSetpoint, left, right);
@@ -236,9 +236,7 @@ public class Field extends SubsystemBase {
                 poseSetpoint = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
                 break;
         }
-    
         return pathfindToPose(poseSetpoint);
-
     }
 
     /**
@@ -274,10 +272,10 @@ public class Field extends SubsystemBase {
         Command command;
         switch (cycle.feederStation) {
             case 2:
-                command = new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToSetpoint(FieldSetpoint.SourceLeft, false, false), NamedCommands.getCommand("Intake"));
+                command = new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToSetpoint(() -> FieldSetpoint.SourceLeft, false, false), NamedCommands.getCommand("Intake"));
                 break;
             case 1:
-                command = new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToSetpoint(FieldSetpoint.SourceRight, false, false), NamedCommands.getCommand("Intake"));
+                command = new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToSetpoint(() -> FieldSetpoint.SourceRight, false, false), NamedCommands.getCommand("Intake"));
                 break;
             case 0:    
             default:
@@ -386,5 +384,19 @@ public class Field extends SubsystemBase {
 
             autoCycleChooser.getSelected().updateAutoCycle();
         }
+    }
+
+    public Command alignToNearestSetpoint(boolean isLeft, boolean isRight){
+        return pathfindToSetpoint(() -> getNearestSetpoint(swerve::getPose), isLeft, isRight);
+    }
+
+    public FieldSetpoint getNearestSetpoint(Supplier<Pose2d> robotPose){
+        var pose = robotPose.get().nearest(zoneMap);
+        for (FieldSetpoint setpoint : fieldSetpoints) {
+            if(pose.equals(fieldSetpointMap.get(setpoint))){
+                return setpoint;
+            }
+        }
+        return null;
     }
 }

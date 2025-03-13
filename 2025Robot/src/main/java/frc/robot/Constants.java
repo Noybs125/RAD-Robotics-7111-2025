@@ -301,7 +301,8 @@ public class Constants {
     public static final double MAX_ANGULAR_ACCEL_RAD_PER_SECOND = 12.56;
     /* Pathplanner config */
 
-    public static final PathConstraints constraints = new PathConstraints(MAX_VELOCITY_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED, MAX_ANGULAR_RADIANS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED);
+    public static final PathConstraints reefConstraints = new PathConstraints(2, 2, 4, 6);
+    public static final PathConstraints constraints = new PathConstraints(MAX_VELOCITY_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED, MAX_ANGULAR_RADIANS_PER_SECOND, MAX_ANGULAR_ACCEL_RAD_PER_SECOND);
 
     public static final int numModules = 4;
     public static final double massKgs = Units.lbsToKilograms(138);
