@@ -73,13 +73,13 @@ public class RobotContainer {
 
     
     NamedCommands.registerCommand("Coral Feeder", superStructure.setActualStateCommand(SuperStructure.ActualState.coralFeeder));
-    NamedCommands.registerCommand("L1 Center", superStructure.useCenterAlignment().alongWith(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow)));
-    NamedCommands.registerCommand("L2 Left", superStructure.useLeftAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
-    NamedCommands.registerCommand("L2 Right", superStructure.useRightAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
-    NamedCommands.registerCommand("L3 Left", superStructure.useLeftAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3)));
-    NamedCommands.registerCommand("L3 Right", superStructure.useRightAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3)));
-    NamedCommands.registerCommand("L4 Left", superStructure.useLeftAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
-    NamedCommands.registerCommand("L4 Right", superStructure.useRightAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
+    NamedCommands.registerCommand("L1 Center", field.alignToNearestSetpoint(false, false).alongWith(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow)));
+    NamedCommands.registerCommand("L2 Left", field.alignToNearestSetpoint(true, false).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
+    NamedCommands.registerCommand("L2 Right", field.alignToNearestSetpoint(false, true).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
+    NamedCommands.registerCommand("L3 Left", field.alignToNearestSetpoint(true, false).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3)));
+    NamedCommands.registerCommand("L3 Right", field.alignToNearestSetpoint(false, true).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3)));
+    NamedCommands.registerCommand("L4 Left", field.alignToNearestSetpoint(true, false).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
+    NamedCommands.registerCommand("L4 Right", field.alignToNearestSetpoint(false, true).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
 
     NamedCommands.registerCommand("Score", new InstantCommand(() -> flywheels.setSpeed(-0.6)));
     NamedCommands.registerCommand("Intake", new InstantCommand(() -> flywheels.setSpeed(1)));
@@ -90,10 +90,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("L3 Algae", superStructure.useCenterAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL3)));
     NamedCommands.registerCommand("Processor Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeProcessor));
     NamedCommands.registerCommand("Net Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeNet));
-    
-    
-
-    
 
     autoChooser = AutoBuilder.buildAutoChooser();
     autoChooser.addOption("Custom", new PathPlannerAuto(field.generateAutoRoutine(field.getAutoCycles())));
@@ -134,6 +130,10 @@ public class RobotContainer {
     Trigger l3 = operatorController.b();
     Trigger l4 = operatorController.y();
     Trigger stow = operatorController.back();
+
+    Command leftAlign = field.alignToNearestSetpoint(true, false);
+    Command rightAlign = field.alignToNearestSetpoint(false, true);
+    Command centerAlign = field.alignToNearestSetpoint(false, false);
 
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(),
@@ -179,9 +179,9 @@ public class RobotContainer {
     //rightReefAlign.onTrue(superStructure.useRightAlignment());
     //centerReefAlign.onTrue(superStructure.useCenterAlignment());
     //leftReefAlign.negate().and(rightReefAlign.negate()).and(centerReefAlign.negate()).onTrue(superStructure.useNoAlignment());
-    rightReefAlign.onTrue(field.alignToNearestSetpoint(false, true));
-    leftReefAlign.onTrue(field.alignToNearestSetpoint(true, false));
-    centerReefAlign.onTrue(field.alignToNearestSetpoint(false, false));
+    rightReefAlign.onTrue(rightAlign).onFalse(new InstantCommand(() -> rightAlign.cancel()));
+    leftReefAlign.onTrue(leftAlign).onFalse(new InstantCommand(() -> leftAlign.cancel()));
+    centerReefAlign.onTrue(centerAlign).onFalse(new InstantCommand(() -> centerAlign.cancel()));
 
     // change or remove each of these when we decide controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());
