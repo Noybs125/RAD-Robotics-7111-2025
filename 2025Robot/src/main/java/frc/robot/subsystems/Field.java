@@ -361,8 +361,7 @@ public class Field extends SubsystemBase {
         
         if (Pathfinding.isNewPathAvailable()){
             path = Pathfinding.getCurrentPath(Constants.kAuto.constraints, endState);
-            swerve.setUseVisionPose(false);
-        }else swerve.setUseVisionPose(true);
+        }
     
         if (path != null) {
             fieldObjectPose.setPoses(path.getPathPoses());

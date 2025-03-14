@@ -135,7 +135,7 @@ public class SuperStructure extends SubsystemBase {
             case XButton:
                 //checks for whether it should align for reef or processor
                 switch(actualRobotState){
-                    case stow:
+                    case coralL1Stow:
                         actualRobotState = ActualState.coralFeeder;
                         break;
                     default:
@@ -182,7 +182,29 @@ public class SuperStructure extends SubsystemBase {
                 break;
         
             case StartButton:
-                actualRobotState = ActualState.deepClimbExtended;
+                actualRobotState = ActualState.algaeNet;
+                break;
+
+            case LeftBumper:
+            switch(actualRobotState){
+                case coralFeeder:
+                    actualRobotState = ActualState.coralL1Stow;
+                    break;
+                default:
+                    actualRobotState = ActualState.algaeL3;
+                    break;
+                }
+                break;
+            
+            case RightBumper:
+                    switch(actualRobotState){
+                        case coralFeeder:
+                            actualRobotState = ActualState.coralL1Stow;
+                            break;
+                        default:
+                            actualRobotState = ActualState.algaeL2;
+                            break;
+                        }
                 break;
 
             case Default:

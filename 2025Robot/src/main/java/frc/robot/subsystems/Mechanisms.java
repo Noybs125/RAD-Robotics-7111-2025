@@ -259,6 +259,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
                 
             case ReefL2:
+                maxWristSpeed = 0.15;
                 moveElevThenArm(0.425, 0.39725, 0.01);
                 break;
 
@@ -276,11 +277,11 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case AlgaeL2:
-                setAllMechanismsSetpoint(0, 0);
+                moveElevThenArm(0.4444, 0.3104, 0.01);
                 break;
 
             case AlgaeL3:
-                setAllMechanismsSetpoint(0, 0);
+                moveElevThenArm(0.647, 0.3104, 0.01);
                 break;
 
             case AlgaeProcessor:
@@ -288,12 +289,8 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case AlgaeNet:
-                setAllMechanismsSetpoint(0.38, 0.85);
-                if(elevator.isAtSetpoint(0.04)){
-                    elevatorMaxSpeed = 0.1;
-                    moveElevThenArm(1.0178, -0.25, 0.02);
-                }
-                setAllMechanismsSetpoint(0, 0);
+                maxWristSpeed = 0.15;
+                moveElevThenArm(0.8431, 0.0502, 0.01);
                 break;
 
             case Store:
@@ -302,7 +299,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case CoralFeeder:
-                setAllMechanismsSetpoint(-0.06975, 0.18);
+                setAllMechanismsSetpoint(-0.0727, 0.1676);
                 break;
 
             case Climb:
@@ -322,14 +319,15 @@ public class Mechanisms extends SubsystemBase {
     public void periodic() {
         handleState();
         elevator.setSpeedLimits(elevatorMaxSpeed, -elevatorMaxSpeed);
+        wrist.setSpeedLimits(maxWristSpeed, -maxWristSpeed);
         if (!isManual){
             elevator.setSetpoint(elevatorSetpoint, false);
             wrist.setSetpoint(wristSetpoint, false);
         }
 
         // Full speed for wrist and elevator default
-        maxWristSpeed = kMechanisms.maxWristSpeed;
         maxElevatorSpeed = elevatorMaxSpeed;
+
         // Safety booleans for safty logic
         // Order of what moves and if it should reduce maximum speed
         boolean unsafeWrist = false;
@@ -483,5 +481,12 @@ public class Mechanisms extends SubsystemBase {
 
     private void defaultState(){
         elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
+        maxWristSpeed = Constants.kMechanisms.maxWristSpeed;
+    }
+
+    public void zeroMechanisms(){
+        elevator.setPosition(0);
+        wrist.setPosition(0);
+        state = MechanismsState.Manual;
     }
 }

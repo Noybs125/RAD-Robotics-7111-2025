@@ -73,6 +73,7 @@ public class RobotContainer {
 
     
     NamedCommands.registerCommand("Coral Feeder", superStructure.setActualStateCommand(SuperStructure.ActualState.coralFeeder));
+    NamedCommands.registerCommand("Stow", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow));
     NamedCommands.registerCommand("L1 Center", field.alignToNearestSetpoint(false, false).alongWith(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow)));
     NamedCommands.registerCommand("L2 Left", field.alignToNearestSetpoint(true, false).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
     NamedCommands.registerCommand("L2 Right", field.alignToNearestSetpoint(false, true).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
@@ -118,10 +119,13 @@ public class RobotContainer {
     Trigger elevatorDown = operatorController.povDown();
     Trigger armUp = operatorController.povRight();
     Trigger armDown = operatorController.povLeft();
-    Trigger effectorIntake = operatorController.rightStick();
-    Trigger effectorScore = operatorController.leftStick();
+    Trigger effectorIntake = operatorController.rightTrigger(0.1);
+    Trigger effectorScore = operatorController.leftTrigger(0.1);
     Trigger climbUp = driverController.povUp();
     Trigger climbDown = driverController.povDown();
+    Trigger algaeL2 = operatorController.rightBumper();
+    Trigger algaeL3 = operatorController.leftBumper();
+    Trigger algaeNet = operatorController.start();
 
     Trigger zeroGyro = driverController.start();
 
@@ -130,6 +134,8 @@ public class RobotContainer {
     Trigger l3 = operatorController.b();
     Trigger l4 = operatorController.y();
     Trigger stow = operatorController.back();
+
+    Trigger zeroMechanisms = operatorController.rightStick();
 
     Command leftAlign = field.alignToNearestSetpoint(true, false);
     Command rightAlign = field.alignToNearestSetpoint(false, true);
@@ -160,13 +166,19 @@ public class RobotContainer {
 
     armUp.negate().and(armDown.negate()).onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0)));
 
-    effectorIntake.onTrue(new InstantCommand(() -> flywheels.setSpeed(1)));
-    effectorScore.onTrue(new InstantCommand(() -> flywheels.setSpeed(-0.6)));
+    zeroMechanisms.onTrue(new InstantCommand(() -> mechanisms.zeroMechanisms()));
+
+    effectorIntake.onTrue(flywheels.setSuppliedSpeed(() -> operatorController.getRightTriggerAxis()));
+    effectorScore.onTrue(flywheels.setSuppliedSpeed(() -> operatorController.getLeftTriggerAxis()));
     effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
 
     climbUp.onTrue(new InstantCommand(() -> deepClimb.setSpeed(1)));
     climbDown.onTrue(new InstantCommand(() -> deepClimb.setSpeed(-1)));
     climbDown.negate().and(climbUp.negate()).onTrue(new InstantCommand(() -> deepClimb.setSpeed(0)));
+
+    algaeL2.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.RightBumper));
+    algaeL3.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.LeftBumper));
+    algaeNet.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.StartButton));
     
 
     l1.onTrue(superStructure.setRobotStateCommand(ControlState.XButton));

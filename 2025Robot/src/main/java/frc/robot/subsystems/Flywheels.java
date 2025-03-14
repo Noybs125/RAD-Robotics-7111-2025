@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.motor.Motor;
 import frc.robot.utils.motor.REVMotor;
@@ -81,5 +84,9 @@ public class Flywheels extends SubsystemBase {
             default:
                 break;
         }
+    }
+
+    public Command setSuppliedSpeed(DoubleSupplier speed){
+        return run(() -> effectorWheels.setSpeed(speed.getAsDouble()));
     }
 }

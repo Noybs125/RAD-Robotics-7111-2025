@@ -27,6 +27,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     robotContainer = new RobotContainer();
+    robotContainer.swerve.setUseVisionPose(true);
   }
 
   /**
@@ -58,6 +59,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    robotContainer.swerve.setUseVisionPose(false);
     autoCommand = robotContainer.getAutonomousCommand();
 
     if(autoCommand != null){
@@ -78,7 +80,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    robotContainer.swerve.setUseVisionPose(true);
+  }
 
   /** This function is called periodically during operator control. */
   @Override

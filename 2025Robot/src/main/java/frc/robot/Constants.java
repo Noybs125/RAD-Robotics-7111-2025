@@ -295,8 +295,8 @@ public class Constants {
     public static final double THETA_CONTROLLER_KP = 1.0;
     
     /* Constraints. */
-    public static final double MAX_VELOCITY_METERS_PER_SECOND = 5.0;
-    public static final double MAX_ACCEL_METERS_PER_SECOND_SQUARED = 3.0;
+    public static final double MAX_VELOCITY_METERS_PER_SECOND = 5.41;
+    public static final double MAX_ACCEL_METERS_PER_SECOND_SQUARED = 5.41;
     public static final double MAX_ANGULAR_RADIANS_PER_SECOND = 6.99;
     public static final double MAX_ANGULAR_ACCEL_RAD_PER_SECOND = 12.56;
     /* Pathplanner config */
@@ -323,7 +323,7 @@ public class Constants {
     public static final PPHolonomicDriveController cont = new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                     //new PIDConstants(13, 0.0001, 0.022), // Translation PID constants
                     //new PIDConstants(9.15, 0.09, 0.9) // Rotation PID constants
-                    new PIDConstants(8, 0.0, 0.0001),
+                    new PIDConstants(10, 0.0, 0.000),
                     new PIDConstants(5, 0.0, 0.0)
             );
 

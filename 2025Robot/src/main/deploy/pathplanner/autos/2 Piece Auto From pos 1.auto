@@ -5,15 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Reef 3 from 1"
+            "name": "Stow"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "L4 Right"
+            "pathName": "Reef 3 from 1"
           }
         },
         {
@@ -71,15 +71,21 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Reef 2 from intake R"
+            "name": "Stop Wheels "
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L4 Left"
+            "name": "Stow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef 2 from intake R"
           }
         },
         {
@@ -121,7 +127,7 @@
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }
