@@ -39,6 +39,18 @@
           "data": {
             "name": "Stop Wheels "
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "right backup"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Zero"
+          }
         }
       ]
     }

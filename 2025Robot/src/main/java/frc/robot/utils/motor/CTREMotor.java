@@ -90,10 +90,13 @@ public class CTREMotor implements Motor {
             ? feedforward.calculate(pid.getErrorDerivative())
             : 0;
         double totalOutput = pidOutput + feedforwardOutput;
+        SmartDashboard.putNumber("Motor " + id + " pid", totalOutput);
         if(totalOutput > positiveSpeedLimit){
-            motor.set(positiveSpeedLimit);
+            motor.setVoltage(positiveSpeedLimit);
+            //motor.set(positiveSpeedLimit);
         }else if(totalOutput < negativeSpeedLimit){
-            motor.set(negativeSpeedLimit);
+            motor.setVoltage(negativeSpeedLimit);
+            //motor.set(negativeSpeedLimit);
         }else{
             motor.setVoltage(totalOutput);
         }

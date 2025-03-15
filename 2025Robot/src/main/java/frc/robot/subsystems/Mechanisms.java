@@ -1,11 +1,15 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.kMechanisms;
@@ -82,6 +86,7 @@ public class Mechanisms extends SubsystemBase {
         wrist = new CTREMotor(14, null, kMechanisms.wristGearRatio, Constants.kMechanisms.armPID, Constants.kMechanisms.wristFF, new ArmSimMotor(null, null, null, null), Constants.kMechanisms.wristConfig());
 
         wrist.setSpeedLimits(Constants.kMechanisms.maxWristSpeed, -Constants.kMechanisms.maxWristSpeed);
+        wrist.setPosition(0);
     }
 
     /**
@@ -164,25 +169,26 @@ public class Mechanisms extends SubsystemBase {
     public void setWristSpeed(double speed) {
         isManual = true;
         if(wrist.getPosition() >= Constants.kMechanisms.maxWristPosition
-            || wrist.getPosition() <= Constants.kMechanisms.minWristPosition){
-                if(speed > Constants.kMechanisms.maxWristSpeed){
-                    speed = Constants.kMechanisms.maxWristSpeed;
-                }else if(speed < -Constants.kMechanisms.maxWristSpeed){
-                    speed = -Constants.kMechanisms.maxWristSpeed;
-                }
+            && speed >= 0){
+                wrist.setSpeed(0);
+        }
+        else if(wrist.getPosition() < Constants.kMechanisms.minWristPosition && speed <= 0){
+            wrist.setSpeed(0); 
         }
         if(speed == 0){
             wristSetpoint = wrist.getPosition();
             isManual = false;
         }
         
-        if(speed <= kMechanisms.maxWristSpeed * maxWristSpeed)
+        if(speed <= -maxWristSpeed)
         {
-            wrist.setSpeed(speed);
+            wrist.setSpeed(-maxWristSpeed);
         }
-        else
+        else if(speed >= maxWristSpeed)
         {
-            wrist.setSpeed(kMechanisms.maxWristSpeed * maxWristSpeed);
+            wrist.setSpeed(maxWristSpeed);
+        } else {
+            wrist.setSpeed(speed);
         }
     }
 
@@ -270,18 +276,18 @@ public class Mechanisms extends SubsystemBase {
             case ReefL4:
                 moveElevThenArm(1.01, 0.40122, 0.2);
                 if(elevator.isAtSetpoint(0.2)){
-                    elevatorMaxSpeed = 0.25;
+                    elevatorMaxSpeed = 7;
                 }else{
                     elevatorMaxSpeed = kMechanisms.elevatorMaxSpeed;
                 }
                 break;
 
             case AlgaeL2:
-                moveElevThenArm(0.4444, 0.3104, 0.01);
+                moveElevThenArm(0.4444, 0.305, 0.01);
                 break;
 
             case AlgaeL3:
-                moveElevThenArm(0.647, 0.3104, 0.01);
+                moveElevThenArm(0.647, 0.305, 0.01);
                 break;
 
             case AlgaeProcessor:
@@ -289,11 +295,13 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case AlgaeNet:
-                maxWristSpeed = 0.15;
+                maxWristSpeed = 1;
                 moveElevThenArm(0.8431, 0.0502, 0.01);
                 break;
 
             case Store:
+                moveArmThenElev(0.0, 0.0, 0.01);
+                break;
             case StoreCoral:
                 moveElevThenArm(0.148, 0.31325, 0.05);
                 break;
@@ -468,6 +476,8 @@ public class Mechanisms extends SubsystemBase {
         SmartDashboard.putBoolean("denied elevator", deniedElev);
         SmartDashboard.putBoolean("unsafe wrist", unsafeWrist);
         SmartDashboard.putBoolean("unsafe elevator", unsafeElev);
+
+        SmartDashboard.putNumber("wrist speed", wrist.getSpeed());
     }
 
     public void simulationPeriodic(){
@@ -488,5 +498,9 @@ public class Mechanisms extends SubsystemBase {
         elevator.setPosition(0);
         wrist.setPosition(0);
         state = MechanismsState.Manual;
+    }
+
+    public Command setSuppliedWristSpeed(DoubleSupplier speed){
+        return new InstantCommand(() -> setWristSpeed(speed.getAsDouble()));
     }
 }

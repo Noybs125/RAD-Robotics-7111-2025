@@ -82,6 +82,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     robotContainer.swerve.setUseVisionPose(true);
+    robotContainer.flywheels.setSpeed(0);
   }
 
   /** This function is called periodically during operator control. */

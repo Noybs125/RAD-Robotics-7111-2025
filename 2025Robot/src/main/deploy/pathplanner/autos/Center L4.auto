@@ -13,13 +13,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef 3 from 1"
+            "pathName": "Center L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.5
+            "waitTime": 2.0
           }
         },
         {
@@ -31,7 +37,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.0
           }
         },
         {
@@ -41,21 +47,15 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "left backup"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "Zero"
+            "name": "Stow"
           }
         }
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": null,
   "choreoAuto": false
 }

@@ -9,6 +9,7 @@ import com.ctre.phoenix6.mechanisms.MechanismState;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
@@ -123,6 +124,8 @@ public class SuperStructure extends SubsystemBase {
         swerve.setSubtractedSpeed(mechanisms.getElevatorHeight());
         swerve.setRotationSetpoint(field.getNearestZone(swerve.getPose()).getRotation().getDegrees());
         //vision.getNearestReefTag(swerve.getPose());
+
+        SmartDashboard.putString("actualRobotState", actualRobotState.toString());
     }
 
     /**

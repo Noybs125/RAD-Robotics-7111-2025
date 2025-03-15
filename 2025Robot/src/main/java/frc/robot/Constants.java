@@ -221,7 +221,7 @@ public class Constants {
     public static final double elevatorWinchDiameter = 2;
     public static final double wristGearRatio = 48.13;
     /** Elevator max speed allowed, in percent. 0 = 0%, 1 = 100% */
-    public static final double elevatorMaxSpeed = 0.55;
+    public static final double elevatorMaxSpeed = 20;
     /** Elevator Max Height in feet */
     public static final double elevatorMaxHeight = 8;
 
@@ -250,15 +250,15 @@ public class Constants {
     public static final double elevatorMinPosition = 0.01;
 
     //mechanical limits of wrist in rotations
-    public static final double maxWristPosition = 0.25; //90 digrees toward deep climb module
-    public static final double minWristPosition = -0.5; //180 digrees away from deep climb module
+    public static final double maxWristPosition = -0.25; //90 digrees toward deep climb module
+    public static final double minWristPosition = 0.5; //180 digrees away from deep climb module
 
-    public static final double maxWristSpeed = 0.3;
+    public static final double maxWristSpeed = 5;
     public static final SimpleMotorFeedforward wristFF = null;//new SimpleMotorFeedforward(0.12, 5.78, 0.08);
     public static final SimpleMotorFeedforward deepClimbFF = null;
 
     public static PIDController elevatorPID = new PIDController(34, 0.65, 0.0);
-    public static PIDController armPID = new PIDController(25, 0.0, 0.0);
+    public static PIDController armPID = new PIDController(25, 0.0, 0.0); // - 15, 0.03, 0.01?
     public static PIDController deepClimbPID = new PIDController(0, 0, 0);
 
     /** Motor Configurations */

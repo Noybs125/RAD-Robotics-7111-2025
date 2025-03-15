@@ -74,6 +74,8 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("Coral Feeder", superStructure.setActualStateCommand(SuperStructure.ActualState.coralFeeder));
     NamedCommands.registerCommand("Stow", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow));
+    NamedCommands.registerCommand("Zero", superStructure.setActualStateCommand(SuperStructure.ActualState.stow));
+    NamedCommands.registerCommand("L4", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4));
     NamedCommands.registerCommand("L1 Center", field.alignToNearestSetpoint(false, false).alongWith(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow)));
     NamedCommands.registerCommand("L2 Left", field.alignToNearestSetpoint(true, false).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
     NamedCommands.registerCommand("L2 Right", field.alignToNearestSetpoint(false, true).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
@@ -82,7 +84,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("L4 Left", field.alignToNearestSetpoint(true, false).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
     NamedCommands.registerCommand("L4 Right", field.alignToNearestSetpoint(false, true).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
 
-    NamedCommands.registerCommand("Score", new InstantCommand(() -> flywheels.setSpeed(-0.6)));
+    NamedCommands.registerCommand("Score", new InstantCommand(() -> flywheels.setSpeed(-0.7)));
     NamedCommands.registerCommand("Intake", new InstantCommand(() -> flywheels.setSpeed(1)));
     NamedCommands.registerCommand("Stop Wheels", new InstantCommand(() -> flywheels.setSpeed(0)));
 
@@ -117,12 +119,12 @@ public class RobotContainer {
     Trigger centerReefAlign = leftReefAlign.and(rightReefAlign);
     Trigger elevatorUp = operatorController.povUp();
     Trigger elevatorDown = operatorController.povDown();
-    Trigger armUp = operatorController.povRight();
-    Trigger armDown = operatorController.povLeft();
+    Trigger armUp = new Trigger(() -> operatorController.getLeftX() > 0.15);//operatorController.povRight();
+    Trigger armDown = new Trigger(() -> operatorController.getLeftX() < -0.15);//operatorController.povLeft();
     Trigger effectorIntake = operatorController.rightTrigger(0.1);
     Trigger effectorScore = operatorController.leftTrigger(0.1);
-    Trigger climbUp = driverController.povUp();
-    Trigger climbDown = driverController.povDown();
+    Trigger climbUp = driverController.rightBumper();
+    Trigger climbDown = driverController.leftBumper();
     Trigger algaeL2 = operatorController.rightBumper();
     Trigger algaeL3 = operatorController.leftBumper();
     Trigger algaeNet = operatorController.start();
@@ -139,7 +141,7 @@ public class RobotContainer {
 
     Command leftAlign = field.alignToNearestSetpoint(true, false);
     Command rightAlign = field.alignToNearestSetpoint(false, true);
-    Command centerAlign = field.alignToNearestSetpoint(false, false);
+    Command centerAlign = field.alignToNearestSetpoint(true, true);
 
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(),
@@ -158,18 +160,18 @@ public class RobotContainer {
 
     elevatorDown.negate().and(elevatorUp.negate()).onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));
 
-    armUp.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0.15))
+    armUp.onTrue(mechanisms.setSuppliedWristSpeed(() -> operatorController.getLeftX() / 2)
         .alongWith(new InstantCommand(() -> superStructure.setActualState(ActualState.Manual))));
 
-    armDown.onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(-0.15))
+    armDown.onTrue(mechanisms.setSuppliedWristSpeed(() -> operatorController.getLeftX() / 2)
         .alongWith(new InstantCommand(() -> superStructure.setActualState(ActualState.Manual))));
 
-    armUp.negate().and(armDown.negate()).onTrue(new InstantCommand(() -> mechanisms.setWristSpeed(0)));
+    armUp.negate().and(armDown.negate()).onTrue(mechanisms.setSuppliedWristSpeed(() -> 0));
 
-    zeroMechanisms.onTrue(new InstantCommand(() -> mechanisms.zeroMechanisms()));
+    //zeroMechanisms.onTrue(new InstantCommand(() -> mechanisms.zeroMechanisms()));
 
     effectorIntake.onTrue(flywheels.setSuppliedSpeed(() -> operatorController.getRightTriggerAxis()));
-    effectorScore.onTrue(flywheels.setSuppliedSpeed(() -> operatorController.getLeftTriggerAxis()));
+    effectorScore.onTrue(flywheels.setSuppliedSpeed(() -> -operatorController.getLeftTriggerAxis()));
     effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
 
     climbUp.onTrue(new InstantCommand(() -> deepClimb.setSpeed(1)));
