@@ -163,8 +163,8 @@ public class Constants {
     public static final double ANGLE_KF = 0;
   
     /* Swerve constraints. */
-    public static final double MAX_VELOCITY_METERS_PER_SECOND = 2;
-    public static final double MAX_ANGULAR_RADIANS_PER_SECOND = 4;
+    public static final double MAX_VELOCITY_METERS_PER_SECOND = 6;
+    public static final double MAX_ANGULAR_RADIANS_PER_SECOND = 6;
 
     /* Inversions. */
     public static final InvertedValue DRIVE_MOTOR_INVERSION = InvertedValue.CounterClockwise_Positive;

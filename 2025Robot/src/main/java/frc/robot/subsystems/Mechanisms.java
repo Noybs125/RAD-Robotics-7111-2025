@@ -253,8 +253,8 @@ public class Mechanisms extends SubsystemBase {
         defaultState();
         switch (state) {
             case ReefL1:
-                if(elevator.getPosition() >= 0.6){
-                    moveElevThenArm(0.58, 0.31325, 0.05);
+                if(elevator.getPosition() >= 0.65){
+                    moveElevThenArm(0.58, 0.31325, 0.1);
                 }else{
                     if(wrist.isAtSetpoint(0.05)){
                         moveElevThenArm(0.148, 0.31325, 0.05);

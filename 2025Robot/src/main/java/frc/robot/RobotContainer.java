@@ -6,10 +6,7 @@ import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.commands.PathfindThenFollowPath;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -18,8 +15,6 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Deepclimb;
 import frc.robot.subsystems.Field;
 import frc.robot.subsystems.Vision;
-import frc.robot.subsystems.Field.FieldSetpoint;
-import frc.robot.subsystems.Mechanisms.MechanismsState;
 import frc.robot.subsystems.SuperStructure.ActualState;
 import frc.robot.subsystems.SuperStructure.ControlState;
 import frc.robot.subsystems.Flywheels;
@@ -168,7 +163,7 @@ public class RobotContainer {
 
     armUp.negate().and(armDown.negate()).onTrue(mechanisms.setSuppliedWristSpeed(() -> 0));
 
-    //zeroMechanisms.onTrue(new InstantCommand(() -> mechanisms.zeroMechanisms()));
+    zeroMechanisms.onTrue(new InstantCommand(() -> mechanisms.zeroMechanisms()));
 
     effectorIntake.onTrue(flywheels.setSuppliedSpeed(() -> operatorController.getRightTriggerAxis()));
     effectorScore.onTrue(flywheels.setSuppliedSpeed(() -> -operatorController.getLeftTriggerAxis()));
