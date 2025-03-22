@@ -184,7 +184,7 @@ public class RobotContainer {
     rightReefAlign.onTrue(new InstantCommand(() -> field.updateCommand(true, false, true)).alongWith(Commands.print("right")));
     leftReefAlign.onTrue(new InstantCommand(() -> field.updateCommand(true, true, false)).alongWith(Commands.print("left")));
     centerReefAlign.onTrue(new InstantCommand(() -> field.updateCommand(true, false, false)).alongWith(Commands.print("center")));
-    rightReefAlign.negate().and(leftReefAlign.negate()).and(centerReefAlign.negate()).onTrue(new InstantCommand(() -> field.updateCommand(false, true, true)).alongWith(Commands.print("none")));
+    rightReefAlign.negate().and(leftReefAlign.negate()).and(centerReefAlign.negate()).onTrue(new InstantCommand(() -> field.updateCommand(false, false, false)).alongWith(Commands.print("none")));
 
     // change or remove each of these when we decide controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());

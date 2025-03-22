@@ -50,9 +50,9 @@ public class Field extends SubsystemBase {
     private FieldSetpoint nearestSetpoint = FieldSetpoint.Reef1;
     private Pose2d nearestPose = new Pose2d(5, 1, new Rotation2d());
     private boolean isCommandsUpdated = false;
-    private boolean isLeft = false;
+    private boolean isLeft = true;
     private boolean isRight = false;
-    private Command alignCommand = new InstantCommand();
+    private Command alignCommand = pathfindToPose(transformPose(nearestPose, isLeft, isRight));
 
     public GoalEndState endState = new GoalEndState(0, poseSetpoint.getRotation());
     public PathPlannerPath path;
@@ -182,16 +182,15 @@ public class Field extends SubsystemBase {
 
     public Pose2d transformPose(Pose2d pose, boolean left, boolean right) {
         if (left) {
-            var relativePose = pose.relativeTo(new Pose2d(pose.getX(), pose.getY() - Constants.kAuto.relativeBy, pose.getRotation()));
-            var poseTransform = new Transform2d(relativePose.getX(), relativePose.getY(), relativePose.getRotation());
-            pose.plus(poseTransform);
+            var relativePose = pose.relativeTo(new Pose2d(pose.getX(), pose.getY(), pose.getRotation()));
+            var poseTransform = new Transform2d(relativePose.getX(), relativePose.getY() + Constants.kAuto.relativeBy, relativePose.getRotation());
+            pose = pose.plus(poseTransform);
             }
         else if (right) {
-            var relativePose = pose.relativeTo(new Pose2d(pose.getX(), pose.getY() + Constants.kAuto.relativeBy, pose.getRotation()));
-            var poseTransform = new Transform2d(relativePose.getX(), relativePose.getY(), relativePose.getRotation());
-            pose.plus(poseTransform);
+            var relativePose = pose.relativeTo(new Pose2d(pose.getX(), pose.getY(), pose.getRotation()));
+            var poseTransform = new Transform2d(relativePose.getX(), relativePose.getY() - Constants.kAuto.relativeBy, relativePose.getRotation());
+            pose = pose.plus(poseTransform);
         }
-
         return pose;
     }
 
@@ -350,10 +349,16 @@ public class Field extends SubsystemBase {
         SmartDashboard.putString("nearest setpoint", nearestSetpoint.toString());
         SmartDashboard.putNumber("nearest posex", nearestPose.getX());
         SmartDashboard.putNumber("nearest posey", nearestPose.getY());
-        alignCommand = alignToNearestSetpoint(nearestPose, isLeft, isRight);
+        //alignToNearestSetpoint(nearestPose, isLeft, isRight);
         if(isCommandsUpdated){
+            alignCommand = pathfindToPose(transformPose(nearestPose, isLeft, isRight));
             alignCommand.schedule();
-        }else alignCommand.cancel();
+        }else 
+            alignCommand.cancel();
+
+        SmartDashboard.putBoolean("isCommandsUpdated", isCommandsUpdated);
+        SmartDashboard.putBoolean("isLeft", isLeft);
+        SmartDashboard.putBoolean("isRight", isRight);
     }
 
     public Command alignToNearestSetpoint(Pose2d pose, boolean isLeft, boolean isRight){
@@ -391,9 +396,9 @@ public class Field extends SubsystemBase {
         isCommandsUpdated = condition;
         this.isLeft = isLeft;
         this.isRight = isRight;
-    }
-
-    public Command getUpdatedCommand(){
-        return alignCommand;
+        if(!condition){
+            alignCommand.cancel();
+            System.out.println("canceled");
+        }
     }
 }
