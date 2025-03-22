@@ -50,6 +50,8 @@ public class Field extends SubsystemBase {
     private FieldSetpoint nearestSetpoint = FieldSetpoint.Reef1;
     private Pose2d nearestPose = new Pose2d(5, 1, new Rotation2d());
     private boolean isCommandsUpdated = false;
+    private boolean isLeft = false;
+    private boolean isRight = false;
     private Command alignCommand = new InstantCommand();
 
     public GoalEndState endState = new GoalEndState(0, poseSetpoint.getRotation());
@@ -165,36 +167,20 @@ public class Field extends SubsystemBase {
      * @param pose -Type "Pose2d", used to give pathfindToPose a position to go toward.
      * @return -A command to go from the robot's position to the "pose" input, adhearing to constraints.
      */
-    public Command pathfindToPose(Supplier<Pose2d> pose) {
+    public Command pathfindToPose(Pose2d pose) {
         return new ConditionalCommand(
             new ConditionalCommand(
                 new ConditionalCommand(
-                    AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.constraints, 0), 
-                    AutoBuilder.pathfindToPoseFlipped(pose.get(), Constants.kAuto.constraints, 0), 
+                    AutoBuilder.pathfindToPose(pose, Constants.kAuto.constraints, 0), 
+                    AutoBuilder.pathfindToPoseFlipped(pose, Constants.kAuto.constraints, 0), 
                     () -> DriverStation.getAlliance().get() == Alliance.Blue), 
-                AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.constraints, 0), 
+                AutoBuilder.pathfindToPose(pose, Constants.kAuto.constraints, 0), 
                 () -> DriverStation.getAlliance().isPresent()), 
-            AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.constraints, 0), 
-            () -> pose.get() != null);
-
-        /*if(pose != null){
-            if(pose.get() != null){
-                SmartDashboard.putNumber("supplied posex", pose.get().getX());
-                SmartDashboard.putNumber("supplied posey", pose.get().getY());
-                Command com;
-                if (DriverStation.getAlliance().isPresent()) {
-                    com = DriverStation.getAlliance().get() == Alliance.Blue 
-                        ? AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.constraints, 0)
-                        : AutoBuilder.pathfindToPoseFlipped(pose.get(), Constants.kAuto.constraints, 0);
-                }
-                else com = AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.constraints, 0);
-                return com.alongWith(Commands.print("pose isnt null"));
-            }
-        }
-        return AutoBuilder.pathfindToPose(new Pose2d(5, 10, new Rotation2d()), Constants.kAuto.reefConstraints, 0).alongWith(Commands.print("null"));*/
+            AutoBuilder.pathfindToPose(pose, Constants.kAuto.constraints, 0), 
+            () -> pose != null);
     }
 
-    public Pose2d transformBy(Pose2d pose, boolean left, boolean right) {
+    public Pose2d transformPose(Pose2d pose, boolean left, boolean right) {
         if (left) {
             var relativePose = pose.relativeTo(new Pose2d(pose.getX(), pose.getY() - Constants.kAuto.relativeBy, pose.getRotation()));
             var poseTransform = new Transform2d(relativePose.getX(), relativePose.getY(), relativePose.getRotation());
@@ -207,80 +193,6 @@ public class Field extends SubsystemBase {
         }
 
         return pose;
-    }
-
-    /**
-     * States for setting destination for the robot, using the FieldSetpoint as the specified states.
-     * @see -Link to Pose2d object class: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose2d.html.
-     * @param state -Type FieldSetpoint enum. Options include "Reef1" through "Reef6", SourceLeft and "SourceRight", "Barge" and "Climb".
-     * @return -A command to the state's position, being a point on the field. Uses method "pathfindToPose", defined in this class.
-     */
-    public Pose2d getPoseFromSetpoint(Supplier<FieldSetpoint> state, boolean left, boolean right) {
-        System.out.println("berfor state");
-        if(state != null){
-            if(state.get() != null){
-                System.out.println("got pose from setpoint maybe " + state.get().toString());
-                switch (state.get()) {
-                    case Reef1:
-                        poseSetpoint = new Pose2d(3.16, 4.05, Rotation2d.fromDegrees(0));
-                        transformBy(poseSetpoint, left, right);
-                        break;
-                    case Reef2:
-                        poseSetpoint = new Pose2d(3.87, 5.20, Rotation2d.fromDegrees(-60));
-                        transformBy(poseSetpoint, left, right);
-                        break;
-                    case Reef3:
-                        poseSetpoint = new Pose2d(5.15, 5.18, Rotation2d.fromDegrees(-120));
-                        transformBy(poseSetpoint, left, right);
-                        break;
-                    case Reef4:
-                        poseSetpoint = new Pose2d(5.86, 4.00, Rotation2d.fromDegrees(-180));
-                        transformBy(poseSetpoint, left, right);
-                        break;
-                    case Reef5:
-                        poseSetpoint = new Pose2d(5.08, 2.85, Rotation2d.fromDegrees(120));
-                        transformBy(poseSetpoint, left, right);
-                        break;
-                    case Reef6:
-                        poseSetpoint = new Pose2d(3.16, 4.05, Rotation2d.fromDegrees(60));
-                        transformBy(poseSetpoint, left, right);
-                        break;
-                    case SourceLeft:
-                        poseSetpoint = new Pose2d(1.07, 7.15, Rotation2d.fromDegrees(126));
-                        break;
-                    case SourceRight:
-                        poseSetpoint = new Pose2d(1.07, 0.96, Rotation2d.fromDegrees(-125.5));
-                        break;
-                    case Barge:
-                        poseSetpoint = new Pose2d(7.29, 6.18, Rotation2d.fromDegrees(0));
-                        break;
-                    case Climb:
-                        switch (driverLocation.getSelected()) {
-                            case 1:
-                                poseSetpoint = new Pose2d(7.33, 7.27, Rotation2d.fromDegrees(0));
-                                break;
-                            case 2:
-                                poseSetpoint = new Pose2d(7.33, 6.20, Rotation2d.fromDegrees(0));
-                                break;
-                            case 3:
-                                poseSetpoint = new Pose2d(7.33, 5.09, Rotation2d.fromDegrees(0));
-                                break;
-                            default:
-                                poseSetpoint = new Pose2d(4.49, 6.20, Rotation2d.fromDegrees(0));
-                        }
-                        break;
-                    case Processor:
-                        poseSetpoint = new Pose2d(6.13, 0.35, Rotation2d.fromDegrees(-90));
-                        break;
-
-                    default:
-                        poseSetpoint = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-                        break;
-                }
-            }
-        }
-        poseSetpoint = swerve.getPose();
-        return poseSetpoint;
     }
 
     /**
@@ -361,7 +273,7 @@ public class Field extends SubsystemBase {
             Transform2d transform = new Transform2d(pose2.getX(), pose2.getY(), pose2.getRotation());
             pose.transformBy(transform);
         }
-        command.andThen(new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToPose(() -> pose)));
+        command.andThen(new SequentialCommandGroup(NamedCommands.getCommand("Stow"), pathfindToPose(pose)));
 
 
         switch (cycle.levelToScore) {
@@ -438,16 +350,14 @@ public class Field extends SubsystemBase {
         SmartDashboard.putString("nearest setpoint", nearestSetpoint.toString());
         SmartDashboard.putNumber("nearest posex", nearestPose.getX());
         SmartDashboard.putNumber("nearest posey", nearestPose.getY());
-        alignCommand = alignToNearestSetpoint(() -> nearestPose, false, false);
+        alignCommand = alignToNearestSetpoint(nearestPose, isLeft, isRight);
         if(isCommandsUpdated){
             alignCommand.schedule();
         }else alignCommand.cancel();
     }
 
-    public Command alignToNearestSetpoint(Supplier<Pose2d> pose, boolean isLeft, boolean isRight){
-        
-        return pathfindToPose(() -> transformBy(pose.get(), isLeft, isRight));
-        //return pathfindToPose(() -> getPoseFromSetpoint(() -> getNearestSetpoint(() -> swerve.getPose()), isLeft, isRight));
+    public Command alignToNearestSetpoint(Pose2d pose, boolean isLeft, boolean isRight){
+        return pathfindToPose(transformPose(pose, isLeft, isRight));
     }
 
     public Pose2d getNearestPose(){
@@ -477,8 +387,10 @@ public class Field extends SubsystemBase {
         return null;
     }
 
-    public void updateCommand(boolean condition){
+    public void updateCommand(boolean condition, boolean isLeft, boolean isRight){
         isCommandsUpdated = condition;
+        this.isLeft = isLeft;
+        this.isRight = isRight;
     }
 
     public Command getUpdatedCommand(){

@@ -110,8 +110,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // all of these bindings will be correctly defined when we decide controls
-    Trigger leftReefAlign = driverController.leftTrigger().and(driverController.rightTrigger().negate());
-    Trigger rightReefAlign = driverController.rightTrigger().and(leftReefAlign.negate());
+    Trigger leftReefAlign = driverController.leftTrigger();
+    Trigger rightReefAlign = driverController.rightTrigger();
     Trigger centerReefAlign = leftReefAlign.and(rightReefAlign);
     Trigger elevatorUp = operatorController.povUp();
     Trigger elevatorDown = operatorController.povDown();
@@ -134,10 +134,6 @@ public class RobotContainer {
     Trigger stow = operatorController.back();
 
     Trigger zeroMechanisms = operatorController.rightStick();
-
-    Command leftAlign = field.alignToNearestSetpoint(field::getNearestPose, true, false);
-    Command rightAlign = field.alignToNearestSetpoint(field::getNearestPose, true, false);
-    Command centerAlign = field.alignToNearestSetpoint(field::getNearestPose, true, false);
 
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(),
@@ -185,13 +181,10 @@ public class RobotContainer {
     l4.onTrue(superStructure.setRobotStateCommand(ControlState.YButton));
     stow.onTrue(superStructure.setRobotStateCommand(ControlState.SelectButton));
 
-    //leftReefAlign.onTrue(superStructure.useLeftAlignment());
-    //rightReefAlign.onTrue(superStructure.useRightAlignment());
-    //centerReefAlign.onTrue(superStructure.useCenterAlignment());
-    //leftReefAlign.negate().and(rightReefAlign.negate()).and(centerReefAlign.negate()).onTrue(superStructure.useNoAlignment());
-    rightReefAlign.onTrue(new InstantCommand(() -> field.updateCommand(true)).alongWith(Commands.print("right")));
-    leftReefAlign.onTrue(new InstantCommand(() -> field.updateCommand(true)).alongWith(Commands.print("left")));
-    centerReefAlign.onTrue(new InstantCommand(() -> field.updateCommand(true)).alongWith(Commands.print("center")));
+    rightReefAlign.onTrue(new InstantCommand(() -> field.updateCommand(true, false, true)).alongWith(Commands.print("right")));
+    leftReefAlign.onTrue(new InstantCommand(() -> field.updateCommand(true, true, false)).alongWith(Commands.print("left")));
+    centerReefAlign.onTrue(new InstantCommand(() -> field.updateCommand(true, false, false)).alongWith(Commands.print("center")));
+    rightReefAlign.negate().and(leftReefAlign.negate()).and(centerReefAlign.negate()).onTrue(new InstantCommand(() -> field.updateCommand(false, true, true)).alongWith(Commands.print("none")));
 
     // change or remove each of these when we decide controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());
