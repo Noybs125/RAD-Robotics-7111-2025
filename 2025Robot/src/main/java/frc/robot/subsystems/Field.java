@@ -77,7 +77,7 @@ public class Field extends SubsystemBase {
         new Pose2d(5.15, 5.18, Rotation2d.fromDegrees(-120)),
         new Pose2d(5.86, 4.00, Rotation2d.fromDegrees(-180)),
         new Pose2d(5.08, 2.85, Rotation2d.fromDegrees(120)),
-        new Pose2d(3.16, 4.05, Rotation2d.fromDegrees(60)),
+        new Pose2d(3.81, 2.9, Rotation2d.fromDegrees(60)),
         //new Pose2d(5.18, 2.78, Rotation2d.fromDegrees(119.01)),
         //new Pose2d(3.76, 2.80, Rotation2d.fromDegrees(60.01)),
         //new Pose2d(6.21, 0.39, Rotation2d.fromDegrees(270)),
