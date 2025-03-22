@@ -162,15 +162,18 @@ public class Field extends SubsystemBase {
      * @return -A command to go from the robot's position to the "pose" input, adhearing to constraints.
      */
     public Command pathfindToPose(Supplier<Pose2d> pose) {
+        
         if(pose != null){
             if(pose.get() != null){
+                SmartDashboard.putNumber("supplied posex", pose.get().getX());
+                SmartDashboard.putNumber("supplied posey", pose.get().getY());
                 Command com;
                 if (DriverStation.getAlliance().isPresent()) {
                     com = DriverStation.getAlliance().get() == Alliance.Blue 
-                        ? AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.reefConstraints, 0)
-                        : AutoBuilder.pathfindToPoseFlipped(pose.get(), Constants.kAuto.reefConstraints, 0);
+                        ? AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.constraints, 0)
+                        : AutoBuilder.pathfindToPoseFlipped(pose.get(), Constants.kAuto.constraints, 0);
                 }
-                else com = AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.reefConstraints, 0);
+                else com = AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.constraints, 0);
                 return com.alongWith(Commands.print("pose isnt null"));
             }
         }
@@ -410,13 +413,17 @@ public class Field extends SubsystemBase {
 
             autoCycleChooser.getSelected().updateAutoCycle();
         }
-
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
-            nearestSetpoint = reversedSetpointMap.get(swerve.getPose().nearest(zoneMap));
-        }else{
-            nearestSetpoint = reversedSetpointMap.get(FlippingUtil.flipFieldPose(swerve.getPose()).nearest(zoneMap));
+        if(DriverStation.getAlliance().isPresent()){
+            if(DriverStation.getAlliance().get() == Alliance.Blue){
+                nearestSetpoint = reversedSetpointMap.get(swerve.getPose().nearest(zoneMap));
+            }else{
+                nearestSetpoint = reversedSetpointMap.get(FlippingUtil.flipFieldPose(swerve.getPose()).nearest(zoneMap));
+            }
         }
         nearestPose = fieldSetpointMap.get(nearestSetpoint);
+        SmartDashboard.putString("nearest setpoint", nearestSetpoint.toString());
+        SmartDashboard.putNumber("nearest posex", nearestPose.getX());
+        SmartDashboard.putNumber("nearest posey", nearestPose.getY());
     }
 
     public Command alignToNearestSetpoint(boolean isLeft, boolean isRight){
