@@ -83,7 +83,7 @@ public class Mechanisms extends SubsystemBase {
             new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, 
                 new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), Constants.kMechanisms.elevator2Config()));
 
-        wrist = new CTREMotor(14, null, kMechanisms.wristGearRatio, Constants.kMechanisms.armPID, Constants.kMechanisms.wristFF, new ArmSimMotor(null, null, null, null), Constants.kMechanisms.wristConfig());
+        wrist = new CTREMotor(13, null, kMechanisms.wristGearRatio, Constants.kMechanisms.armPID, Constants.kMechanisms.wristFF, new ArmSimMotor(null, null, null, null), Constants.kMechanisms.wristConfig());
 
         wrist.setSpeedLimits(Constants.kMechanisms.maxWristSpeed, -Constants.kMechanisms.maxWristSpeed);
         wrist.setPosition(0);

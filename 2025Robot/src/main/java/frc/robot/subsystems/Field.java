@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,6 +45,8 @@ public class Field extends SubsystemBase {
     private SendableChooser<Integer> reefLevelChooser = new SendableChooser<>();
 
     private Pose2d poseSetpoint = new Pose2d();
+    private FieldSetpoint nearestSetpoint = FieldSetpoint.Reef1;
+    private Pose2d nearestPose = new Pose2d();
 
     public GoalEndState endState = new GoalEndState(0, poseSetpoint.getRotation());
     public PathPlannerPath path;
@@ -76,6 +79,7 @@ public class Field extends SubsystemBase {
     };
     public Map<FieldSetpoint, Pose2d> fieldSetpointMap = new HashMap<>();
     public Map<FieldSetpoint, Pose2d> fieldSetpointMapFlipped = new HashMap<>();
+    public Map<Pose2d, FieldSetpoint> reversedSetpointMap = new HashMap<>();
     private FieldSetpoint[] fieldSetpoints = new FieldSetpoint[] {
         FieldSetpoint.Reef1,
         FieldSetpoint.Reef2,
@@ -135,6 +139,7 @@ public class Field extends SubsystemBase {
         for(FieldSetpoint setpoint : fieldSetpoints){
             fieldSetpointMap.put(setpoint, zoneMap.get(poseIndex));
             fieldSetpointMapFlipped.put(setpoint, zoneMapFlipped.get(poseIndex));
+            reversedSetpointMap.put(zoneMap.get(poseIndex), setpoint);
             poseIndex++;
         }
 
@@ -157,12 +162,19 @@ public class Field extends SubsystemBase {
      * @return -A command to go from the robot's position to the "pose" input, adhearing to constraints.
      */
     public Command pathfindToPose(Supplier<Pose2d> pose) {
-        if (DriverStation.getAlliance().isPresent()) {
-            return DriverStation.getAlliance().get() == Alliance.Blue 
-                ? AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.reefConstraints, 0)
-                : AutoBuilder.pathfindToPoseFlipped(pose.get(), Constants.kAuto.reefConstraints, 0);
+        if(pose != null){
+            if(pose.get() != null){
+                Command com;
+                if (DriverStation.getAlliance().isPresent()) {
+                    com = DriverStation.getAlliance().get() == Alliance.Blue 
+                        ? AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.reefConstraints, 0)
+                        : AutoBuilder.pathfindToPoseFlipped(pose.get(), Constants.kAuto.reefConstraints, 0);
+                }
+                else com = AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.reefConstraints, 0);
+                return com.alongWith(Commands.print("pose isnt null"));
+            }
         }
-        else return AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.reefConstraints, 0);
+        return AutoBuilder.pathfindToPose(new Pose2d(5, 10, new Rotation2d()), Constants.kAuto.reefConstraints, 0).alongWith(Commands.print("null"));
     }
 
     public Pose2d transformBy(Pose2d pose, boolean left, boolean right) {
@@ -187,8 +199,10 @@ public class Field extends SubsystemBase {
      * @return -A command to the state's position, being a point on the field. Uses method "pathfindToPose", defined in this class.
      */
     public Pose2d getPoseFromSetpoint(Supplier<FieldSetpoint> state, boolean left, boolean right) {
+        System.out.println("berfor state");
         if(state != null){
             if(state.get() != null){
+                System.out.println("got pose from setpoint maybe " + state.get().toString());
                 switch (state.get()) {
                     case Reef1:
                         poseSetpoint = new Pose2d(3.16, 4.05, Rotation2d.fromDegrees(0));
@@ -396,13 +410,22 @@ public class Field extends SubsystemBase {
 
             autoCycleChooser.getSelected().updateAutoCycle();
         }
+
+        if(DriverStation.getAlliance().get() == Alliance.Blue){
+            nearestSetpoint = reversedSetpointMap.get(swerve.getPose().nearest(zoneMap));
+        }else{
+            nearestSetpoint = reversedSetpointMap.get(FlippingUtil.flipFieldPose(swerve.getPose()).nearest(zoneMap));
+        }
+        nearestPose = fieldSetpointMap.get(nearestSetpoint);
     }
 
     public Command alignToNearestSetpoint(boolean isLeft, boolean isRight){
-        return pathfindToPose(() -> getPoseFromSetpoint(() -> getNearestSetpoint(() -> swerve.getPose()), isLeft, isRight));
+        return pathfindToPose(() -> nearestPose).alongWith(Commands.print("why isnt this working"));
+        //return pathfindToPose(() -> getPoseFromSetpoint(() -> getNearestSetpoint(() -> swerve.getPose()), isLeft, isRight));
     }
 
     public FieldSetpoint getNearestSetpoint(Supplier<Pose2d> robotPose){
+        System.out.println("This is Running!!!!!!!!!!!!!!!!!!!!!!!");
         Pose2d pose;
         if(DriverStation.getAlliance().isPresent()){
             if(DriverStation.getAlliance().get() == Alliance.Red){
@@ -414,6 +437,7 @@ public class Field extends SubsystemBase {
         
         
         for (FieldSetpoint setpoint : fieldSetpoints) {
+            System.out.println(setpoint.toString());
             if(pose.getX() == fieldSetpointMap.get(setpoint).getX() 
                 && pose.getY() == fieldSetpointMap.get(setpoint).getY()
                 && pose.getRotation().getDegrees() == fieldSetpointMap.get(setpoint).getRotation().getDegrees()){

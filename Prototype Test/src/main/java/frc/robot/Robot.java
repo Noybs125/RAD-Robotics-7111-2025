@@ -18,11 +18,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
 
-  private int divID = 21;
-  private SparkMax neoTestMotor = new SparkMax(divID, MotorType.kBrushless);
+  /*private int divID = 21;
+  private SparkMax neoTestMotor = new SparkMax(divID, MotorType.kBrushless);*/
   private Command m_autonomousCommand;
   
-  private int krakenID = 0;
+  private int krakenID = 14 ;
   private TalonFX krakenTestMotor = new TalonFX(krakenID);
 
   private XboxController controller = new XboxController(0);
@@ -37,9 +37,9 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     
-    double neoVoltage = neoTestMotor.getBusVoltage();
+    //double neoVoltage = neoTestMotor.getBusVoltage();
 
-    if(controller.getAButton()){
+    /*if(controller.getAButton()){
       neoTestMotor.set(.5);
     } else if(controller.getYButton()){
       neoTestMotor.set(-0.5);
@@ -50,7 +50,7 @@ public class Robot extends TimedRobot {
     }
     else{
       neoTestMotor.set(0);
-    }
+    }*/
 
     if(controller.getRightBumper()){
       krakenTestMotor.set(.5);
@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
       krakenTestMotor.set(0);
     }
 
-    SmartDashboard.putNumber("Can Bus Voltage", neoVoltage);
+    //SmartDashboard.putNumber("Can Bus Voltage", neoVoltage);
   }
 
   @Override

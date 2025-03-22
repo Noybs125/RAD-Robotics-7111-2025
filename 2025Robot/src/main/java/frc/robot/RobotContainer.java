@@ -22,6 +22,7 @@ import frc.robot.subsystems.Mechanisms;
 import frc.robot.subsystems.Sensors;
 import frc.robot.subsystems.SuperStructure;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -169,9 +170,9 @@ public class RobotContainer {
     effectorScore.onTrue(flywheels.setSuppliedSpeed(() -> -operatorController.getLeftTriggerAxis()));
     effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
 
-    climbUp.onTrue(new InstantCommand(() -> deepClimb.setSpeed(1)));
-    climbDown.onTrue(new InstantCommand(() -> deepClimb.setSpeed(-1)));
-    climbDown.negate().and(climbUp.negate()).onTrue(new InstantCommand(() -> deepClimb.setSpeed(0)));
+    //climbUp.onTrue(new InstantCommand(() -> deepClimb.setSpeed(1)));
+    //climbDown.onTrue(new InstantCommand(() -> deepClimb.setSpeed(-1)));
+    //climbDown.negate().and(climbUp.negate()).onTrue(new InstantCommand(() -> deepClimb.setSpeed(0)));
 
     algaeL2.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.RightBumper));
     algaeL3.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.LeftBumper));
@@ -188,9 +189,9 @@ public class RobotContainer {
     //rightReefAlign.onTrue(superStructure.useRightAlignment());
     //centerReefAlign.onTrue(superStructure.useCenterAlignment());
     //leftReefAlign.negate().and(rightReefAlign.negate()).and(centerReefAlign.negate()).onTrue(superStructure.useNoAlignment());
-    rightReefAlign.onTrue(rightAlign).onFalse(new InstantCommand(() -> rightAlign.cancel()));
-    leftReefAlign.onTrue(leftAlign).onFalse(new InstantCommand(() -> leftAlign.cancel()));
-    centerReefAlign.onTrue(centerAlign).onFalse(new InstantCommand(() -> centerAlign.cancel()));
+    rightReefAlign.onTrue(rightAlign.alongWith(Commands.print("right")));
+    leftReefAlign.onTrue(leftAlign.alongWith(Commands.print("left")));
+    centerReefAlign.onTrue(centerAlign.alongWith(Commands.print("center")));
 
     // change or remove each of these when we decide controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());
