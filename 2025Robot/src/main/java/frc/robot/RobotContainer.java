@@ -72,14 +72,14 @@ public class RobotContainer {
     NamedCommands.registerCommand("Stow", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow));
     NamedCommands.registerCommand("Zero", superStructure.setActualStateCommand(SuperStructure.ActualState.stow));
     NamedCommands.registerCommand("L4", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4));
-    NamedCommands.registerCommand("L1 Center", field.alignToNearestSetpoint(false, false).alongWith(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow)));
+    /*NamedCommands.registerCommand("L1 Center", field.alignToNearestSetpoint(false, false).alongWith(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow)));
     NamedCommands.registerCommand("L2 Left", field.alignToNearestSetpoint(true, false).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
     NamedCommands.registerCommand("L2 Right", field.alignToNearestSetpoint(false, true).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
     NamedCommands.registerCommand("L3 Left", field.alignToNearestSetpoint(true, false).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3)));
     NamedCommands.registerCommand("L3 Right", field.alignToNearestSetpoint(false, true).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3)));
     NamedCommands.registerCommand("L4 Left", field.alignToNearestSetpoint(true, false).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
     NamedCommands.registerCommand("L4 Right", field.alignToNearestSetpoint(false, true).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
-
+*/
     NamedCommands.registerCommand("Score", new InstantCommand(() -> flywheels.setSpeed(-0.7)));
     NamedCommands.registerCommand("Intake", new InstantCommand(() -> flywheels.setSpeed(1)));
     NamedCommands.registerCommand("Stop Wheels", new InstantCommand(() -> flywheels.setSpeed(0)));
@@ -135,9 +135,9 @@ public class RobotContainer {
 
     Trigger zeroMechanisms = operatorController.rightStick();
 
-    Command leftAlign = field.alignToNearestSetpoint(true, false);
-    Command rightAlign = field.alignToNearestSetpoint(false, true);
-    Command centerAlign = field.alignToNearestSetpoint(true, true);
+    Command leftAlign = field.alignToNearestSetpoint(field::getNearestPose, true, false);
+    Command rightAlign = field.alignToNearestSetpoint(field::getNearestPose, true, false);
+    Command centerAlign = field.alignToNearestSetpoint(field::getNearestPose, true, false);
 
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(),
@@ -189,9 +189,9 @@ public class RobotContainer {
     //rightReefAlign.onTrue(superStructure.useRightAlignment());
     //centerReefAlign.onTrue(superStructure.useCenterAlignment());
     //leftReefAlign.negate().and(rightReefAlign.negate()).and(centerReefAlign.negate()).onTrue(superStructure.useNoAlignment());
-    rightReefAlign.onTrue(rightAlign.alongWith(Commands.print("right")));
-    leftReefAlign.onTrue(leftAlign.alongWith(Commands.print("left")));
-    centerReefAlign.onTrue(centerAlign.alongWith(Commands.print("center")));
+    rightReefAlign.onTrue(new InstantCommand(() -> field.updateCommand(true)).alongWith(Commands.print("right")));
+    leftReefAlign.onTrue(new InstantCommand(() -> field.updateCommand(true)).alongWith(Commands.print("left")));
+    centerReefAlign.onTrue(new InstantCommand(() -> field.updateCommand(true)).alongWith(Commands.print("center")));
 
     // change or remove each of these when we decide controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());

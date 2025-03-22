@@ -28,7 +28,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -46,7 +48,9 @@ public class Field extends SubsystemBase {
 
     private Pose2d poseSetpoint = new Pose2d();
     private FieldSetpoint nearestSetpoint = FieldSetpoint.Reef1;
-    private Pose2d nearestPose = new Pose2d();
+    private Pose2d nearestPose = new Pose2d(5, 1, new Rotation2d());
+    private boolean isCommandsUpdated = false;
+    private Command alignCommand = new InstantCommand();
 
     public GoalEndState endState = new GoalEndState(0, poseSetpoint.getRotation());
     public PathPlannerPath path;
@@ -162,8 +166,18 @@ public class Field extends SubsystemBase {
      * @return -A command to go from the robot's position to the "pose" input, adhearing to constraints.
      */
     public Command pathfindToPose(Supplier<Pose2d> pose) {
-        
-        if(pose != null){
+        return new ConditionalCommand(
+            new ConditionalCommand(
+                new ConditionalCommand(
+                    AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.constraints, 0), 
+                    AutoBuilder.pathfindToPoseFlipped(pose.get(), Constants.kAuto.constraints, 0), 
+                    () -> DriverStation.getAlliance().get() == Alliance.Blue), 
+                AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.constraints, 0), 
+                () -> DriverStation.getAlliance().isPresent()), 
+            AutoBuilder.pathfindToPose(pose.get(), Constants.kAuto.constraints, 0), 
+            () -> pose.get() != null);
+
+        /*if(pose != null){
             if(pose.get() != null){
                 SmartDashboard.putNumber("supplied posex", pose.get().getX());
                 SmartDashboard.putNumber("supplied posey", pose.get().getY());
@@ -177,7 +191,7 @@ public class Field extends SubsystemBase {
                 return com.alongWith(Commands.print("pose isnt null"));
             }
         }
-        return AutoBuilder.pathfindToPose(new Pose2d(5, 10, new Rotation2d()), Constants.kAuto.reefConstraints, 0).alongWith(Commands.print("null"));
+        return AutoBuilder.pathfindToPose(new Pose2d(5, 10, new Rotation2d()), Constants.kAuto.reefConstraints, 0).alongWith(Commands.print("null"));*/
     }
 
     public Pose2d transformBy(Pose2d pose, boolean left, boolean right) {
@@ -424,11 +438,20 @@ public class Field extends SubsystemBase {
         SmartDashboard.putString("nearest setpoint", nearestSetpoint.toString());
         SmartDashboard.putNumber("nearest posex", nearestPose.getX());
         SmartDashboard.putNumber("nearest posey", nearestPose.getY());
+        alignCommand = alignToNearestSetpoint(() -> nearestPose, false, false);
+        if(isCommandsUpdated){
+            alignCommand.schedule();
+        }else alignCommand.cancel();
     }
 
-    public Command alignToNearestSetpoint(boolean isLeft, boolean isRight){
-        return pathfindToPose(() -> nearestPose).alongWith(Commands.print("why isnt this working"));
+    public Command alignToNearestSetpoint(Supplier<Pose2d> pose, boolean isLeft, boolean isRight){
+        
+        return pathfindToPose(() -> transformBy(pose.get(), isLeft, isRight));
         //return pathfindToPose(() -> getPoseFromSetpoint(() -> getNearestSetpoint(() -> swerve.getPose()), isLeft, isRight));
+    }
+
+    public Pose2d getNearestPose(){
+        return nearestPose;
     }
 
     public FieldSetpoint getNearestSetpoint(Supplier<Pose2d> robotPose){
@@ -452,5 +475,13 @@ public class Field extends SubsystemBase {
                 }
         }
         return null;
+    }
+
+    public void updateCommand(boolean condition){
+        isCommandsUpdated = condition;
+    }
+
+    public Command getUpdatedCommand(){
+        return alignCommand;
     }
 }
