@@ -286,7 +286,7 @@ public class Constants {
   }
 
   public static class kAuto {
-    public static final double relativeBy = 0.2;
+    public static final double relativeBy = 0.18;
 
     /* PID Values. */
     public static final double X_CONTROLLER_KP = 1.0;

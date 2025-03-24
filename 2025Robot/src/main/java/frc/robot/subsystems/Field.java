@@ -50,6 +50,7 @@ public class Field extends SubsystemBase {
     private FieldSetpoint nearestSetpoint = FieldSetpoint.Reef1;
     private Pose2d nearestPose = new Pose2d(5, 1, new Rotation2d());
     private boolean isCommandsUpdated = false;
+    private boolean isCommandEnded = false;
     private boolean isLeft = true;
     private boolean isRight = false;
     private Command alignCommand = pathfindToPose(transformPose(nearestPose, isLeft, isRight));
@@ -171,12 +172,12 @@ public class Field extends SubsystemBase {
         return new ConditionalCommand(
             new ConditionalCommand(
                 new ConditionalCommand(
-                    AutoBuilder.pathfindToPose(pose, Constants.kAuto.constraints, 0), 
-                    AutoBuilder.pathfindToPoseFlipped(pose, Constants.kAuto.constraints, 0), 
+                    AutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0), 
+                    AutoBuilder.pathfindToPoseFlipped(pose, Constants.kAuto.reefConstraints, 0), 
                     () -> DriverStation.getAlliance().get() == Alliance.Blue), 
-                AutoBuilder.pathfindToPose(pose, Constants.kAuto.constraints, 0), 
+                AutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0), 
                 () -> DriverStation.getAlliance().isPresent()), 
-            AutoBuilder.pathfindToPose(pose, Constants.kAuto.constraints, 0), 
+            AutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0), 
             () -> pose != null);
     }
 
@@ -350,11 +351,15 @@ public class Field extends SubsystemBase {
         SmartDashboard.putNumber("nearest posex", nearestPose.getX());
         SmartDashboard.putNumber("nearest posey", nearestPose.getY());
         //alignToNearestSetpoint(nearestPose, isLeft, isRight);
+
         if(isCommandsUpdated){
             alignCommand = pathfindToPose(transformPose(nearestPose, isLeft, isRight));
             alignCommand.schedule();
-        }else 
+            isCommandsUpdated = false;
+        }else if(isCommandEnded){
             alignCommand.cancel();
+            isCommandEnded = false;
+        }
 
         SmartDashboard.putBoolean("isCommandsUpdated", isCommandsUpdated);
         SmartDashboard.putBoolean("isLeft", isLeft);
@@ -394,6 +399,7 @@ public class Field extends SubsystemBase {
 
     public void updateCommand(boolean condition, boolean isLeft, boolean isRight){
         isCommandsUpdated = condition;
+        isCommandEnded = !condition;
         this.isLeft = isLeft;
         this.isRight = isRight;
         if(!condition){
