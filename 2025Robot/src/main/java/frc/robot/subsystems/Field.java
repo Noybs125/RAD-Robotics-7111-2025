@@ -75,7 +75,7 @@ public class Field extends SubsystemBase {
     private Pose2d[] zoneArray = new Pose2d[] {
         new Pose2d(3.16, 4.05, Rotation2d.fromDegrees(0)),
         new Pose2d(3.87, 5.20, Rotation2d.fromDegrees(-60)),
-        new Pose2d(5.15, 5.18, Rotation2d.fromDegrees(-120)),
+        new Pose2d(5.14, 5.16, Rotation2d.fromDegrees(-120)),
         new Pose2d(5.86, 4.00, Rotation2d.fromDegrees(-180)),
         new Pose2d(5.08, 2.85, Rotation2d.fromDegrees(120)),
         new Pose2d(3.81, 2.9, Rotation2d.fromDegrees(60)),
@@ -169,6 +169,7 @@ public class Field extends SubsystemBase {
      * @return -A command to go from the robot's position to the "pose" input, adhearing to constraints.
      */
     public Command pathfindToPose(Pose2d pose) {
+        
         return new ConditionalCommand(
             new ConditionalCommand(
                 new ConditionalCommand(
@@ -184,12 +185,16 @@ public class Field extends SubsystemBase {
     public Pose2d transformPose(Pose2d pose, boolean left, boolean right) {
         if (left) {
             var relativePose = pose.relativeTo(new Pose2d(pose.getX(), pose.getY(), pose.getRotation()));
-            var poseTransform = new Transform2d(relativePose.getX(), relativePose.getY() + Constants.kAuto.relativeBy, relativePose.getRotation());
+            var poseTransform = new Transform2d(relativePose.getX(), relativePose.getY() + Constants.kAuto.leftOffset + Constants.kAuto.centerOffset, relativePose.getRotation());
             pose = pose.plus(poseTransform);
             }
         else if (right) {
             var relativePose = pose.relativeTo(new Pose2d(pose.getX(), pose.getY(), pose.getRotation()));
-            var poseTransform = new Transform2d(relativePose.getX(), relativePose.getY() - Constants.kAuto.relativeBy, relativePose.getRotation());
+            var poseTransform = new Transform2d(relativePose.getX(), relativePose.getY() - Constants.kAuto.rightOffset, relativePose.getRotation());
+            pose = pose.plus(poseTransform);
+        }else{
+            var relativePose = pose.relativeTo(new Pose2d(pose.getX(), pose.getY(), pose.getRotation()));
+            var poseTransform = new Transform2d(relativePose.getX(), relativePose.getY() + Constants.kAuto.centerOffset, relativePose.getRotation());
             pose = pose.plus(poseTransform);
         }
         return pose;

@@ -110,8 +110,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // all of these bindings will be correctly defined when we decide controls
-    Trigger leftReefAlign = driverController.leftTrigger();
-    Trigger rightReefAlign = driverController.rightTrigger();
+    Trigger leftReefAlign = driverController.leftBumper();
+    Trigger rightReefAlign = driverController.rightBumper();
     Trigger centerReefAlign = leftReefAlign.and(rightReefAlign);
     Trigger elevatorUp = operatorController.povUp();
     Trigger elevatorDown = operatorController.povDown();
@@ -119,13 +119,14 @@ public class RobotContainer {
     Trigger armDown = new Trigger(() -> operatorController.getLeftX() < -0.15);//operatorController.povLeft();
     Trigger effectorIntake = operatorController.rightTrigger(0.1);
     Trigger effectorScore = operatorController.leftTrigger(0.1);
-    Trigger climbUp = driverController.rightBumper();
-    Trigger climbDown = driverController.leftBumper();
+    Trigger climbUp = driverController.rightTrigger();
+    Trigger climbDown = driverController.leftTrigger();
     Trigger algaeL2 = operatorController.rightBumper();
     Trigger algaeL3 = operatorController.leftBumper();
     Trigger algaeNet = operatorController.start();
 
     Trigger zeroGyro = driverController.start();
+    Trigger zeroOdometry = driverController.leftStick();
 
     Trigger l1 = operatorController.x();
     Trigger l2 = operatorController.a();
@@ -188,5 +189,6 @@ public class RobotContainer {
 
     // change or remove each of these when we decide controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());
+    zeroOdometry.onTrue(swerve.resetOdometryCommand());
   }
 }

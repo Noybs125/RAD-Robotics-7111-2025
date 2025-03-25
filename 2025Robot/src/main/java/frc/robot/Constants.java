@@ -286,7 +286,9 @@ public class Constants {
   }
 
   public static class kAuto {
-    public static final double relativeBy = 0.18;
+    public static final double rightOffset = 0.1308;
+    public static final double leftOffset = 0.1308;
+    public static final double centerOffset = 0.05;
 
     /* PID Values. */
     public static final double X_CONTROLLER_KP = 1.0;
@@ -300,7 +302,7 @@ public class Constants {
     public static final double MAX_ANGULAR_ACCEL_RAD_PER_SECOND = 12.56;
     /* Pathplanner config */
 
-    public static final PathConstraints reefConstraints = new PathConstraints(2, 2, 4, 6);
+    public static final PathConstraints reefConstraints = new PathConstraints(2, 1.25, 2, 2);
     public static final PathConstraints constraints = new PathConstraints(MAX_VELOCITY_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED, MAX_ANGULAR_RADIANS_PER_SECOND, MAX_ANGULAR_ACCEL_RAD_PER_SECOND);
 
     public static final int numModules = 4;
@@ -322,8 +324,8 @@ public class Constants {
     public static final PPHolonomicDriveController cont = new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                     //new PIDConstants(13, 0.0001, 0.022), // Translation PID constants
                     //new PIDConstants(9.15, 0.09, 0.9) // Rotation PID constants
-                    new PIDConstants(10, 0.0, 0.000),
-                    new PIDConstants(5, 0.0, 0.0)
+                    new PIDConstants(10, 0.0, 0.01),
+                    new PIDConstants(5, 0.0, 0.01)
             );
 
     
