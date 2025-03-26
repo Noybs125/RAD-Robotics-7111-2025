@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Sensors extends SubsystemBase {
 
     public PowerDistribution powerHub = new PowerDistribution(1, ModuleType.kRev);
-    private DigitalInput beamBreak = new DigitalInput(2);
+    private DigitalInput beamBreakRec = new DigitalInput(8);
 
     public Sensors(){
         Shuffleboard.getTab("DeviceOutputs").addDouble("PDHTotalCurrent", () -> getPDHCurrentTotal()).withWidget("");
@@ -64,7 +64,7 @@ public class Sensors extends SubsystemBase {
      * @see -Link to get method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/DigitalInput.html#get().
      */
     public boolean isBeamBroken(){
-        return beamBreak.get();
+        return beamBreakRec.get();
     }
 
 
@@ -72,6 +72,6 @@ public class Sensors extends SubsystemBase {
      * Periodic method called 50 times per second. Currently completely empty.
      */
     public void periodic(){
-        SmartDashboard.putBoolean("BeamBreak", isBeamBroken());
+        SmartDashboard.putBoolean("BeamBreakRec", isBeamBroken());
     }
 }

@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.AutoCycle;
+import frc.robot.utils.betterpathplanner.CustomAutoBuilder;
 
 public class Field extends SubsystemBase {
 
@@ -173,12 +174,12 @@ public class Field extends SubsystemBase {
         return new ConditionalCommand(
             new ConditionalCommand(
                 new ConditionalCommand(
-                    AutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0), 
-                    AutoBuilder.pathfindToPoseFlipped(pose, Constants.kAuto.reefConstraints, 0), 
+                    CustomAutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0), 
+                    CustomAutoBuilder.pathfindToPoseFlipped(pose, Constants.kAuto.reefConstraints, 0), 
                     () -> DriverStation.getAlliance().get() == Alliance.Blue), 
-                AutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0), 
+                CustomAutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0), 
                 () -> DriverStation.getAlliance().isPresent()), 
-            AutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0), 
+            CustomAutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0), 
             () -> pose != null);
     }
 

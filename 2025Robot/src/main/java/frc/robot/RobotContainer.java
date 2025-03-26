@@ -17,6 +17,7 @@ import frc.robot.subsystems.Field;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.SuperStructure.ActualState;
 import frc.robot.subsystems.SuperStructure.ControlState;
+import frc.robot.utils.betterpathplanner.CustomAutoBuilder;
 import frc.robot.subsystems.Flywheels;
 import frc.robot.subsystems.Mechanisms;
 import frc.robot.subsystems.Sensors;
@@ -90,7 +91,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Processor Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeProcessor));
     NamedCommands.registerCommand("Net Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeNet));
 
-    autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser = CustomAutoBuilder.buildAutoChooser();
     autoChooser.addOption("Custom", new PathPlannerAuto(field.generateAutoRoutine(field.getAutoCycles())));
     SmartDashboard.putData(autoChooser);
 
@@ -167,9 +168,9 @@ public class RobotContainer {
     effectorScore.onTrue(flywheels.setSuppliedSpeed(() -> -operatorController.getLeftTriggerAxis()));
     effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
 
-    //climbUp.onTrue(new InstantCommand(() -> deepClimb.setSpeed(1)));
-    //climbDown.onTrue(new InstantCommand(() -> deepClimb.setSpeed(-1)));
-    //climbDown.negate().and(climbUp.negate()).onTrue(new InstantCommand(() -> deepClimb.setSpeed(0)));
+    climbUp.onTrue(new InstantCommand(() -> deepClimb.setSpeed(.5)));
+    climbDown.onTrue(new InstantCommand(() -> deepClimb.setSpeed(-.5)));
+    climbDown.negate().and(climbUp.negate()).onTrue(new InstantCommand(() -> deepClimb.setSpeed(0)));
 
     algaeL2.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.RightBumper));
     algaeL3.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.LeftBumper));

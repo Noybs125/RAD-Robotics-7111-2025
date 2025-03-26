@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.Camera;
 import frc.robot.utils.SwerveModule;
+import frc.robot.utils.betterpathplanner.CustomAutoBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
@@ -114,7 +115,7 @@ public class Swerve extends SubsystemBase {
 			Shuffleboard.getTab("test").add("CAN Coder " + mod.moduleNumber + " rotations", mod.getCanCoder());
 		}
 		
-		AutoBuilder.configure(
+		CustomAutoBuilder.configure(
 				this::getPose, // Robot pose supplier
 				this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
 				this::getRelSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
