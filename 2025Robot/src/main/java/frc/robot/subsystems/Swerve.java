@@ -123,11 +123,11 @@ public class Swerve extends SubsystemBase {
 				Constants.kAuto.cont,
 				Constants.kAuto.config,
 				() -> {
-				if(DriverStation.getAlliance().isPresent()){
-					return DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
-				}else{
-					return false;
-				}
+					if(DriverStation.getAlliance().isPresent()){
+						return DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+					}else{
+						return false;
+					}
 				},
 				this // Reference to this subsystem to set requirements
 		);

@@ -111,9 +111,9 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // all of these bindings will be correctly defined when we decide controls
-    Trigger leftReefAlign = driverController.leftBumper();
-    Trigger rightReefAlign = driverController.rightBumper();
-    Trigger centerReefAlign = leftReefAlign.and(rightReefAlign);
+    Trigger leftReefAlign = driverController.leftBumper().and(driverController.rightBumper().negate());
+    Trigger rightReefAlign = driverController.rightBumper().and(leftReefAlign.negate());
+    Trigger centerReefAlign = driverController.leftBumper().and(driverController.rightBumper());
     Trigger elevatorUp = operatorController.povUp();
     Trigger elevatorDown = operatorController.povDown();
     Trigger armUp = new Trigger(() -> operatorController.getLeftX() > 0.15);//operatorController.povRight();
