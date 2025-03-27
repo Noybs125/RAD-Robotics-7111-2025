@@ -335,134 +335,62 @@ public class Mechanisms extends SubsystemBase {
 
         // Full speed for wrist and elevator default
         maxElevatorSpeed = elevatorMaxSpeed;
-
-        // Safety booleans for safty logic
-        // Order of what moves and if it should reduce maximum speed
-        boolean unsafeWrist = false;
-        boolean unsafeWristSpeeds = false;
-        boolean unsafeElev = false;
-        boolean unsafeElevSpeeds = false;
-
-        // Will not move mechanism if true
-        boolean deniedElev = false;
-        boolean deniedWrist = false;
-
+        
+        /**Unused */
+        double potentialWristSetpoint = 0;
+        /**Unused */
+        boolean doArmThenElev = false;
         // Safety logic for states on which thing moves first.
 
-        /*CHECKS INCLUDE:
-         * if elevator is low enough for wrist to hit robot, do not let wrist move far enough to hit robot if elevator stays low enough to be a danger,
-         * else if the elevator will move outside of the dangerous range, move elevator then the wrist.
-         * 
-         * if wrist is angled enough to hit robot, do not let the elevator move far enough to hit the robot if the wrist stays angled enough to be a danger,
-         * else if the wrist will move outside of the dangerous range, move wrist then elevator.
-         * 
-         * if the elevator is high enough that the wrist max rotation speed could be a danger, limit the max wrist speed.
-         * 
-         * if the elevator is high enough that the elevator max speed could be a danger, limit the max elevator speed. (in the case of near max elev height, ect. may not be used)
-         */
-         /* 
-        // If the elevator wants to move down beyond where the wrist can move where ever
-        if(elevatorSetpoint < kMechanisms.elevatorMinSafeWristHeight)
+        // If elevator is too low and the robot wants to move wrist down too low
+        if(elevator.getPosition() <= kMechanisms.elevatorMinSafeWristHeight && (wristSetpoint >= kMechanisms.wristMaxSafeRotation || wristSetpoint <= kMechanisms.wristMinSafeRotation))
         {
-            //say a collision from moving the wrist is possible
-            unsafeWrist = true;
-        }
-        // If the wrist wants to move beyond the safe limits
-        if(wristSetpoint < kMechanisms.wristMinSafeRotation || wristSetpoint > kMechanisms.wristMaxSafeRotation)
-        {
-            //say a collision from moving the elevator down is possible.
-            unsafeElev = true;
-        }
-        //if the wrist is currently in a position it can hit the robot at an elevator height,
-        if(wrist.getPosition() < kMechanisms.wristMinSafeRotation || wrist.getPosition() > kMechanisms.wristMaxSafeRotation)
-        {
-            //and if the wrist plans on staying there, AND if the elevator wants to move to a spot the wrist could hit the robot,
-            if(unsafeWrist&& unsafeElev)
+            // Set wrist position setpoint to the edge of the safe range
+            if(wristSetpoint <= kMechanisms.wristMinSafeRotation)
             {
-                //keep the elevator from moving.
-                deniedElev = true;
-            }
-        }
-        //if the elevator is below the minimum safe height for the wrist,
-        if(elevator.getPosition() < kMechanisms.elevatorMinSafeWristHeight)
-        {
-            //and the elevator plans on staying there, AND the wrist wants to move beyond the safe bounds,
-            if(unsafeElev && unsafeWrist)
+                potentialWristSetpoint = wristSetpoint;
+                wristSetpoint = kMechanisms.wristMinSafeRotation;
+            } 
+            else if(wristSetpoint >= kMechanisms.wristMaxSafeRotation)
             {
-                //keep the wrist from moving.
-                deniedWrist = true;
+                potentialWristSetpoint = wristSetpoint;
+                wristSetpoint = kMechanisms.wristMaxSafeRotation;
             }
-        }
-        //if the elevator is high enough that the max wrist speed can cause problems,
-        if(elevator.getPosition() > kMechanisms.elevatorMaxSafeWristHeight)
-        {
-            //say the wrist should not move at max speed.
-            unsafeWristSpeeds = true;
-        }
-        // if the elevator is high enough that its max speed can cause problems,
-        if(elevator.getPosition() > kMechanisms.elevatorMaxSafeHeight)
-        {
-            //say the elevator should not move at max speed.
-            unsafeElevSpeeds = true;
+            doArmThenElev = true;
         }
 
-
-        //if the wrist is told to not move, set the elevator setpoint to current position.
-        if(deniedWrist)
+        //if elevator is low but not too low, then you can go to a setpoint slightly more permissive than before
+        if(elevatorSetpoint <= kMechanisms.elevatorPrecautionWristHeight)
         {
-            //wristSetpoint = wrist.getPosition();
-        }
-        //if the elevator is told not to move, set the elevator setpoint to current position.
-        if(deniedElev)
-        {
-            //elevatorSetpoint = elevator.getPosition();
-        }
-
-        //if the elevator is low enough the wrist could hit the frame AND the elevator is trying to move out of the dangerous range,
-        if(unsafeWrist)
-        {
-            //move the elevator first, letting it get out of the way, and let the wrist move after.
-            moveElevThenArm(elevatorSetpoint, wristSetpoint, 0);
-        }
-        else
-        //if the wrist is angled enough the elevator could make it hit the frame AND the wrist is trying to move out of the dangerous range,
-        if(unsafeElev)
-        {
-            //move the arm first, letting it get out of the way, and let the elevator move after.
-            moveArmThenElev(wristSetpoint, elevatorSetpoint, 0);
+            if(wristSetpoint <= kMechanisms.wristPrecautionaryMinRotation)
+            {
+                potentialWristSetpoint = wristSetpoint;
+                wristSetpoint = kMechanisms.wristPrecautionaryMinRotation;
+            }
+            else if(wristSetpoint >= kMechanisms.wristPrecautionaryMaxRotation)
+            {
+                potentialWristSetpoint = wristSetpoint;
+                wristSetpoint = kMechanisms.wristPrecautionaryMaxRotation;
+            }
+            doArmThenElev = true;
         }
 
         //if the wrist is high enough to cause issues at max speed,
-        if(unsafeWristSpeeds)
+        if(elevator.getPosition() >= kMechanisms.elevatorMaxSafeWristHeight)
         {
             //reduce it to the reduced speed limit.
             maxWristSpeed = kMechanisms.maxWristReducedSpeed;
         }
         //if the elevator is high enough to cause issues at max speed,
-        if(unsafeElevSpeeds)
+        if(elevator.getPosition() >= kMechanisms.elevatorMaxSafeHeight)
         {
             //reduce it to the reduced speed limit.
             maxElevatorSpeed = kMechanisms.maxElevReducedSpeed;
         }
 
-        // Sets the speed of the wrist and elevator to the decided max speed
+        // Sets the speed of the wrist and elevator to the decided max speed, defaults to the robot's set max speed
         wrist.setSpeedLimits(maxWristSpeed, -maxWristSpeed);
         elevator.setSpeedLimits(elevatorMaxSpeed, -elevatorMaxSpeed);
-
-        /*NOTE:
-         *if the elevator or wrist is denied from moving, the setpoint for them will be equal to the current position they are in.
-         *
-         *If both the elevator and the wrist are deemed unsafe (they are trying to move to an area that makes the limits matter), BUT the elevator is not low enough OR the wrist is not angled enough,
-         *it will move until it reaches one of the limited zones.
-         *
-         *Unsafe is defined as: A part is planning on moving to a spot in which moving the other part could cause the robot to hit itself
-         *EXAMPLE: Wrist is in a position that moving the elevator down would cause it to hit itself, unsafeElev = true.
-         *
-         *Denied is defined as: Both parts are "unsafe", AND one of the parts are currently in the limit zones, it will cause the part not in the zone to not be allowed to move
-         *EXAMPLE: Elevator is fully down, it wants to stay there, and the wrist wants to move outside of the safe area, it will cause the wrist to not move.
-         *EXAMPLE 2: Elevator is extended beyond limit, it wants to move into limit, and the wrist is trying to move to its "unsafe" zone, the elevator will not be allowed to move if the wrist reaches the "unsafe zone" first,
-         *OR the wrist will not be allowed to move if the elevator reaches its "unsafe" zone first.
-         */
 
         elevator.periodic();
         wrist.periodic();
@@ -472,10 +400,8 @@ public class Mechanisms extends SubsystemBase {
         SmartDashboard.putBoolean("elevator isAtSetpoint", elevator.isAtSetpoint(0.01));
         SmartDashboard.putBoolean("wrist isAtSetpoint", wrist.isAtSetpoint(0.01));
 
-        SmartDashboard.putBoolean("denied wrist", deniedWrist);
-        SmartDashboard.putBoolean("denied elevator", deniedElev);
-        SmartDashboard.putBoolean("unsafe wrist", unsafeWrist);
-        SmartDashboard.putBoolean("unsafe elevator", unsafeElev);
+        SmartDashboard.putNumber("wristSetpoint", wristSetpoint);
+        SmartDashboard.putNumber("elevatorSetpoint", elevatorSetpoint);
 
         SmartDashboard.putNumber("wrist speed", wrist.getSpeed());
     }
