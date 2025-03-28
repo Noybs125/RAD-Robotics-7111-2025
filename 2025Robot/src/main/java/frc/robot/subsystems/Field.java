@@ -174,12 +174,12 @@ public class Field extends SubsystemBase {
         return new ConditionalCommand(
             new ConditionalCommand(
                 new ConditionalCommand(
-                    CustomAutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0), 
+                    CustomAutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0).alongWith(), 
                     CustomAutoBuilder.pathfindToPoseFlipped(pose, Constants.kAuto.reefConstraints, 0), 
                     () -> DriverStation.getAlliance().get() == Alliance.Blue), 
-                CustomAutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0), 
+                CustomAutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0).alongWith(Commands.print("\n\n\nnull\n\n\n")), 
                 () -> DriverStation.getAlliance().isPresent()), 
-            CustomAutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0), 
+            CustomAutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0).alongWith(Commands.print("\n\n\nnull\n\n\n")), 
             () -> pose != null);
     }
 
@@ -359,12 +359,15 @@ public class Field extends SubsystemBase {
         //alignToNearestSetpoint(nearestPose, isLeft, isRight);
 
         if(isCommandsUpdated){
-            alignCommand = pathfindToPose(transformPose(nearestPose, isLeft, isRight));
+            alignCommand = pathfindToPose(transformPose(nearestPose, isLeft, isRight)).alongWith(Commands.print("path is running (allegedly)"));
             alignCommand.schedule();
             isCommandsUpdated = false;
+            System.out.println("\nalign command scheduled\n");
         }else if(isCommandEnded){
             alignCommand.cancel();
             isCommandEnded = false;
+            Pathfinding.setStartPosition(swerve.getPose().getTranslation());
+            System.out.println("\nalign command canceled\n");
         }
 
         SmartDashboard.putBoolean("isCommandsUpdated", isCommandsUpdated);
@@ -412,5 +415,6 @@ public class Field extends SubsystemBase {
             alignCommand.cancel();
             System.out.println("canceled");
         }
+        System.out.println("\ncommand updated\n");
     }
 }

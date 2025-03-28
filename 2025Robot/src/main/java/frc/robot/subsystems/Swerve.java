@@ -369,7 +369,6 @@ public class Swerve extends SubsystemBase {
 	 */
 	private void zeroGyro() {
 		gyro.zeroYaw();
-		gyro.setAngleAdjustment(180);
 	}
 
 	/**
