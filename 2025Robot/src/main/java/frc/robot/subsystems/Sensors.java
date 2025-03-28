@@ -64,7 +64,7 @@ public class Sensors extends SubsystemBase {
      * @see -Link to get method: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/DigitalInput.html#get().
      */
     public boolean isBeamBroken(){
-        return beamBreakRec.get();
+        return !beamBreakRec.get();
     }
 
 

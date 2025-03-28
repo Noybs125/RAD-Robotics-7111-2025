@@ -429,7 +429,7 @@ public class Swerve extends SubsystemBase {
 	 */
 	@Override 
 	public void periodic() {
-		swerveOdometry.update(getAngle(), getInvertedPositions());
+		swerveOdometry.update(getYaw(), getInvertedPositions());
 		if(useVisionPose){
 			for(Camera camera : vision.cameraList){
 				if(camera.updatePose()){

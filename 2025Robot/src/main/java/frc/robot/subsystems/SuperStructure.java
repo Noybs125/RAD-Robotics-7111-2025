@@ -112,7 +112,7 @@ public class SuperStructure extends SubsystemBase {
         }else if (actualRobotState == ActualState.algaeL2 && sensors.isBeamBroken() || actualRobotState == ActualState.algaeL3 && sensors.isBeamBroken()) {
             hasAlgae = true;
             hasCoral = false;
-        }else {
+        }else if(!sensors.isBeamBroken()){
             hasAlgae = false;
             hasCoral = false;
         }
