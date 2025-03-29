@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.FlippingUtil;
@@ -55,6 +56,10 @@ public class Field extends SubsystemBase {
     private boolean isLeft = true;
     private boolean isRight = false;
     private Command alignCommand = pathfindToPose(transformPose(nearestPose, isLeft, isRight));
+
+    private double maxAccelerationMPSSq = 1;
+    private double maxAngularVelocityAcceleration = 1;
+    private double autoDifference;
 
     public GoalEndState endState = new GoalEndState(0, poseSetpoint.getRotation());
     public PathPlannerPath path;
@@ -174,7 +179,7 @@ public class Field extends SubsystemBase {
         return new ConditionalCommand(
             new ConditionalCommand(
                 new ConditionalCommand(
-                    CustomAutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0).alongWith(), 
+                    CustomAutoBuilder.pathfindToPose(pose,new PathConstraints(Constants.kAuto.reefConstraints.maxVelocityMPS(), Constants.kAuto.reefConstraints.maxAccelerationMPSSq() * maxAccelerationMPSSq , Constants.kAuto.reefConstraints.maxAngularVelocityRadPerSec(), Constants.kAuto.reefConstraints.maxAngularAccelerationRadPerSecSq() * maxAngularVelocityAcceleration), 0).alongWith(), 
                     CustomAutoBuilder.pathfindToPoseFlipped(pose, Constants.kAuto.reefConstraints, 0), 
                     () -> DriverStation.getAlliance().get() == Alliance.Blue), 
                 CustomAutoBuilder.pathfindToPose(pose, Constants.kAuto.reefConstraints, 0).alongWith(Commands.print("\n\n\nnull\n\n\n")), 
@@ -314,6 +319,14 @@ public class Field extends SubsystemBase {
      * Periodic function called 50 times per second
      */
     public void periodic() {
+       
+		//determines the max speed from 100% - x%
+        autoDifference = swerve.getDifference();
+		maxAccelerationMPSSq = 1 - autoDifference;
+		maxAngularVelocityAcceleration = 1 - (autoDifference);
+
+
+
         field.setRobotPose(swerve.getPose());
         SmartDashboard.putNumber("robot x", swerve.getPose().getX());
         SmartDashboard.putNumber("robot y", swerve.getPose().getY());
