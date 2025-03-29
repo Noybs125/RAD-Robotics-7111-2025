@@ -25,6 +25,7 @@ import frc.robot.subsystems.SuperStructure;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -81,9 +82,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("L4 Left", field.alignToNearestSetpoint(true, false).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
     NamedCommands.registerCommand("L4 Right", field.alignToNearestSetpoint(false, true).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
 */
-    NamedCommands.registerCommand("Score", new InstantCommand(() -> flywheels.setSpeed(-0.7)));
-    NamedCommands.registerCommand("Intake", new InstantCommand(() -> flywheels.setSpeed(1)));
-    NamedCommands.registerCommand("Stop Wheels", new InstantCommand(() -> flywheels.setSpeed(0)));
+    NamedCommands.registerCommand("Score", new InstantCommand(() -> flywheels.setSpeed(-0.7))
+        .andThen(new WaitUntilCommand(() -> !sensors.isBeamBroken()))
+        .andThen(new InstantCommand(() -> flywheels.setSpeed(0))));
+
+    NamedCommands.registerCommand("Intake", new InstantCommand(() -> flywheels.setSpeed(1))
+        .andThen(new WaitUntilCommand(() -> sensors.isBeamBroken())
+        .andThen(new InstantCommand(() -> flywheels.setSpeed(0)))));
 
 
     NamedCommands.registerCommand("L2 Algae", superStructure.useCenterAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL2)));

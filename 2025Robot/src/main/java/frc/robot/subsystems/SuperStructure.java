@@ -144,36 +144,73 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case AButton:
                 //checks for whether it should score coral or intake algae
-                switch(actualRobotState){
-                    case coralFeeder:
-                        actualRobotState = ActualState.coralL1Stow;
-                        break;
-                    default:
-                        actualRobotState = ActualState.coralL2;
-                        break;
-                    }       
+
+                if (!hasCoral) {
+                    switch(actualRobotState){
+                        case coralFeeder:
+                            actualRobotState = ActualState.coralL1Stow;
+                            break;
+                        default:
+                            actualRobotState = ActualState.algaeL2;
+                            break;
+                        }      
+                }
+                else {
+                    switch(actualRobotState){
+                        case coralFeeder:
+                            actualRobotState = ActualState.coralL1Stow;
+                            break;
+                        default:
+                            actualRobotState = ActualState.coralL2;
+                            break;
+                        }    
+                    }   
                 break;
             case BButton:
                 //checks for whether it should score coral or intake algae
-                switch(actualRobotState){
-                    case coralFeeder:
-                        actualRobotState = ActualState.coralL1Stow;
-                        break;
-                    default:
-                        actualRobotState = ActualState.coralL3;
-                        break;
-                    }
+                if (!hasCoral) {
+                    switch(actualRobotState){
+                        case coralFeeder:
+                            actualRobotState = ActualState.coralL1Stow;
+                            break;
+                        default:
+                            actualRobotState = ActualState.algaeL3;
+                            break;
+                        }      
+                }
+                else {
+                    switch(actualRobotState){
+                        case coralFeeder:
+                            actualRobotState = ActualState.coralL1Stow;
+                            break;
+                        default:
+                            actualRobotState = ActualState.coralL3;
+                            break;
+                        }    
+                    }   
                 break;
             case YButton:
                 //checks for whether it should score coral on L4 or score algae in net
-                switch(actualRobotState){
-                    case coralFeeder:
-                        actualRobotState = ActualState.coralL1Stow;
-                        break;
-                    default:
-                        actualRobotState = ActualState.coralL4;
-                        break;
-                    }
+                if (hasAlgae) {
+                    switch(actualRobotState){
+                        case coralFeeder:
+                            actualRobotState = ActualState.coralL1Stow;
+                            break;
+                        default:
+                            actualRobotState = ActualState.algaeNet;
+                            break;
+                        }      
+                }
+                else {
+                    switch(actualRobotState){
+                        case coralFeeder:
+                            actualRobotState = ActualState.coralL1Stow;
+                            break;
+                        default:
+                            actualRobotState = ActualState.coralL4;
+                            break;
+                        }    
+                    }   
                 break;
             case SelectButton:
                 //actualRobotState = ActualState.deepClimbRetracted;
