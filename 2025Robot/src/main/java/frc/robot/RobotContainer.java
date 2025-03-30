@@ -151,10 +151,10 @@ public class RobotContainer {
       )
     );
 
-    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0.1))
-        .alongWith(new InstantCommand(() -> superStructure.setActualState(ActualState.Manual))));
+    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(.1))
+        .alongWith(new InstantCommand(() -> superStructure.setActualState(ActualState.Manual))).alongWith(Commands.print("\n Control Working \n")));
 
-    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-0.1))
+    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-.1))
         .alongWith(new InstantCommand(() -> superStructure.setActualState(ActualState.Manual))));
 
     elevatorDown.negate().and(elevatorUp.negate()).onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));

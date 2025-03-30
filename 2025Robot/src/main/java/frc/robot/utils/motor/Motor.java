@@ -73,6 +73,9 @@ public interface Motor {
      */
     public double getVoltage();
 
+    public void setVoltage(double volts);
+    
+
     /**
      * Checks if the motor is at its setpoint.
      * @param deadzone -Type "double", the allowed of clearance between the setpoint and the current position confirm it is in the setpoint.

@@ -36,6 +36,8 @@ public class Mechanisms extends SubsystemBase {
     private double maxWristSpeed = kMechanisms.maxWristSpeed;
     private double maxElevatorSpeed = kMechanisms.elevatorMaxSpeed;
 
+    private PIDController selectedArmPID = Constants.kMechanisms.armPID;
+
     /**
      * States for choosing what position to set mechanisms to.
      * States include: "ReefL1" through "ReefL4", "AlgaeL2" and "AlgaeL3", "AlgaeProcessor", "AlgaeNet", "Store", "CoralFeeder", and "Climb".
@@ -74,16 +76,16 @@ public class Mechanisms extends SubsystemBase {
      */
     public Mechanisms(){
         PIDController twoMotorsPID = Constants.kMechanisms.elevatorPID;
-        SimpleMotorFeedforward twoMotorsSMFF = null /*new SimpleMotorFeedforward(0, 0)*/;
+        SimpleMotorFeedforward twoMotorsSMFF = Constants.kMechanisms.elevatorFF; /*new SimpleMotorFeedforward(0, 0)*/;
         WpiEncoder twoMotorsEncoder = new WpiEncoder(0, 1);
 
         elevator = new TwoMotors(
-            new CTREMotor(8, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, 
+            new CTREMotor(8, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, null, 
                 new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), Constants.kMechanisms.elevator1Config()),
-            new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, 
+            new CTREMotor(2, twoMotorsEncoder, 1, twoMotorsPID, twoMotorsSMFF, null,
                 new ElevatorSimMotor(null, Constants.kSimulation.elevatorSimGearRatio, Constants.kSimulation.elevatorPid, Constants.kSimulation.elevatorFF, Constants.kSimulation.elevatorSimConstants), Constants.kMechanisms.elevator2Config()));
 
-        wrist = new CTREMotor(13, null, kMechanisms.wristGearRatio, Constants.kMechanisms.armPID, Constants.kMechanisms.wristFF, new ArmSimMotor(null, null, null, null), Constants.kMechanisms.wristConfig());
+        wrist = new CTREMotor(16, null, kMechanisms.wristGearRatio, Constants.kMechanisms.armPID, Constants.kMechanisms.wristFF, Constants.kMechanisms.wristArmFF, new ArmSimMotor(null, null, null, null), Constants.kMechanisms.wristConfig());
 
         wrist.setSpeedLimits(Constants.kMechanisms.maxWristSpeed, -Constants.kMechanisms.maxWristSpeed);
         wrist.setPosition(0);
@@ -176,8 +178,9 @@ public class Mechanisms extends SubsystemBase {
             wrist.setSpeed(0); 
         }
         if(speed == 0){
+            selectedArmPID = Constants.kMechanisms.armManualPID;
             wristSetpoint = wrist.getPosition();
-            isManual = false;
+            isManual = false; 
         }
         
         if(speed <= -maxWristSpeed)
@@ -190,6 +193,7 @@ public class Mechanisms extends SubsystemBase {
         } else {
             wrist.setSpeed(speed);
         }
+        wrist.setSpeed(speed);
     }
 
     /**
@@ -254,23 +258,23 @@ public class Mechanisms extends SubsystemBase {
         switch (state) {
             case ReefL1:
                 if(elevator.getPosition() >= 0.65){
-                    moveElevThenArm(0.58, 0.31325, 0.1);
+                    moveElevThenArm(0.58, 0.298, 0.1);
                 }else{
                     if(wrist.isAtSetpoint(0.05)){
-                        moveElevThenArm(0.148, 0.31325, 0.05);
+                        moveElevThenArm(0.131, 0.290, 0.05);
                     }else{
-                        moveArmThenElev(0.31325, 0.58, 0.05);
+                        moveArmThenElev(0.290, 0.58, 0.05);
                     }
                 }
                 break;
                 
             case ReefL2:
                 maxWristSpeed = 0.15;
-                moveElevThenArm(0.425, 0.39725, 0.01);
+                moveElevThenArm(0.425, 0.38725, 0.01);
                 break;
 
             case ReefL3:
-                moveElevThenArm(0.645, 0.39725, 0.01);
+                moveElevThenArm(0.645, 0.38725, 0.01);
                 break;
 
             case ReefL4:
@@ -315,6 +319,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
             
             case Manual:
+                selectedArmPID = Constants.kMechanisms.armManualPID;
                 break;
 
             default:
@@ -340,7 +345,7 @@ public class Mechanisms extends SubsystemBase {
         double potentialWristSetpoint = 0;
         /**Unused */
         boolean doArmThenElev = false;
-        // Safety logic for states on which thing moves first.
+       /*  // Safety logic for states on which thing moves first.
 
         // If elevator is too low and the robot wants to move wrist down too low
         if(elevator.getPosition() <= kMechanisms.elevatorMinSafeWristHeight && (wristSetpoint >= kMechanisms.wristMaxSafeRotation || wristSetpoint <= kMechanisms.wristMinSafeRotation))
@@ -390,7 +395,7 @@ public class Mechanisms extends SubsystemBase {
 
         // Sets the speed of the wrist and elevator to the decided max speed, defaults to the robot's set max speed
         wrist.setSpeedLimits(maxWristSpeed, -maxWristSpeed);
-        elevator.setSpeedLimits(elevatorMaxSpeed, -elevatorMaxSpeed);
+        elevator.setSpeedLimits(elevatorMaxSpeed, -elevatorMaxSpeed);*/
 
         elevator.periodic();
         wrist.periodic();
@@ -416,6 +421,7 @@ public class Mechanisms extends SubsystemBase {
     }
 
     private void defaultState(){
+        selectedArmPID = Constants.kMechanisms.armPID;
         elevatorMaxSpeed = Constants.kMechanisms.elevatorMaxSpeed;
         maxWristSpeed = Constants.kMechanisms.maxWristSpeed;
     }

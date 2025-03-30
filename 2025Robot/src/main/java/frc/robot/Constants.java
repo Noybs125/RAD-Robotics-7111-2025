@@ -220,7 +220,7 @@ public class Constants {
     public static final double elevatorWinchDiameter = 2;
     public static final double wristGearRatio = 48.13;
     /** Elevator max speed allowed, in percent. 0 = 0%, 1 = 100% */
-    public static final double elevatorMaxSpeed = 20;
+    public static final double elevatorMaxSpeed = 25;
     /** Elevator Max Height in feet */
     public static final double elevatorMaxHeight = 8;
 
@@ -253,17 +253,21 @@ public class Constants {
 
     //mechanical limits of wrist in rotations
     /**Maximum mechanical limit of wrist in rotation */
-    public static final double maxWristPosition = -0.25; //90 digrees toward deep climb module
+    public static final double maxWristPosition = -0.25; //90 degrees toward deep climb module
     /** Minimum mechanical limit of wrist in rotation */
-    public static final double minWristPosition = 0.5; //180 digrees away from deep climb module
+    public static final double minWristPosition = 0.5; //180 degrees away from deep climb module
 
-    public static final double maxWristSpeed = 5;
+    public static final double maxWristSpeed = 4; // in volts
     public static final SimpleMotorFeedforward wristFF = null;//new SimpleMotorFeedforward(0.12, 5.78, 0.08);
+    public static final SimpleMotorFeedforward elevatorFF = null;//new SimpleMotorFeedforward(0.5, 7.22, 0.05);
     public static final SimpleMotorFeedforward deepClimbFF = null;
 
-    public static PIDController elevatorPID = new PIDController(34, 0.65, 0.0);
-    public static PIDController armPID = new PIDController(25, 0.0, 0.0); // - 15, 0.03, 0.01?
+    public static PIDController elevatorPID = new PIDController(86, 2.5, 0.0);
+    public static PIDController armPID = new PIDController(25, 0.02, 4.7); // - 15, 0.03, 0.01?
+    public static PIDController armManualPID = new PIDController(25, 0, 2);
     public static PIDController deepClimbPID = new PIDController(0, 0, 0);
+
+    public static final ArmFeedforward wristArmFF = null;//new ArmFeedforward(0.375, 0.51, 0.92, 0.02);//new ArmFeedforward(0, 0, 0, 0);
 
     /** Motor Configurations */
 
