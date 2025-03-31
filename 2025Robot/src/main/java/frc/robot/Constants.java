@@ -220,7 +220,7 @@ public class Constants {
     public static final double elevatorWinchDiameter = 2;
     public static final double wristGearRatio = 48.13;
     /** Elevator max speed allowed, in percent. 0 = 0%, 1 = 100% */
-    public static final double elevatorMaxSpeed = 25;
+    public static final double elevatorMaxSpeed = 15;
     /** Elevator Max Height in feet */
     public static final double elevatorMaxHeight = 8;
 
@@ -263,7 +263,7 @@ public class Constants {
     public static final SimpleMotorFeedforward deepClimbFF = null;
 
     public static PIDController elevatorPID = new PIDController(86, 2.5, 0.0);
-    public static PIDController armPID = new PIDController(25, 0.02, 4.7); // - 15, 0.03, 0.01?
+    public static PIDController armPID = new PIDController(29, 0.08, 4.7); // - 15, 0.03, 0.01?
     public static PIDController armManualPID = new PIDController(25, 0, 2);
     public static PIDController deepClimbPID = new PIDController(0, 0, 0);
 

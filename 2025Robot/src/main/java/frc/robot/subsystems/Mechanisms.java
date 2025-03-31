@@ -178,7 +178,7 @@ public class Mechanisms extends SubsystemBase {
             wrist.setSpeed(0); 
         }
         if(speed == 0){
-            selectedArmPID = Constants.kMechanisms.armManualPID;
+            //selectedArmPID = Constants.kMechanisms.armManualPID;
             wristSetpoint = wrist.getPosition();
             isManual = false; 
         }
@@ -260,25 +260,25 @@ public class Mechanisms extends SubsystemBase {
                 if(elevator.getPosition() >= 0.65){
                     moveElevThenArm(0.58, 0.298, 0.1);
                 }else{
-                    if(wrist.isAtSetpoint(0.05)){
+                    if(wrist.isAtSetpoint(0.025)){
                         moveElevThenArm(0.131, 0.290, 0.05);
                     }else{
-                        moveArmThenElev(0.290, 0.58, 0.05);
+                        moveArmThenElev(0.290, 0.58, 0.025);
                     }
                 }
                 break;
                 
             case ReefL2:
-                maxWristSpeed = 0.15;
+                //maxWristSpeed = 0.15;
                 moveElevThenArm(0.425, 0.38725, 0.01);
                 break;
 
             case ReefL3:
-                moveElevThenArm(0.645, 0.38725, 0.01);
+                moveElevThenArm(0.630, 0.38725, 0.01);
                 break;
 
             case ReefL4:
-                moveElevThenArm(1.01, 0.40122, 0.2);
+                moveElevThenArm(1.00, 0.40122, 0.2);
                 if(elevator.isAtSetpoint(0.2)){
                     elevatorMaxSpeed = 7;
                 }else{
@@ -319,7 +319,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
             
             case Manual:
-                selectedArmPID = Constants.kMechanisms.armManualPID;
+                //selectedArmPID = Constants.kMechanisms.armManualPID;
                 break;
 
             default:
@@ -331,7 +331,7 @@ public class Mechanisms extends SubsystemBase {
     }
     public void periodic() {
         handleState();
-        elevator.setSpeedLimits(elevatorMaxSpeed, -elevatorMaxSpeed);
+        elevator.setSpeedLimits(elevatorMaxSpeed, -elevatorMaxSpeed/2);
         wrist.setSpeedLimits(maxWristSpeed, -maxWristSpeed);
         if (!isManual){
             elevator.setSetpoint(elevatorSetpoint, false);
