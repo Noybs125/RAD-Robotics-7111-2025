@@ -5,7 +5,10 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
@@ -19,9 +22,13 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class CustomPathfindingCommand extends PathfindingCommand {
@@ -45,6 +52,7 @@ public class CustomPathfindingCommand extends PathfindingCommand {
 
     private double timeOffset = 0;
     private boolean isFinished = false;
+    
     public CustomPathfindingCommand(
         Pose2d targetPose,
         PathConstraints constraints,
@@ -80,6 +88,7 @@ public class CustomPathfindingCommand extends PathfindingCommand {
 
     @Override
     public boolean isFinished(){
+        System.out.println(isFinished);
         return isFinished;
     }
 
@@ -190,5 +199,25 @@ public class CustomPathfindingCommand extends PathfindingCommand {
         timer.reset();
         timer.start();
         }
+    }
+
+    public static Command warmupCommand(){
+        return new CustomPathfindingCommand(
+            new Pose2d(15.0, 4.0, Rotation2d.k180deg),
+            new PathConstraints(4, 3, 4, 4),
+            0,
+            () -> new Pose2d(1.5, 4, Rotation2d.kZero),
+            ChassisSpeeds::new,
+            (speeds, feedforwards) -> {},
+            new PPHolonomicDriveController(
+                new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
+            new RobotConfig(
+                75,
+                6.8,
+                new ModuleConfig(
+                    0.048, 5.0, 1.2, DCMotor.getKrakenX60(1).withReduction(6.14), 60.0, 1),
+                0.55))
+        .andThen(Commands.print("[PathPlanner] PathfindingCommand finished warmup"))
+        .ignoringDisable(true);
     }
 }

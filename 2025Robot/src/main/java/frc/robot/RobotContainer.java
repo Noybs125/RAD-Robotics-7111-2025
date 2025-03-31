@@ -69,7 +69,11 @@ public class RobotContainer {
     deepClimb = new Deepclimb();
     superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels, deepClimb);
 
-    
+    NamedCommands.registerCommand("Align Right", new InstantCommand(() -> field.updateCommand(true, false, true)));
+    NamedCommands.registerCommand("Align Left", new InstantCommand(() -> field.updateCommand(true, true, false)));
+    NamedCommands.registerCommand("Align Center", new InstantCommand(() -> field.updateCommand(true, false, false)));
+    NamedCommands.registerCommand("Stop Align", new InstantCommand(() -> field.updateCommand(true, false, false)));
+
     NamedCommands.registerCommand("Coral Feeder", superStructure.setActualStateCommand(SuperStructure.ActualState.coralFeeder));
     NamedCommands.registerCommand("Stow", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow));
     NamedCommands.registerCommand("Zero", superStructure.setActualStateCommand(SuperStructure.ActualState.stow));

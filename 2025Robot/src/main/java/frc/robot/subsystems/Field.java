@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -37,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.AutoCycle;
 import frc.robot.utils.betterpathplanner.CustomAutoBuilder;
+import frc.robot.utils.betterpathplanner.CustomPathfindingCommand;
 
 public class Field extends SubsystemBase {
 
@@ -79,12 +81,18 @@ public class Field extends SubsystemBase {
     public List<Pose2d> zoneMap = new ArrayList<>();
     public List<Pose2d> zoneMapFlipped = new ArrayList<>();
     private Pose2d[] zoneArray = new Pose2d[] {
-        new Pose2d(3.16, 4.05, Rotation2d.fromDegrees(0)),
-        new Pose2d(3.87, 5.20, Rotation2d.fromDegrees(-60)),
-        new Pose2d(5.14, 5.16, Rotation2d.fromDegrees(-120)),
-        new Pose2d(5.86, 4.00, Rotation2d.fromDegrees(-180)),
-        new Pose2d(5.08, 2.85, Rotation2d.fromDegrees(120)),
-        new Pose2d(3.81, 2.9, Rotation2d.fromDegrees(60)),
+        FlippingUtil.flipFieldPose(new Pose2d(14.36, 3.98, Rotation2d.k180deg)),
+        FlippingUtil.flipFieldPose(new Pose2d(13.651, 2.867, Rotation2d.fromDegrees(120))),
+        FlippingUtil.flipFieldPose(new Pose2d(12.367, 2.925, Rotation2d.fromDegrees(60))),
+        FlippingUtil.flipFieldPose(new Pose2d(13.36, 3.98, Rotation2d.fromDegrees(0))),
+        FlippingUtil.flipFieldPose(new Pose2d(12.460, 5.181, Rotation2d.fromDegrees(-60))),
+        FlippingUtil.flipFieldPose(new Pose2d(13.772, 5.114, Rotation2d.fromDegrees(-120))),
+        //new Pose2d(3.16, 4.05, Rotation2d.fromDegrees(0)),
+        //new Pose2d(3.87, 5.20, Rotation2d.fromDegrees(-60)),
+        //new Pose2d(5.14, 5.16, Rotation2d.fromDegrees(-120)),
+        //new Pose2d(5.86, 4.00, Rotation2d.fromDegrees(-180)),
+        //new Pose2d(5.08, 2.85, Rotation2d.fromDegrees(120)),
+        //new Pose2d(3.81, 2.9, Rotation2d.fromDegrees(60)),
         //new Pose2d(5.18, 2.78, Rotation2d.fromDegrees(119.01)),
         //new Pose2d(3.76, 2.80, Rotation2d.fromDegrees(60.01)),
         //new Pose2d(6.21, 0.39, Rotation2d.fromDegrees(270)),
@@ -138,6 +146,7 @@ public class Field extends SubsystemBase {
         fieldPublisher = Shuffleboard.getTab("Odometry").add("field odometry", field).withWidget("Field");
 
         Pathfinding.ensureInitialized();
+        
 
         driverLocation.addOption("1", 1);
         driverLocation.addOption("2", 2);
@@ -325,6 +334,8 @@ public class Field extends SubsystemBase {
 		maxAccelerationMPSSq = 1 - autoDifference;
 		maxAngularVelocityAcceleration = 1 - (autoDifference);
 
+        
+
 
 
         field.setRobotPose(swerve.getPose());
@@ -372,7 +383,9 @@ public class Field extends SubsystemBase {
         //alignToNearestSetpoint(nearestPose, isLeft, isRight);
 
         if(isCommandsUpdated){
+
             alignCommand = pathfindToPose(transformPose(nearestPose, isLeft, isRight)).alongWith(Commands.print("path is running (allegedly)"));
+            CustomPathfindingCommand.warmupCommand().schedule();
             alignCommand.schedule();
             isCommandsUpdated = false;
             System.out.println("\nalign command scheduled\n");
@@ -382,6 +395,7 @@ public class Field extends SubsystemBase {
             Pathfinding.setStartPosition(swerve.getPose().getTranslation());
             System.out.println("\nalign command canceled\n");
         }
+        
 
         SmartDashboard.putBoolean("isCommandsUpdated", isCommandsUpdated);
         SmartDashboard.putBoolean("isLeft", isLeft);

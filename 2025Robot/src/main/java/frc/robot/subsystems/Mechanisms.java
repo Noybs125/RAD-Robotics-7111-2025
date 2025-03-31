@@ -311,7 +311,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case CoralFeeder:
-                setAllMechanismsSetpoint(-0.0727, 0.1676);
+                setAllMechanismsSetpoint(-0.0725, 0.1676);
                 break;
 
             case Climb:

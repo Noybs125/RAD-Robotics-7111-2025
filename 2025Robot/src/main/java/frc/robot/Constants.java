@@ -295,9 +295,9 @@ public class Constants {
   }
 
   public static class kAuto {
-    public static final double rightOffset = 0.11;
-    public static final double leftOffset = 0.16;
-    public static final double centerOffset = 0.05;
+    public static final double rightOffset = 0.15;//0.12;
+    public static final double leftOffset = 0.15;
+    public static final double centerOffset = 0.0;//0.05;
 
     /* PID Values. */
     public static final double X_CONTROLLER_KP = 1.0;
@@ -315,7 +315,7 @@ public class Constants {
     public static final PathConstraints reefConstraints = new PathConstraints(2, 1.25, 2, 2);
 
     public static final int numModules = 4;
-    public static final double massKgs = Units.lbsToKilograms(138);
+    public static final double massKgs = Units.lbsToKilograms(143.2);
     public static final double MOI = massKgs * (Units.inchesToMeters(28) * Units.inchesToMeters(30));
     public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND,
         0.8, DCMotor.getKrakenX60(1), kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT, 1);
@@ -333,8 +333,9 @@ public class Constants {
     public static final PPHolonomicDriveController cont = new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                     //new PIDConstants(13, 0.0001, 0.022), // Translation PID constants
                     //new PIDConstants(9.15, 0.09, 0.9) // Rotation PID constants
-                    new PIDConstants(10, 0.0, 0.03), // Translation PID constants
-                    new PIDConstants(5, 0.0, 0.03)    // Rotation PID constants
+                    new PIDConstants(10.5, 0.02, 0.01), // Translation PID constants
+                    //new PIDConstants(2.5, 0.0, 0.02)    // Rotation PID constants
+                    new PIDConstants(5, 0.0, 0.4)    // Rotation PID constants
             );
 
     
