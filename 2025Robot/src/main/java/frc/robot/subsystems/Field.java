@@ -146,7 +146,8 @@ public class Field extends SubsystemBase {
         fieldPublisher = Shuffleboard.getTab("Odometry").add("field odometry", field).withWidget("Field");
 
         Pathfinding.ensureInitialized();
-        
+        CustomPathfindingCommand.warmupCommand().schedule();
+
 
         driverLocation.addOption("1", 1);
         driverLocation.addOption("2", 2);
@@ -385,7 +386,6 @@ public class Field extends SubsystemBase {
         if(isCommandsUpdated){
 
             alignCommand = pathfindToPose(transformPose(nearestPose, isLeft, isRight)).alongWith(Commands.print("path is running (allegedly)"));
-            CustomPathfindingCommand.warmupCommand().schedule();
             alignCommand.schedule();
             isCommandsUpdated = false;
             System.out.println("\nalign command scheduled\n");
