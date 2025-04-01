@@ -25,6 +25,7 @@ import frc.robot.subsystems.SuperStructure;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -69,10 +70,19 @@ public class RobotContainer {
     deepClimb = new Deepclimb();
     superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels, deepClimb);
 
-    NamedCommands.registerCommand("Align Right", new InstantCommand(() -> field.updateCommand(true, false, true)));
-    NamedCommands.registerCommand("Align Left", new InstantCommand(() -> field.updateCommand(true, true, false)));
+    NamedCommands.registerCommand("Reef 5 Left", field.getReefPath(5, true, false));
+    NamedCommands.registerCommand("Reef 6 Right", field.getReefPath(6, false, true));
+    NamedCommands.registerCommand("Reef 3 Right", field.getReefPath(3, false, true));
+    NamedCommands.registerCommand("Reef 2 Left", field.getReefPath(2, true, false));
+    NamedCommands.registerCommand("Reef 4 Left", field.getReefPath(4, true, false));
+    NamedCommands.registerCommand("Reef 4 Right", field.getReefPath(4, false, true));
+    
     NamedCommands.registerCommand("Align Center", new InstantCommand(() -> field.updateCommand(true, false, false)));
-    NamedCommands.registerCommand("Stop Align", new InstantCommand(() -> field.updateCommand(false, false, false)).alongWith(new InstantCommand(() -> flywheels.setSpeed(-7))));
+
+    NamedCommands.registerCommand("Score", new InstantCommand(() -> flywheels.setSpeed(-0.7))
+        .alongWith(new WaitUntilCommand(() -> !sensors.isBeamBroken()))
+        .andThen(new WaitCommand(0.5))
+        .andThen(new InstantCommand(() -> flywheels.setSpeed(0))));
 
     NamedCommands.registerCommand("Coral Feeder", superStructure.setActualStateCommand(SuperStructure.ActualState.coralFeeder));
     NamedCommands.registerCommand("Stow", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow));
@@ -81,14 +91,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("L2", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2));
     NamedCommands.registerCommand("L3", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3));
     NamedCommands.registerCommand("L4", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4));
-
-    NamedCommands.registerCommand("Shoot", new InstantCommand(() -> flywheels.setSpeed(-0.7)).alongWith(new InstantCommand(() -> superStructure.testBool = true)));
-        
-
-   /*  NamedCommands.registerCommand("Intake", new InstantCommand(() -> flywheels.setSpeed(1))
-        .andThen(new WaitUntilCommand(() -> sensors.isBeamBroken())
-        .andThen(new InstantCommand(() -> flywheels.setSpeed(0)))));*/
-
 
     NamedCommands.registerCommand("L2 Algae", superStructure.useCenterAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL2)));
     NamedCommands.registerCommand("L3 Algae", superStructure.useCenterAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL3)));
@@ -168,9 +170,9 @@ public class RobotContainer {
 
     zeroMechanisms.onTrue(new InstantCommand(() -> mechanisms.zeroMechanisms()));
 
-    /*effectorIntake.onTrue(flywheels.setSuppliedSpeed(() -> operatorController.getRightTriggerAxis()));
+    effectorIntake.onTrue(flywheels.setSuppliedSpeed(() -> operatorController.getRightTriggerAxis()));
     effectorScore.onTrue(flywheels.setSuppliedSpeed(() -> -operatorController.getLeftTriggerAxis()));
-    effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));*/
+    effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
 
     climbUp.onTrue(new InstantCommand(() -> deepClimb.setSpeed(.5)));
     climbDown.onTrue(new InstantCommand(() -> deepClimb.setSpeed(-.5)));

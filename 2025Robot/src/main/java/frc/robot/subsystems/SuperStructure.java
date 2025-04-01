@@ -119,8 +119,6 @@ public class SuperStructure extends SubsystemBase {
             hasCoral = false;
         }
 
-        System.out.println(testBool);
-
         swerve.setSubtractedSpeed(mechanisms.getElevatorHeight());
         swerve.setRotationSetpoint(field.getNearestZone(swerve.getPose()).getRotation().getDegrees());
         //vision.getNearestReefTag(swerve.getPose());

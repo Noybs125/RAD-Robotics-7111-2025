@@ -81,7 +81,7 @@ public class Field extends SubsystemBase {
 
     public List<Pose2d> zoneMap = new ArrayList<>();
     public List<Pose2d> zoneMapFlipped = new ArrayList<>();
-    private Pose2d[] zoneArray = new Pose2d[] {
+    public Pose2d[] zoneArray = new Pose2d[] {
         FlippingUtil.flipFieldPose(new Pose2d(14.36, 3.98, Rotation2d.k180deg)),
         FlippingUtil.flipFieldPose(new Pose2d(13.651, 2.867, Rotation2d.fromDegrees(120))),
         FlippingUtil.flipFieldPose(new Pose2d(12.367, 2.925, Rotation2d.fromDegrees(60))),
@@ -454,5 +454,21 @@ public class Field extends SubsystemBase {
             System.out.println("canceled");
         }
         System.out.println("\ncommand updated\n");
+    }
+
+    public Command getReefPath(int face, boolean isLeft, boolean isRight){
+        Pose2d actualReefPose = zoneArray[face - 1];
+            GoalEndState endState = new GoalEndState(0, actualReefPose.getRotation()); 
+            List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(transformPoseX(actualReefPose, 0.6), transformPose(actualReefPose, isLeft, isRight));
+            PathPlannerPath findPath =  new PathPlannerPath(waypoints, Constants.kAuto.reefConstraints, null, endState);
+
+        return AutoBuilder.followPath(findPath);
+    }
+
+    private Pose2d transformPoseX(Pose2d pose, double amount){
+        var relativePose = pose.relativeTo(new Pose2d(pose.getX(), pose.getY(), pose.getRotation()));
+        var poseTransform = new Transform2d(relativePose.getX() - amount, relativePose.getY(), relativePose.getRotation());
+        pose = pose.plus(poseTransform);
+        return pose;
     }
 }
