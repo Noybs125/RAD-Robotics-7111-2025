@@ -287,11 +287,11 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case AlgaeL2:
-                moveElevThenArm(0.4444, 0.305, 0.01);
+                moveElevThenArm(0.2471, 0.1840, 0.01);
                 break;
 
             case AlgaeL3:
-                moveElevThenArm(0.647, 0.305, 0.01);
+                moveElevThenArm(0.46513, 0.1909, 0.01);
                 break;
 
             case AlgaeProcessor:
