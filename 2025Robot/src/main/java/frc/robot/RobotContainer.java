@@ -69,7 +69,11 @@ public class RobotContainer {
     deepClimb = new Deepclimb();
     superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels, deepClimb);
 
-    
+    NamedCommands.registerCommand("Align Right", new InstantCommand(() -> field.updateCommand(true, false, true)));
+    NamedCommands.registerCommand("Align Left", new InstantCommand(() -> field.updateCommand(true, true, false)));
+    NamedCommands.registerCommand("Align Center", new InstantCommand(() -> field.updateCommand(true, false, false)));
+    NamedCommands.registerCommand("Stop Align", new InstantCommand(() -> field.updateCommand(true, false, false)));
+
     NamedCommands.registerCommand("Coral Feeder", superStructure.setActualStateCommand(SuperStructure.ActualState.coralFeeder));
     NamedCommands.registerCommand("Stow", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow));
     NamedCommands.registerCommand("Zero", superStructure.setActualStateCommand(SuperStructure.ActualState.stow));
@@ -151,10 +155,10 @@ public class RobotContainer {
       )
     );
 
-    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0.1))
-        .alongWith(new InstantCommand(() -> superStructure.setActualState(ActualState.Manual))));
+    elevatorUp.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(.1))
+        .alongWith(new InstantCommand(() -> superStructure.setActualState(ActualState.Manual))).alongWith(Commands.print("\n Control Working \n")));
 
-    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-0.1))
+    elevatorDown.onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(-.1))
         .alongWith(new InstantCommand(() -> superStructure.setActualState(ActualState.Manual))));
 
     elevatorDown.negate().and(elevatorUp.negate()).onTrue(new InstantCommand(() -> mechanisms.setElevatorSpeed(0)));

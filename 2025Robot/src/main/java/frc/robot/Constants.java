@@ -220,7 +220,7 @@ public class Constants {
     public static final double elevatorWinchDiameter = 2;
     public static final double wristGearRatio = 48.13;
     /** Elevator max speed allowed, in percent. 0 = 0%, 1 = 100% */
-    public static final double elevatorMaxSpeed = 20;
+    public static final double elevatorMaxSpeed = 15;
     /** Elevator Max Height in feet */
     public static final double elevatorMaxHeight = 8;
 
@@ -253,17 +253,21 @@ public class Constants {
 
     //mechanical limits of wrist in rotations
     /**Maximum mechanical limit of wrist in rotation */
-    public static final double maxWristPosition = -0.25; //90 digrees toward deep climb module
+    public static final double maxWristPosition = -0.25; //90 degrees toward deep climb module
     /** Minimum mechanical limit of wrist in rotation */
-    public static final double minWristPosition = 0.5; //180 digrees away from deep climb module
+    public static final double minWristPosition = 0.5; //180 degrees away from deep climb module
 
-    public static final double maxWristSpeed = 5;
+    public static final double maxWristSpeed = 4; // in volts
     public static final SimpleMotorFeedforward wristFF = null;//new SimpleMotorFeedforward(0.12, 5.78, 0.08);
+    public static final SimpleMotorFeedforward elevatorFF = null;//new SimpleMotorFeedforward(0.5, 7.22, 0.05);
     public static final SimpleMotorFeedforward deepClimbFF = null;
 
-    public static PIDController elevatorPID = new PIDController(34, 0.65, 0.0);
-    public static PIDController armPID = new PIDController(25, 0.0, 0.0); // - 15, 0.03, 0.01?
+    public static PIDController elevatorPID = new PIDController(86, 2.5, 0.0);
+    public static PIDController armPID = new PIDController(29, 0.08, 4.7); // - 15, 0.03, 0.01?
+    public static PIDController armManualPID = new PIDController(25, 0, 2);
     public static PIDController deepClimbPID = new PIDController(0, 0, 0);
+
+    public static final ArmFeedforward wristArmFF = null;//new ArmFeedforward(0.375, 0.51, 0.92, 0.02);//new ArmFeedforward(0, 0, 0, 0);
 
     /** Motor Configurations */
 
@@ -291,9 +295,9 @@ public class Constants {
   }
 
   public static class kAuto {
-    public static final double rightOffset = 0.11;
-    public static final double leftOffset = 0.16;
-    public static final double centerOffset = 0.05;
+    public static final double rightOffset = 0.15;//0.12;
+    public static final double leftOffset = 0.15;
+    public static final double centerOffset = 0.0;//0.05;
 
     /* PID Values. */
     public static final double X_CONTROLLER_KP = 1.0;
@@ -311,7 +315,7 @@ public class Constants {
     public static final PathConstraints reefConstraints = new PathConstraints(2, 1.25, 2, 2);
 
     public static final int numModules = 4;
-    public static final double massKgs = Units.lbsToKilograms(138);
+    public static final double massKgs = Units.lbsToKilograms(143.2);
     public static final double MOI = massKgs * (Units.inchesToMeters(28) * Units.inchesToMeters(30));
     public static final ModuleConfig moduleConfig = new ModuleConfig(kSwerve.WHEEL_DIAMETER / 2, MAX_VELOCITY_METERS_PER_SECOND,
         0.8, DCMotor.getKrakenX60(1), kSwerve.DRIVE_GEAR_RATIO, kSwerve.DRIVE_CURRENT_LIMIT, 1);
@@ -329,8 +333,9 @@ public class Constants {
     public static final PPHolonomicDriveController cont = new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                     //new PIDConstants(13, 0.0001, 0.022), // Translation PID constants
                     //new PIDConstants(9.15, 0.09, 0.9) // Rotation PID constants
-                    new PIDConstants(10, 0.0, 0.03), // Translation PID constants
-                    new PIDConstants(5, 0.0, 0.03)    // Rotation PID constants
+                    new PIDConstants(10.5, 0.02, 0.01), // Translation PID constants
+                    //new PIDConstants(2.5, 0.0, 0.02)    // Rotation PID constants
+                    new PIDConstants(5, 0.0, 0.4)    // Rotation PID constants
             );
 
     

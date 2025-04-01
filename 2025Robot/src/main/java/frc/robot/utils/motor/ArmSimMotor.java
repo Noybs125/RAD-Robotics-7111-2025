@@ -78,6 +78,10 @@ public class ArmSimMotor implements Motor {
         return outputVoltage;
     }
 
+    public void setVoltage(double volts){
+        motor.setInputVoltage(volts);
+    }
+
     public boolean isAtSetpoint(double deadzone){
         return getPosition() <= setpoint + deadzone && getPosition() >= setpoint - deadzone;
     }

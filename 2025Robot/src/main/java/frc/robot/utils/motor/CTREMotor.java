@@ -1,6 +1,8 @@
 package frc.robot.utils.motor;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CTREMotor implements Motor {
     private TalonFX motor;
-    PIDController pid = new PIDController(0.05, 0, 0);
+    private PIDController pid = new PIDController(0.05, 0, 0);
     private TalonFXConfiguration config;
     private Encoder encoder = null;
     private double gearRatio;
@@ -20,6 +22,7 @@ public class CTREMotor implements Motor {
     private double positiveSpeedLimit = 1;
     private double negativeSpeedLimit = -1;
     private SimpleMotorFeedforward feedforward;
+    private ArmFeedforward armFF;
     private Motor simType;
     private int id;
 
@@ -27,11 +30,12 @@ public class CTREMotor implements Motor {
     private GenericEntry motorIEntry;
     private GenericEntry motorDEntry;
     
-    public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, Motor simType, TalonFXConfiguration talonConfig){
+    public CTREMotor(int id, Encoder encoder, double gearRatio, PIDController pid, SimpleMotorFeedforward feedForward, ArmFeedforward armFF, Motor simType, TalonFXConfiguration talonConfig){
         this.encoder = encoder;
         this.gearRatio = gearRatio;
         this.pid = pid;
         this.feedforward = feedForward;
+        this.armFF = armFF;
         this.id = id;
         motor = new TalonFX(id);
         this.simType = simType;
@@ -86,9 +90,13 @@ public class CTREMotor implements Motor {
     public void setSetpoint(double setPoint, boolean useSimFF){
         currentSetpoint = setPoint;
         double pidOutput = pid.calculate(getPosition(), setPoint);
-        double feedforwardOutput = feedforward != null 
-            ? feedforward.calculate(pid.getErrorDerivative())
-            : 0;
+        double feedforwardOutput;
+        if(feedforward != null){
+            feedforwardOutput = useSimFF
+            ? armFF.calculate((setPoint + 0.1973) * 2 * Math.PI , pid.getErrorDerivative())
+            : feedforward.calculate(pid.getErrorDerivative());
+        }else 
+            feedforwardOutput = 0;
         double totalOutput = pidOutput + feedforwardOutput;
         SmartDashboard.putNumber("Motor " + id + " pid", totalOutput);
         if(totalOutput > positiveSpeedLimit){
@@ -117,6 +125,10 @@ public class CTREMotor implements Motor {
 
     public double getVoltage(){
         return motor.getMotorVoltage().getValueAsDouble();
+    }
+    
+    public void setVoltage(double volts){
+        motor.setVoltage(volts);
     }
     
     public boolean isAtSetpoint(double deadzone){

@@ -502,4 +502,7 @@ public class Swerve extends SubsystemBase {
 	public void setUseVisionPose(boolean bool){
 		useVisionPose = bool;
 	}
+	public double getDifference(){
+		return difference;
+	}
 }

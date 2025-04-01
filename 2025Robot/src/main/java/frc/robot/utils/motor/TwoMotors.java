@@ -61,6 +61,11 @@ public class TwoMotors implements Motor {
         return motor1.getVoltage();
     }
 
+    public void setVoltage(double volts){
+        motor1.setVoltage(volts);
+        motor2.setVoltage(volts);
+    }
+
     public boolean isAtSetpoint(double deadzone){
         return motor1.isAtSetpoint(deadzone);
     }

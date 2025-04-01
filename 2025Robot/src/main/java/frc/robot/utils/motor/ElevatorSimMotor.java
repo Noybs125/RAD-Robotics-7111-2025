@@ -89,6 +89,10 @@ public class ElevatorSimMotor implements Motor{
     public double getVoltage(){
         return outputVoltage;
     }
+    public void setVoltage(double volts) {
+        motor.setInputVoltage(volts);
+    }
+    
     public boolean isAtSetpoint(double deadzone){
         if (getPosition() >= setPoint - deadzone && getPosition() <= setPoint + deadzone)
             return true;

@@ -31,7 +31,7 @@ public class Deepclimb extends SubsystemBase {
     public Deepclimb(){
         this.climbMotorConfigs = new TalonFXConfiguration();
         climbMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        this.climbMotor = new CTREMotor(5, null, 64, Constants.kMechanisms.deepClimbPID, Constants.kMechanisms.deepClimbFF, climbMotor, climbMotorConfigs);
+        this.climbMotor = new CTREMotor(5, null, 64, Constants.kMechanisms.deepClimbPID, Constants.kMechanisms.deepClimbFF, null, climbMotor, climbMotorConfigs);
     }
 
     /**

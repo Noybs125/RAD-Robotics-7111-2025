@@ -107,6 +107,10 @@ public class REVMotor implements Motor {
         return motor.getBusVoltage();
     }
 
+    public void setVoltage(double volts){
+        motor.setVoltage(volts);
+    }
+
     public boolean isAtSetpoint(double deadzone){
         if (getPosition() >= setPoint - deadzone && getPosition() <= setPoint + deadzone)
             return  true;
