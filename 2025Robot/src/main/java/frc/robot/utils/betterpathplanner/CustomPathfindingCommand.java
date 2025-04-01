@@ -88,7 +88,7 @@ public class CustomPathfindingCommand extends PathfindingCommand {
 
     @Override
     public boolean isFinished(){
-        System.out.println(isFinished);
+        
         return isFinished;
     }
 

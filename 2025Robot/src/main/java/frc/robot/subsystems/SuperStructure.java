@@ -23,6 +23,8 @@ public class SuperStructure extends SubsystemBase {
     public boolean hasAlgae;
     public Deepclimb deepClimb;
 
+    public boolean testBool = false;
+
     public SwerveState swerveState = SwerveState.DefaultState;
 
     /**
@@ -116,6 +118,8 @@ public class SuperStructure extends SubsystemBase {
             hasAlgae = false;
             hasCoral = false;
         }
+
+        System.out.println(testBool);
 
         swerve.setSubtractedSpeed(mechanisms.getElevatorHeight());
         swerve.setRotationSetpoint(field.getNearestZone(swerve.getPose()).getRotation().getDegrees());
@@ -470,4 +474,5 @@ public class SuperStructure extends SubsystemBase {
             swerveState = SwerveState.DefaultState;
         });
     }
+
 }

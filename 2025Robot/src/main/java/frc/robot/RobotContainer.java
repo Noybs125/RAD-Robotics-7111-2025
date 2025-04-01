@@ -72,27 +72,22 @@ public class RobotContainer {
     NamedCommands.registerCommand("Align Right", new InstantCommand(() -> field.updateCommand(true, false, true)));
     NamedCommands.registerCommand("Align Left", new InstantCommand(() -> field.updateCommand(true, true, false)));
     NamedCommands.registerCommand("Align Center", new InstantCommand(() -> field.updateCommand(true, false, false)));
-    NamedCommands.registerCommand("Stop Align", new InstantCommand(() -> field.updateCommand(true, false, false)));
+    NamedCommands.registerCommand("Stop Align", new InstantCommand(() -> field.updateCommand(false, false, false)).alongWith(new InstantCommand(() -> flywheels.setSpeed(-7))));
 
     NamedCommands.registerCommand("Coral Feeder", superStructure.setActualStateCommand(SuperStructure.ActualState.coralFeeder));
     NamedCommands.registerCommand("Stow", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow));
     NamedCommands.registerCommand("Zero", superStructure.setActualStateCommand(SuperStructure.ActualState.stow));
+    NamedCommands.registerCommand("L1", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow));
+    NamedCommands.registerCommand("L2", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2));
+    NamedCommands.registerCommand("L3", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3));
     NamedCommands.registerCommand("L4", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4));
-    /*NamedCommands.registerCommand("L1 Center", field.alignToNearestSetpoint(false, false).alongWith(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL1Stow)));
-    NamedCommands.registerCommand("L2 Left", field.alignToNearestSetpoint(true, false).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
-    NamedCommands.registerCommand("L2 Right", field.alignToNearestSetpoint(false, true).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL2)));
-    NamedCommands.registerCommand("L3 Left", field.alignToNearestSetpoint(true, false).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3)));
-    NamedCommands.registerCommand("L3 Right", field.alignToNearestSetpoint(false, true).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3)));
-    NamedCommands.registerCommand("L4 Left", field.alignToNearestSetpoint(true, false).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
-    NamedCommands.registerCommand("L4 Right", field.alignToNearestSetpoint(false, true).andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4)));
-*/
-    NamedCommands.registerCommand("Score", new InstantCommand(() -> flywheels.setSpeed(-0.7))
-        .andThen(new WaitUntilCommand(() -> !sensors.isBeamBroken()))
-        .andThen(new InstantCommand(() -> flywheels.setSpeed(0))));
 
-    NamedCommands.registerCommand("Intake", new InstantCommand(() -> flywheels.setSpeed(1))
+    NamedCommands.registerCommand("Shoot", new InstantCommand(() -> flywheels.setSpeed(-0.7)).alongWith(new InstantCommand(() -> superStructure.testBool = true)));
+        
+
+   /*  NamedCommands.registerCommand("Intake", new InstantCommand(() -> flywheels.setSpeed(1))
         .andThen(new WaitUntilCommand(() -> sensors.isBeamBroken())
-        .andThen(new InstantCommand(() -> flywheels.setSpeed(0)))));
+        .andThen(new InstantCommand(() -> flywheels.setSpeed(0)))));*/
 
 
     NamedCommands.registerCommand("L2 Algae", superStructure.useCenterAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL2)));
@@ -173,16 +168,14 @@ public class RobotContainer {
 
     zeroMechanisms.onTrue(new InstantCommand(() -> mechanisms.zeroMechanisms()));
 
-    effectorIntake.onTrue(flywheels.setSuppliedSpeed(() -> operatorController.getRightTriggerAxis()));
+    /*effectorIntake.onTrue(flywheels.setSuppliedSpeed(() -> operatorController.getRightTriggerAxis()));
     effectorScore.onTrue(flywheels.setSuppliedSpeed(() -> -operatorController.getLeftTriggerAxis()));
-    effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));
+    effectorIntake.negate().and(effectorScore.negate()).onTrue(new InstantCommand(() -> flywheels.setSpeed(0)));*/
 
     climbUp.onTrue(new InstantCommand(() -> deepClimb.setSpeed(.5)));
     climbDown.onTrue(new InstantCommand(() -> deepClimb.setSpeed(-.5)));
     climbDown.negate().and(climbUp.negate()).onTrue(new InstantCommand(() -> deepClimb.setSpeed(0)));
 
-    algaeL2.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.RightBumper));
-    algaeL3.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.LeftBumper));
     algaeNet.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.StartButton));
     
 

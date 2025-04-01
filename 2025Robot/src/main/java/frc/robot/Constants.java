@@ -215,19 +215,16 @@ public class Constants {
   public static class kMechanisms {
     /* Current Limiting */
     public static final double wristCurrentLimit = 40;
-    public static final double elevatorCurrentLimit = 40;
+    public static final double elevatorCurrentLimit = 45;
     public static final double flywheelCurrentLimit = 40;
     public static final double elevatorWinchDiameter = 2;
     public static final double wristGearRatio = 48.13;
     /** Elevator max speed allowed, in percent. 0 = 0%, 1 = 100% */
     public static final double elevatorMaxSpeed = 15;
-    /** Elevator Max Height in feet */
-    public static final double elevatorMaxHeight = 8;
 
     /** Minimum safe height for the elevator so that the wrist can move to  mechanical limits, in scale of percent of max height */
-    public static final double elevatorMinSafeWristHeight = (1+(2/3)) / elevatorMaxHeight; //currently set to 20 inches high, theoretical limit is 16 inches
+    //currently set to 20 inches high, theoretical limit is 16 inches
     /** Height of elevator that it will not allow the wrist to point past precautionary limits */
-    public static final double elevatorPrecautionWristHeight = elevatorMinSafeWristHeight + 0.1;
     
     /** Maximum height the elevator can be before restricting the wrist max rotation speed */
     public static final double elevatorMaxSafeWristHeight = 0.65; //currently set to 5.2 ft
@@ -312,7 +309,7 @@ public class Constants {
     /* Pathplanner config */
 
     public static final PathConstraints constraints = new PathConstraints(MAX_VELOCITY_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED, MAX_ANGULAR_RADIANS_PER_SECOND, MAX_ANGULAR_ACCEL_RAD_PER_SECOND);
-    public static final PathConstraints reefConstraints = new PathConstraints(2, 1.25, 2, 2);
+    public static final PathConstraints reefConstraints = new PathConstraints(1, .5, 1, .5);
 
     public static final int numModules = 4;
     public static final double massKgs = Units.lbsToKilograms(143.2);

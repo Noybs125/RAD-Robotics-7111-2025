@@ -332,9 +332,9 @@ public class Field extends SubsystemBase {
     public void periodic() {
        
 		//determines the max speed from 100% - x%
-        autoDifference = swerve.getDifference();
+        /*autoDifference = swerve.getDifference();
 		maxAccelerationMPSSq = 1 - autoDifference;
-		maxAngularVelocityAcceleration = 1 - (autoDifference);
+		maxAngularVelocityAcceleration = 1 - (autoDifference);*/
 
         
 
@@ -385,9 +385,17 @@ public class Field extends SubsystemBase {
         //alignToNearestSetpoint(nearestPose, isLeft, isRight);
 
         if(isCommandsUpdated){
-            GoalEndState endState = new GoalEndState(0, transformPose(nearestPose, isLeft, isRight).getRotation()); 
-            List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(swerve.getPose(),transformPose(nearestPose, isLeft, isRight));
+
+            Pose2d actualReefPose = nearestPose;
+            if(DriverStation.getAlliance().isPresent()){
+                actualReefPose = DriverStation.getAlliance().get() == Alliance.Red
+                    ? FlippingUtil.flipFieldPose(nearestPose)
+                    : nearestPose;
+            }
+            GoalEndState endState = new GoalEndState(0, actualReefPose.getRotation()); 
+            List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(swerve.getPose(), transformPose(actualReefPose, isLeft, isRight));
             PathPlannerPath findPath =  new PathPlannerPath(waypoints,Constants.kAuto.reefConstraints,null,endState);
+            findPath.preventFlipping = true;
             alignCommand = CustomAutoBuilder.followPath(findPath);
             alignCommand.schedule();
             isCommandsUpdated = false;
