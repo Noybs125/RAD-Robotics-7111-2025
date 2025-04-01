@@ -8,10 +8,11 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.FlippingUtil;
 
@@ -384,8 +385,10 @@ public class Field extends SubsystemBase {
         //alignToNearestSetpoint(nearestPose, isLeft, isRight);
 
         if(isCommandsUpdated){
-
-            alignCommand = pathfindToPose(transformPose(nearestPose, isLeft, isRight)).alongWith(Commands.print("path is running (allegedly)"));
+            GoalEndState endState = new GoalEndState(0, transformPose(nearestPose, isLeft, isRight).getRotation()); 
+            List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(swerve.getPose(),transformPose(nearestPose, isLeft, isRight));
+            PathPlannerPath findPath =  new PathPlannerPath(waypoints,Constants.kAuto.reefConstraints,null,endState);
+            alignCommand = CustomAutoBuilder.followPath(findPath);
             alignCommand.schedule();
             isCommandsUpdated = false;
             System.out.println("\nalign command scheduled\n");
