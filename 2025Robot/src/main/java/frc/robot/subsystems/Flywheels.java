@@ -86,7 +86,7 @@ public class Flywheels extends SubsystemBase {
         }
     }
 
-    /*public Command setSuppliedSpeed(DoubleSupplier speed){
+    public Command setSuppliedSpeed(DoubleSupplier speed){
         return run(() -> effectorWheels.setSpeed(speed.getAsDouble()));
-    }*/
+    }
 }
