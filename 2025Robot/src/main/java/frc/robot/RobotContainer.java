@@ -9,6 +9,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Swerve;
@@ -143,6 +144,8 @@ public class RobotContainer {
 
     Trigger zeroMechanisms = operatorController.rightStick();
 
+    Trigger hasGamepiece = new Trigger(sensors::isBeamBroken);
+
     swerve.setDefaultCommand(swerve.drive(
       () -> -swerve.getTransY(),
       () -> swerve.getTransX(),
@@ -192,6 +195,9 @@ public class RobotContainer {
     centerReefAlign.onTrue(new InstantCommand(() -> field.updateCommand(true, false, false)).alongWith(Commands.print("center")));
     rightReefAlign.negate().and(leftReefAlign.negate()).and(centerReefAlign.negate()).onTrue(new InstantCommand(() -> field.updateCommand(false, false, false)).alongWith(Commands.print("none")));
 
+    hasGamepiece.onChange(Commands.runOnce(() -> driverController.setRumble(RumbleType.kBothRumble, 0.75))
+        .andThen(Commands.waitSeconds(0.2))
+        .andThen(Commands.runOnce(() -> driverController.setRumble(RumbleType.kBothRumble, 0))));
     // change or remove each of these when we decide controls
     zeroGyro.onTrue(swerve.zeroGyroCommand());
     zeroOdometry.onTrue(swerve.resetOdometryCommand());

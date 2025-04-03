@@ -13,7 +13,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef 4 from 2 left"
+            "pathName": "Reef 4 from 2 center"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4"
           }
         },
         {
@@ -25,31 +31,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Score"
+            "name": "Reef 4 Left"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.0
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Stop Wheels"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "center backup"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Zero"
+            "name": "Score"
           }
         }
       ]
