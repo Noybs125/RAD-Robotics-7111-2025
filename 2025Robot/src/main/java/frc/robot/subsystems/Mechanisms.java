@@ -278,7 +278,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case ReefL4:
-                moveElevThenArm(1.0265, 0.40822, 0.2);
+                moveElevThenArm(1.0265, 0.40822, 0.2); //test this if we have time? !! Remember to Deploy !!
                 if(elevator.isAtSetpoint(0.2)){
                     elevatorMaxSpeed = 7;
                 }else{
@@ -291,7 +291,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case AlgaeL3:
-                moveElevThenArm(0.46513, 0.1909, 0.01);
+                moveElevThenArm(0.46513, 0.1840, 0.01);
                 break;
 
             case AlgaeProcessor:
@@ -299,8 +299,8 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case AlgaeNet:
-                maxWristSpeed = 1;
-                moveElevThenArm(0.8431, 0.0502, 0.01);
+        
+                moveElevThenArm(1.01, 0.193, 0.005);
                 break;
 
             case Store:
@@ -311,7 +311,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case CoralFeeder:
-                setAllMechanismsSetpoint(-0.0725, 0.1676);
+                setAllMechanismsSetpoint(-0.0725, 0.18);
                 break;
 
             case Climb:

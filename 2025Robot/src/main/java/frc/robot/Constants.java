@@ -49,7 +49,7 @@ public class Constants {
         Units.inchesToMeters(-6.5), 
         Units.inchesToMeters(-4.75), 
         0, 
-        new Rotation3d(0, 0.0873, 3.1416));
+        new Rotation3d(0, 0/*0.0873*/, Units.degreesToRadians(180 + -22.8)));
 
     public static final double cameraHeight = Units.inchesToMeters(0);
 
@@ -309,7 +309,7 @@ public class Constants {
     /* Pathplanner config */
 
     public static final PathConstraints constraints = new PathConstraints(MAX_VELOCITY_METERS_PER_SECOND, MAX_ACCEL_METERS_PER_SECOND_SQUARED, MAX_ANGULAR_RADIANS_PER_SECOND, MAX_ANGULAR_ACCEL_RAD_PER_SECOND);
-    public static final PathConstraints reefConstraints = new PathConstraints(1, .5, 1, .5);
+    public static final PathConstraints reefConstraints = new PathConstraints(1, .3, 1, .5);
 
     public static final int numModules = 4;
     public static final double massKgs = Units.lbsToKilograms(143.2);

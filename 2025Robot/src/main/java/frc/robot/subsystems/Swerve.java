@@ -441,8 +441,8 @@ public class Swerve extends SubsystemBase {
 		//threshold
 		if(difference <= 0.15){
 			difference = 0;
-		}else if(difference >= 0.9){
-			difference = 0.9;
+		}else if(difference >= 0.95){
+			difference = 0.95;
 		}
 		//determines the max speed from 100% - x%
 		maxSpeed = 1 - difference;

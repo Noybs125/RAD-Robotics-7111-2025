@@ -19,6 +19,7 @@ import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.SuperStructure.ActualState;
 import frc.robot.subsystems.SuperStructure.ControlState;
 import frc.robot.utils.betterpathplanner.CustomAutoBuilder;
+import frc.robot.utils.betterpathplanner.ReefPathfindingCommand;
 import frc.robot.subsystems.Flywheels;
 import frc.robot.subsystems.Mechanisms;
 import frc.robot.subsystems.Sensors;
@@ -71,18 +72,21 @@ public class RobotContainer {
     deepClimb = new Deepclimb();
     superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels, deepClimb);
 
-    NamedCommands.registerCommand("Reef 5 Left", field.getReefPath(5, true, false));
-    NamedCommands.registerCommand("Reef 6 Right", field.getReefPath(6, false, true));
-    NamedCommands.registerCommand("Reef 3 Right", field.getReefPath(3, false, true));
-    NamedCommands.registerCommand("Reef 2 Left", field.getReefPath(2, true, false));
-    NamedCommands.registerCommand("Reef 4 Left", field.getReefPath(4, true, false));
-    NamedCommands.registerCommand("Reef 4 Right", field.getReefPath(4, false, true));
+    NamedCommands.registerCommand("Reef 5 Left", new ReefPathfindingCommand(swerve::getPose, 5, true, field));
+    NamedCommands.registerCommand("Reef 6 Right", new ReefPathfindingCommand(swerve::getPose, 6, false, field));
+    NamedCommands.registerCommand("Reef 3 Right", new ReefPathfindingCommand(swerve::getPose, 3, false, field));
+    NamedCommands.registerCommand("Reef 2 Left", new ReefPathfindingCommand(swerve::getPose, 2, true, field));
+    NamedCommands.registerCommand("Reef 4 Left", new ReefPathfindingCommand(swerve::getPose, 4, true, field));
+    NamedCommands.registerCommand("Reef 4 Right", new ReefPathfindingCommand(swerve::getPose, 4, false, field));
     
     NamedCommands.registerCommand("Align Center", new InstantCommand(() -> field.updateCommand(true, false, false)));
 
     NamedCommands.registerCommand("Score", new InstantCommand(() -> flywheels.setSpeed(-0.7))
         .alongWith(new WaitUntilCommand(() -> !sensors.isBeamBroken()))
         .andThen(new WaitCommand(0.5))
+        .andThen(new InstantCommand(() -> flywheels.setSpeed(0))));
+    NamedCommands.registerCommand("Intake", new InstantCommand(() -> flywheels.setSpeed(0.7))
+        .alongWith(new WaitUntilCommand(sensors::isBeamBroken))
         .andThen(new InstantCommand(() -> flywheels.setSpeed(0))));
 
     NamedCommands.registerCommand("Coral Feeder", superStructure.setActualStateCommand(SuperStructure.ActualState.coralFeeder));
