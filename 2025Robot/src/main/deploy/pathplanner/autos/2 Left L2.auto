@@ -19,7 +19,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L4"
+            "name": "L2"
           }
         },
         {
@@ -44,12 +44,6 @@
           "type": "named",
           "data": {
             "name": "Score"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
           }
         },
         {
@@ -97,13 +91,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef 2 from intake L"
+            "pathName": "Left feeder to 1"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L4"
+            "name": "L2"
           }
         },
         {
@@ -115,7 +109,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Reef 2 Left"
+            "name": "Reef 1 Left"
           }
         },
         {

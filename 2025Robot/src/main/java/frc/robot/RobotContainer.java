@@ -72,12 +72,17 @@ public class RobotContainer {
     deepClimb = new Deepclimb();
     superStructure = new SuperStructure(swerve, vision, field, sensors, mechanisms, flywheels, deepClimb);
 
+    NamedCommands.registerCommand("Disable Vision", new InstantCommand(() -> swerve.setUseVisionPose(false)));
+    NamedCommands.registerCommand("Enable Vision", new InstantCommand(() -> swerve.setUseVisionPose(true)).andThen(Commands.waitSeconds(3)));
+
     NamedCommands.registerCommand("Reef 5 Left", new ReefPathfindingCommand(swerve::getPose, 5, true, field));
     NamedCommands.registerCommand("Reef 6 Right", new ReefPathfindingCommand(swerve::getPose, 6, false, field));
     NamedCommands.registerCommand("Reef 3 Right", new ReefPathfindingCommand(swerve::getPose, 3, false, field));
     NamedCommands.registerCommand("Reef 2 Left", new ReefPathfindingCommand(swerve::getPose, 2, true, field));
     NamedCommands.registerCommand("Reef 4 Left", new ReefPathfindingCommand(swerve::getPose, 4, true, field));
     NamedCommands.registerCommand("Reef 4 Right", new ReefPathfindingCommand(swerve::getPose, 4, false, field));
+    NamedCommands.registerCommand("Reef 1 Left", new ReefPathfindingCommand(swerve::getPose, 1, true, field));
+    NamedCommands.registerCommand("Reef 1 Right", new ReefPathfindingCommand(swerve::getPose, 1, false, field));
     
     NamedCommands.registerCommand("Align Center", new InstantCommand(() -> field.updateCommand(true, false, false)));
 

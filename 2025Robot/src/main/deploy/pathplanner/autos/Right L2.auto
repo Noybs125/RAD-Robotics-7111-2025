@@ -13,13 +13,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef 4 from 2 center"
+            "pathName": "Reef 5 from 3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L4"
+            "name": "L2"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Reef 4 Right"
+            "name": "Reef 5 Left"
           }
         },
         {
@@ -44,6 +44,12 @@
           "type": "named",
           "data": {
             "name": "Score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
           }
         }
       ]
