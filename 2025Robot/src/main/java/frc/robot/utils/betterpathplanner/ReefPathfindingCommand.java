@@ -5,8 +5,11 @@ import java.util.function.Supplier;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Field;
@@ -29,6 +32,11 @@ public class ReefPathfindingCommand extends Command {
     public void initialize(){
         GoalEndState endState = new GoalEndState(0, field.zoneArray[reefFace-1].getRotation());
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(startPose.get(), field.transformPose(field.zoneArray[reefFace-1], isLeft, !isLeft));
+        if(DriverStation.getAlliance().isPresent()){
+            if(DriverStation.getAlliance().get().equals(Alliance.Red)){
+                waypoints = PathPlannerPath.waypointsFromPoses(FlippingUtil.flipFieldPose(startPose.get()), field.transformPose(field.zoneArray[reefFace-1], isLeft, !isLeft));
+            }
+        }
         PathPlannerPath path = new PathPlannerPath(waypoints, Constants.kAuto.reefConstraints, null, endState);
         command = CustomAutoBuilder.followPath(path);
         command.initialize();
