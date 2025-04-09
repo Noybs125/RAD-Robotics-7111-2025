@@ -102,8 +102,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("L3", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL3));
     NamedCommands.registerCommand("L4", superStructure.setActualStateCommand(SuperStructure.ActualState.coralL4));
 
-    NamedCommands.registerCommand("L2 Algae", superStructure.useCenterAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL2)));
-    NamedCommands.registerCommand("L3 Algae", superStructure.useCenterAlignment().andThen(superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL3)));
+    NamedCommands.registerCommand("L2 Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL2));
+    NamedCommands.registerCommand("L3 Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeL3));
     NamedCommands.registerCommand("Processor Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeProcessor));
     NamedCommands.registerCommand("Net Algae", superStructure.setActualStateCommand(SuperStructure.ActualState.algaeNet));
 

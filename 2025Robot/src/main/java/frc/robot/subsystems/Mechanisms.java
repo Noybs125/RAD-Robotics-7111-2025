@@ -278,7 +278,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case ReefL4:
-                moveElevThenArm(1.065, 0.40822, 0.2); 
+                moveElevThenArm(1.035, 0.40822, 0.2); 
                 if(elevator.isAtSetpoint(0.3)){
                     elevatorMaxSpeed = 5;
                 }else{
@@ -287,11 +287,11 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case AlgaeL2:
-                moveElevThenArm(0.2471, 0.1840, 0.01);
+                moveElevThenArm(0.2471, 0.1840, 0.05);
                 break;
 
             case AlgaeL3:
-                moveElevThenArm(0.46513, 0.1840, 0.01);
+                moveElevThenArm(0.46513, 0.1840, 0.05);
                 break;
 
             case AlgaeProcessor:
@@ -311,7 +311,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case CoralFeeder:
-                setAllMechanismsSetpoint(-0.0725, 0.18);
+                setAllMechanismsSetpoint(-0.0725, 0.1825);
                 break;
 
             case Climb:

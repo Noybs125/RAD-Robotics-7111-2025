@@ -13,31 +13,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef 5 from 3"
+            "pathName": "Reef 4 from 2 center"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L2"
+            "name": "L4"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.0
+            "waitTime": 0.75
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Reef 3 Right"
+            "name": "Reef 4 Right"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.1
           }
         },
         {
@@ -49,13 +49,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3 Backup"
+            "pathName": "Reef 4 Backup Right"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Stow"
+            "name": "L3 Algae"
           }
         },
         {
@@ -67,13 +67,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Feeder"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Coral Feeder"
+            "pathName": "Reef 4 Algae"
           }
         },
         {
@@ -83,33 +77,15 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Stow"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Left feeder to 1"
+            "pathName": "Barge from Reef 4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L2"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Reef 1 Left"
+            "name": "Net Algae"
           }
         },
         {
