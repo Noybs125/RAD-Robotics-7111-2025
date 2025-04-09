@@ -135,7 +135,6 @@ public class SuperStructure extends SubsystemBase {
 
             case XButton:
                 //checks for whether it should align for reef or processor
-
                 if (hasAlgae) {
                     actualRobotState = ActualState.coralL1Stow;
                 }
