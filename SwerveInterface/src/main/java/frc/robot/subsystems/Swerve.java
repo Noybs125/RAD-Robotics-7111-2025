@@ -1,0 +1,219 @@
+package frc.robot.subsystems;
+
+import java.util.function.DoubleSupplier;
+
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.DeviceConfigs;
+import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.SwerveConstants;
+import frc.robot.utils.swerve.SwerveModule;
+import frc.robot.utils.swerve.modules.SparkMaxSwerveModule;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.function.Supplier;
+import java.util.function.Consumer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+
+
+public class Swerve extends SubsystemBase {
+    private final SwerveModule[] modules;
+
+    private final SwerveDriveOdometry swerveOdometry;
+
+    private final AHRS gyro;
+
+    public Swerve() {
+        gyro = new AHRS(NavXComType.kMXP_SPI);
+        zeroGyro();
+
+        modules = new SwerveModule[] {
+            new SwerveModule(0, new SparkMaxSwerveModule(SwerveConstants.mod0Constants)),
+            new SwerveModule(1, new SparkMaxSwerveModule(SwerveConstants.mod1Constants)),
+            new SwerveModule(2, new SparkMaxSwerveModule(SwerveConstants.mod2Constants)),
+            new SwerveModule(3, new SparkMaxSwerveModule(SwerveConstants.mod3Constants)),
+        };
+
+        swerveOdometry = new SwerveDriveOdometry(SwerveConstants.kinematics, getYaw(), getPositions());
+        
+        RobotConfig config = null;
+        try{
+            config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+            // Handle exception as needed
+            e.printStackTrace();
+        }
+
+        AutoBuilder.configure(
+            this::getPose, // Robot pose supplier
+            this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getRelSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            this::setRelSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+            ),
+            config,
+            () -> 
+                DriverStation.getAlliance().isPresent()
+                    ? DriverStation.getAlliance().get() == Alliance.Red
+                    : false,
+            this // Reference to this subsystem to set requirements
+        );
+    }
+
+    /** 
+     * This is called a command factory method, and these methods help reduce the
+     * number of files in the command folder, increasing readability and reducing
+     * boilerplate. 
+     * 
+     * Double suppliers are just any function that returns a double.
+     */
+    public Command drive(DoubleSupplier forwardBackAxis, DoubleSupplier leftRightAxis, DoubleSupplier rotationAxis, boolean isFieldRelative, boolean isOpenLoop) {
+        return run(() -> {
+            // Grabbing input from suppliers.
+            double forwardBack = forwardBackAxis.getAsDouble();
+            double leftRight = leftRightAxis.getAsDouble();
+            double rotation = rotationAxis.getAsDouble();
+
+            // Adding deadzone.
+            forwardBack = Math.abs(forwardBack) < ControllerConstants.axisDeadzone ? 0 : forwardBack;
+            leftRight = Math.abs(leftRight) < ControllerConstants.axisDeadzone ? 0 : leftRight;
+            rotation = Math.abs(rotation) < ControllerConstants.axisDeadzone ? 0 : rotation;
+
+            // Converting to m/s
+            forwardBack *= SwerveConstants.maxDriveVelocity;
+            leftRight *= SwerveConstants.maxDriveVelocity;
+            rotation *= SwerveConstants.maxAngularVelocity;
+
+            // Get desired module states.
+            ChassisSpeeds chassisSpeeds = isFieldRelative
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(forwardBack, leftRight, rotation, getYaw())
+                : new ChassisSpeeds(forwardBack, leftRight, rotation);
+
+            SwerveModuleState[] states = SwerveConstants.kinematics.toSwerveModuleStates(chassisSpeeds);
+
+            setModuleStates(states, isOpenLoop);
+        }).withName("SwerveDriveCommand");
+    }
+
+    /** To be used by auto. Use the drive method during teleop. */
+    public void setModuleStates(SwerveModuleState[] states) {
+        setModuleStates(states, false);
+    }
+
+    private void setModuleStates(SwerveModuleState[] states, boolean isOpenLoop) {
+        // Makes sure the module states don't exceed the max speed.
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveConstants.maxDriveVelocity);
+
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].setState(states[modules[i].moduleNumber], isOpenLoop);
+        }
+    }
+
+    public SwerveModuleState[] getStates() {
+        SwerveModuleState currentStates[] = new SwerveModuleState[modules.length];
+        for (int i = 0; i < modules.length; i++) {
+            currentStates[i] = modules[i].getState();
+        }
+
+        return currentStates;
+    }
+
+    public SwerveModulePosition[] getPositions() {
+        SwerveModulePosition currentStates[] = new SwerveModulePosition[modules.length];
+        for (int i = 0; i < modules.length; i++) {
+            currentStates[i] = modules[i].getPosition();
+        }
+
+        return currentStates;
+    }
+
+    public Rotation2d getYaw() {
+        return gyro.getRotation2d(); //Rotation2d.fromDegrees(gyro.getYaw());
+    }
+
+    public Command zeroGyroCommand() {
+        return runOnce(this::zeroGyro).withName("ZeroGyroCommand");
+    }
+
+    private void zeroGyro() {
+        gyro.zeroYaw();
+    }
+
+    public Pose2d getPose() {
+        return swerveOdometry.getPoseMeters();
+    }
+
+    public void resetOdometry(Pose2d pose) {
+        swerveOdometry.resetPosition(getYaw(), getPositions(), pose);
+    }
+
+    public ChassisSpeeds getRelSpeeds() {
+        ChassisSpeeds relSpeed = SwerveConstants.kinematics.toChassisSpeeds(getStates());
+        return relSpeed;
+    }
+
+    public void setRelSpeeds(ChassisSpeeds speeds){
+        speeds.omegaRadiansPerSecond = -speeds.omegaRadiansPerSecond;
+        speeds = ChassisSpeeds.discretize(speeds, 0.02);
+        SwerveModuleState[] states = SwerveConstants.kinematics.toSwerveModuleStates(speeds);
+        setModuleStates(states);
+    }
+    
+    @Override 
+    public void periodic() {
+        swerveOdometry.update(getYaw(), getPositions());
+
+        for(SwerveModule mod : modules){
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getEncoder().getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+        }
+        SmartDashboard.putNumber("Gyro Yaw", getYaw().getDegrees());
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        super.initSendable(builder);
+        for (SwerveModule module : modules) {
+            builder.addStringProperty(
+                String.format("Module %d", module.moduleNumber),
+                () -> {
+                    SwerveModuleState state = module.getState();
+                    return String.format("%6.2fm/s %6.3fdeg", state.speedMetersPerSecond, state.angle.getDegrees());
+                },
+                null);
+
+                builder.addDoubleProperty(
+                String.format("Cancoder %d", module.moduleNumber),
+                () -> module.getEncoder().getDegrees(),
+                null);
+
+                
+                builder.addDoubleProperty(
+                String.format("Angle %d", module.moduleNumber),
+                () -> module.getAngle().getDegrees(),
+                null);
+        }
+    }
+}
