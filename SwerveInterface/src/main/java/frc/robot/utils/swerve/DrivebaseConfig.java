@@ -14,33 +14,49 @@ public class DrivebaseConfig {
     public double width;
     public double length;
     public double wheelDiameter;
-    public double driveGearing; 
-    public double angleGearing;
-    public boolean driveInversion;
-    public boolean angleInversion;
-    public PIDController drivePID;
-    public PIDController anglePID;
 
-    public DrivebaseConfig(SwerveModuleType[] moduleTypes, SwerveModuleConstants[] moduleConstants, double width, double length, double wheelDiameter, double driveGearing, double angleGearing, boolean driveInversion, boolean angleInversion, PIDController drivePID, PIDController anglePID){
+    public DrivebaseConfig(SwerveModuleType[] moduleTypes, SwerveModuleConstants[] moduleConstants, double width, double length, double wheelDiameter){
         this.moduleTypes = moduleTypes;
         this.moduleConstants = moduleConstants;
         this.width = width;
         this.length = length;
         this.wheelDiameter = wheelDiameter;
-        this.driveGearing = driveGearing;
-        this.angleGearing = angleGearing;
-        this.driveInversion = driveInversion;
-        this.angleInversion = angleInversion;
-        this.drivePID = drivePID;
-        this.anglePID = anglePID;
     }
 
     public static DrivebaseConfig getStormSurge(){
+        double width = 0;
+        double length = 0;
+        double wheelDiameter = 3.75;
+
+        double driveGearing = 6.72 / 1.0; 
+        double angleGearing = 468.0 / 35.0;
+        double driveCurrentLimit = 40;
+        double angleCurrentLimit = 40;
+        boolean driveInversion = false;
+        boolean angleInversion = true;
+        PIDController drivePID = new PIDController(0.1, 0.0, 0.0);
+        PIDController anglePID = new PIDController(0.1, 0.0, 0.0);
+
         SwerveModuleConstants[] moduleConstants = new SwerveModuleConstants[]{
-            new SwerveModuleConstants(1, 2, DCMotor.getKrakenX60(1), DCMotor.getKrakenX60(1), new CTREEncoder(0, SwerveModuleConfigs.getCANCoder()), 0),
-            new SwerveModuleConstants(1, 2, DCMotor.getKrakenX60(1), DCMotor.getKrakenX60(1), new CTREEncoder(1, SwerveModuleConfigs.getCANCoder()), 0),
-            new SwerveModuleConstants(1, 2, DCMotor.getKrakenX60(1), DCMotor.getKrakenX60(1), new CTREEncoder(2, SwerveModuleConfigs.getCANCoder()), 0),
-            new SwerveModuleConstants(1, 2, DCMotor.getKrakenX60(1), DCMotor.getKrakenX60(1), new CTREEncoder(3, SwerveModuleConfigs.getCANCoder()), 0),
+            new SwerveModuleConstants(
+                new MotorConstants(DCMotor.getKrakenX60(1), 1, driveInversion, driveGearing, driveCurrentLimit, drivePID), 
+                new MotorConstants(DCMotor.getKrakenX60(1), 2, angleInversion, angleGearing, angleCurrentLimit, anglePID), 
+                new CTREEncoder(0, SwerveModuleConfigs.getCANCoder()), 0),
+
+            new SwerveModuleConstants(
+                new MotorConstants(DCMotor.getKrakenX60(1), 3, driveInversion, driveGearing, driveCurrentLimit, drivePID), 
+                new MotorConstants(DCMotor.getKrakenX60(1), 4, angleInversion, angleGearing, angleCurrentLimit, anglePID), 
+                new CTREEncoder(1, SwerveModuleConfigs.getCANCoder()), 0),
+
+            new SwerveModuleConstants(
+                new MotorConstants(DCMotor.getKrakenX60(1), 5, driveInversion, driveGearing, driveCurrentLimit, drivePID), 
+                new MotorConstants(DCMotor.getKrakenX60(1), 6, angleInversion, angleGearing, angleCurrentLimit, anglePID), 
+                new CTREEncoder(2, SwerveModuleConfigs.getCANCoder()), 0),
+
+            new SwerveModuleConstants(
+                new MotorConstants(DCMotor.getKrakenX60(1), 7, driveInversion, driveGearing, driveCurrentLimit, drivePID), 
+                new MotorConstants(DCMotor.getKrakenX60(1), 8, angleInversion, angleGearing, angleCurrentLimit, anglePID), 
+                new CTREEncoder(3, SwerveModuleConfigs.getCANCoder()), 0),
         };
         SwerveModuleType[] moduleTypes = new SwerveModuleType[]{
             new TalonFXSwerveModule(moduleConstants[0]),
@@ -48,17 +64,8 @@ public class DrivebaseConfig {
             new TalonFXSwerveModule(moduleConstants[2]),
             new TalonFXSwerveModule(moduleConstants[3]),
         };
-        double width = 0;
-        double length = 0;
-        double wheelDiameter = 0;
-        double driveGearing = 6.72 / 1.0; 
-        double angleGearing = 468.0 / 35.0;
-        boolean driveInversion = false;
-        boolean angleInversion = true;
-        PIDController drivePID = new PIDController(0.1, 0.0, 0.0);
-        PIDController anglePID = new PIDController(0.1, 0.0, 0.0);
         
-        return new DrivebaseConfig(moduleTypes, moduleConstants, width, length, wheelDiameter, driveGearing, angleGearing, driveInversion, angleInversion, drivePID, anglePID);
+        return new DrivebaseConfig(moduleTypes, moduleConstants, width, length, wheelDiameter);
     }
 
     public static DrivebaseConfig getBoxChassis(){
@@ -71,12 +78,7 @@ public class DrivebaseConfig {
         double width = 0;
         double length = 0;
         double wheelDiameter = 4;
-        double driveGearing = 6.75 / 1.0; 
-        double angleGearing = 150.0 / 7.0;
-        boolean driveInversion = false;
-        boolean angleInversion = true;
-        PIDController drivePID = new PIDController(0.1, 0.0, 0.0);
-        PIDController anglePID = new PIDController(0.1, 0.0, 0.0);
-        return new DrivebaseConfig(moduleTypes, moduleConstants, width, length, wheelDiameter, driveGearing, angleGearing, driveInversion, angleInversion, drivePID, anglePID);
+
+        return new DrivebaseConfig(moduleTypes, moduleConstants, width, length, wheelDiameter);
     }
 }

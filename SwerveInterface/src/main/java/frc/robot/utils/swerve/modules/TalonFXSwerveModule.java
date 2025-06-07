@@ -30,8 +30,8 @@ public class TalonFXSwerveModule implements SwerveModuleType{
     private double encoderOffsetDegrees;
 
     public TalonFXSwerveModule(SwerveModuleConstants constants){
-        driveMotor = new TalonFX(constants.driveMotorID, Constants.canbus);
-        angleMotor = new TalonFX(constants.angleMotorID, Constants.canbus);
+        driveMotor = new TalonFX(constants.driveMotorConstants.id, Constants.canbus);
+        angleMotor = new TalonFX(constants.angleMotorConstants.id, Constants.canbus);
         encoder = constants.encoder;
 
         encoderOffsetDegrees = constants.canCoderOffsetDegrees;

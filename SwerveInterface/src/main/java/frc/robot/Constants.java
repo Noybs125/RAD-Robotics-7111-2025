@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import frc.robot.utils.encoder.CTREEncoder;
+import frc.robot.utils.swerve.DrivebaseConfig;
 import frc.robot.utils.swerve.SwerveModuleConstants;
 
 /**
@@ -34,10 +35,11 @@ public class Constants {
 
     /** All swerve constants. */
     public static class SwerveConstants {
+        public static final DrivebaseConfig drivebase = DrivebaseConfig.getStormSurge();
         /** Constants that apply to the whole drive train. */
-        public static final double wheelBaseWidth = Units.inchesToMeters(28); // Width of the drivetrain measured from the middle of the wheels.
-        public static final double wheelBaseLength = Units.inchesToMeters(28); // Length of the drivetrain measured from the middle of the wheels.
-        public static final double wheelDiameter = Units.inchesToMeters(3.75);
+        public static final double wheelBaseWidth = drivebase.width; // Width of the drivetrain measured from the middle of the wheels.
+        public static final double wheelBaseLength = drivebase.length; // Length of the drivetrain measured from the middle of the wheels.
+        public static final double wheelDiameter = drivebase.wheelDiameter;
         public static final double wheelCircumference = wheelDiameter * Math.PI;
 
         public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
@@ -62,10 +64,6 @@ public class Constants {
         public static final int angleCurrentLimit = 40;
 
         /** Drive motor PID values. */
-        public static final double driveKP = 0.1;
-        public static final double driveKI = 0.0;
-        public static final double driveKD = 0.0;
-        public static final double driveKF = 0.0;
 
         /** Drive motor characterization. */
         public static final double driveKS = 0.11937;
@@ -73,10 +71,6 @@ public class Constants {
         public static final double driveKA = 0.46034;
 
         /** Angle motor PID values. */
-        public static final double angleKP = 1.5;
-        public static final double angleKI = 0.0;
-        public static final double angleKD = 0.1;
-        public static final double angleKF = 0.0;
         
         /** Swerve constraints. */
         public static final double maxDriveVelocity = 2;
@@ -84,54 +78,21 @@ public class Constants {
         public static final double sensitivity = 1;
 
         /** Inversions. */
-        public static final boolean driveInversion = true;
-        public static final boolean angleInversion = true;
-        public static final boolean encoderInversion = false;
 
         /** Idle modes. */
-        public static final boolean driveBreakMode = false;
-        public static final boolean angleBreakMode = false;
 
         /** 
          * Module specific constants.
          * CanCoder offset is in DEGREES, not radians like the rest of the repo.
          * This is to make offset slightly more accurate and easier to measure.
          */
-        public static final SwerveModuleConstants mod0Constants = new SwerveModuleConstants( // FL -x +y
-            3,
-            4,
-            DCMotor.getKrakenX60(1),
-            DCMotor.getKrakenX60(1),
-            new CTREEncoder(2, DeviceConfigs.SwerveModuleConfigs.getCANCoder()),
-            91.40
-        );
+        public static final SwerveModuleConstants mod0Constants = drivebase.moduleConstants[0];
 
-        public static final SwerveModuleConstants mod1Constants = new SwerveModuleConstants( // FR +x +y
-            5,
-            6,
-            DCMotor.getKrakenX60(1),
-            DCMotor.getKrakenX60(1),
-            new CTREEncoder(3, DeviceConfigs.SwerveModuleConfigs.getCANCoder()),
-            128.49
-        );
+        public static final SwerveModuleConstants mod1Constants = drivebase.moduleConstants[1];
 
-        public static final SwerveModuleConstants mod2Constants = new SwerveModuleConstants( // BL -x -y
-            1,
-            2,
-            DCMotor.getKrakenX60(1),
-            DCMotor.getKrakenX60(1),
-            new CTREEncoder(1, DeviceConfigs.SwerveModuleConfigs.getCANCoder()),
-            134.4
-        );
+        public static final SwerveModuleConstants mod2Constants = drivebase.moduleConstants[2];
 
-        public static final SwerveModuleConstants mod3Constants = new SwerveModuleConstants( // BR +x -y
-            7,
-            8,
-            DCMotor.getKrakenX60(1),
-            DCMotor.getKrakenX60(1),
-            new CTREEncoder(4, DeviceConfigs.SwerveModuleConfigs.getCANCoder()),
-            75.49
-        );
+        public static final SwerveModuleConstants mod3Constants = drivebase.moduleConstants[3];
     }
 
     public static class kAuto {
