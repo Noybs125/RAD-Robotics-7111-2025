@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -10,6 +11,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.utils.encoder.CTREEncoder;
 import frc.robot.utils.swerve.DrivebaseConfig;
 import frc.robot.utils.swerve.SwerveModuleConstants;
+import frc.robot.utils.swerve.modules.SwerveModuleType;
 
 /**
  * This class contains values that remain constant while the robot is running.
@@ -35,11 +37,11 @@ public class Constants {
 
     /** All swerve constants. */
     public static class SwerveConstants {
-        public static final DrivebaseConfig drivebase = DrivebaseConfig.getStormSurge();
+        public static final DrivebaseConfig drivebaseConfig = DrivebaseConfig.getStormSurge(true);
         /** Constants that apply to the whole drive train. */
-        public static final double wheelBaseWidth = drivebase.width; // Width of the drivetrain measured from the middle of the wheels.
-        public static final double wheelBaseLength = drivebase.length; // Length of the drivetrain measured from the middle of the wheels.
-        public static final double wheelDiameter = drivebase.wheelDiameter;
+        public static final double wheelBaseWidth = drivebaseConfig.width; // Width of the drivetrain measured from the middle of the wheels.
+        public static final double wheelBaseLength = drivebaseConfig.length; // Length of the drivetrain measured from the middle of the wheels.
+        public static final double wheelDiameter = drivebaseConfig.wheelDiameter;
         public static final double wheelCircumference = wheelDiameter * Math.PI;
 
         public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
@@ -59,40 +61,44 @@ public class Constants {
         public static final double openLoopRamp = 0.25;
         public static final double closedLoopRamp = 0.0;
 
-        /** Current limiting. */
-        public static final int driveCurrentLimit = 40;
-        public static final int angleCurrentLimit = 40;
-
-        /** Drive motor PID values. */
-
         /** Drive motor characterization. */
         public static final double driveKS = 0.11937;
         public static final double driveKV = 2.6335;
         public static final double driveKA = 0.46034;
-
-        /** Angle motor PID values. */
         
         /** Swerve constraints. */
         public static final double maxDriveVelocity = 2;
         public static final double maxAngularVelocity = 4;
         public static final double sensitivity = 1;
 
-        /** Inversions. */
-
-        /** Idle modes. */
-
         /** 
          * Module specific constants.
          * CanCoder offset is in DEGREES, not radians like the rest of the repo.
          * This is to make offset slightly more accurate and easier to measure.
          */
-        public static final SwerveModuleConstants mod0Constants = drivebase.moduleConstants[0];
+        public static final SwerveModuleConstants mod0Constants = drivebaseConfig.moduleConstants[0];
 
-        public static final SwerveModuleConstants mod1Constants = drivebase.moduleConstants[1];
+        public static final SwerveModuleConstants mod1Constants = drivebaseConfig.moduleConstants[1];
 
-        public static final SwerveModuleConstants mod2Constants = drivebase.moduleConstants[2];
+        public static final SwerveModuleConstants mod2Constants = drivebaseConfig.moduleConstants[2];
 
-        public static final SwerveModuleConstants mod3Constants = drivebase.moduleConstants[3];
+        public static final SwerveModuleConstants mod3Constants = drivebaseConfig.moduleConstants[3];
+
+        /** Motor direction */
+        public static final boolean driveInversion = mod0Constants.driveMotor.isCCW;
+        public static final boolean angleInversion = mod0Constants.angleMotor.isCCW;
+
+        /** Idle modes */
+        public static final boolean driveBreakMode = mod0Constants.driveMotor.isBreakMode;
+        public static final boolean angleBreakMode = mod0Constants.angleMotor.isBreakMode;
+
+        /** PID Controllers */
+        public static final PIDController drivePID = mod0Constants.driveMotor.pid;
+        public static final PIDController anglePID = mod0Constants.angleMotor.pid;
+
+        /** Current limiting. */
+        public static final int driveCurrentLimit = 40;
+        public static final int angleCurrentLimit = 40;
     }
 
     public static class kAuto {

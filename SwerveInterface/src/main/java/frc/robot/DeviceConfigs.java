@@ -12,6 +12,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.utils.swerve.MotorConstants;
+import frc.robot.utils.swerve.SwerveModuleConstants;
 
 /**
  * This class is for defining the configurations of each device (motors, encoders, etc.)
@@ -27,21 +29,21 @@ public class DeviceConfigs {
             return config;
         }
 
-        public static SparkMaxConfig getSparkMaxDrive(){
+        public static SparkMaxConfig getSparkMaxDrive(MotorConstants constants){
             SparkMaxConfig config = new SparkMaxConfig();
-            config.inverted(SwerveConstants.driveInversion);
-            SparkBaseConfig idleMode = SwerveConstants.driveBreakMode
+            config.inverted(constants.isCCW);
+            SparkBaseConfig idleMode = constants.isBreakMode
                 ? config.idleMode(IdleMode.kBrake)
                 : config.idleMode(IdleMode.kCoast);
             config.openLoopRampRate(SwerveConstants.openLoopRamp);
             config.closedLoopRampRate(SwerveConstants.closedLoopRamp);
-            config.smartCurrentLimit(SwerveConstants.driveCurrentLimit);
+            config.smartCurrentLimit(constants.currentLimit);
 
             ClosedLoopConfig pidConfig = new ClosedLoopConfig();
-            pidConfig.p(SwerveConstants.driveKP);
-            pidConfig.i(SwerveConstants.driveKI);
-            pidConfig.d(SwerveConstants.driveKD);
-            pidConfig.velocityFF(SwerveConstants.driveKF);
+            pidConfig.p(constants.pid.getP());
+            pidConfig.i(constants.pid.getI());
+            pidConfig.d(constants.pid.getD());
+            pidConfig.velocityFF(0.1);
         
             AbsoluteEncoderConfig encoderConfig = new AbsoluteEncoderConfig();
             encoderConfig.positionConversionFactor(SwerveConstants.driveRotationsToMeters);
@@ -54,22 +56,22 @@ public class DeviceConfigs {
             return config;
         }
 
-        public static SparkMaxConfig getSparkMaxRotation(){
+        public static SparkMaxConfig getSparkMaxRotation(MotorConstants constants){
             SparkMaxConfig config = new SparkMaxConfig();
             // configuration goes here...
 
-            config.inverted(SwerveConstants.angleInversion);
-            SparkBaseConfig idleMode = SwerveConstants.angleBreakMode
+            config.inverted(constants.isCCW);
+            SparkBaseConfig idleMode = constants.isBreakMode
                 ? config.idleMode(IdleMode.kBrake)
                 : config.idleMode(IdleMode.kCoast);
             
-            config.smartCurrentLimit(SwerveConstants.angleCurrentLimit);
+            config.smartCurrentLimit(constants.currentLimit);
 
             ClosedLoopConfig pidConfig = new ClosedLoopConfig();
-            pidConfig.p(SwerveConstants.angleKP);
-            pidConfig.i(SwerveConstants.angleKI);
-            pidConfig.d(SwerveConstants.angleKD);
-            pidConfig.velocityFF(SwerveConstants.angleKF);
+            pidConfig.p(constants.pid.getP());
+            pidConfig.i(constants.pid.getI());
+            pidConfig.d(constants.pid.getD());
+            pidConfig.velocityFF(0.1);
 
             pidConfig.positionWrappingEnabled(true);
             pidConfig.positionWrappingMaxInput(2 * Math.PI);

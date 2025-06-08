@@ -24,13 +24,13 @@ public class SparkMaxSwerveModule implements SwerveModuleType {
     private double encoderOffsetDegrees;
 
     private SparkMax driveMotor;
-    private SparkBaseConfig driveMotorConfig = DeviceConfigs.SwerveModuleConfigs.getSparkMaxDrive();
+    private SparkBaseConfig driveMotorConfig = DeviceConfigs.SwerveModuleConfigs.getSparkMaxDrive(SwerveConstants.drivebaseConfig.moduleConstants[0].driveMotor);
     private RelativeEncoder driveEncoder;
     private SparkClosedLoopController drivePID;
     private SimpleMotorFeedforward driveFeedforward;
 
     private SparkMax angleMotor;
-    private SparkBaseConfig angleMotorConfig = DeviceConfigs.SwerveModuleConfigs.getSparkMaxRotation();
+    private SparkBaseConfig angleMotorConfig = DeviceConfigs.SwerveModuleConfigs.getSparkMaxRotation(SwerveConstants.drivebaseConfig.moduleConstants[0].angleMotor);
     private RelativeEncoder angleEncoder;
     private SparkClosedLoopController anglePID;
 

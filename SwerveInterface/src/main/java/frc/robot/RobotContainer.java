@@ -24,10 +24,12 @@ public class RobotContainer {
     public final CommandXboxController operatorController = new CommandXboxController(ControllerConstants.driverControllerID);
     public PathPlannerAuto auto1;
     public final Swerve swerve;
-    public SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
+    public SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
         swerve = new Swerve();
+
+        autoChooser = AutoBuilder.buildAutoChooser();
 
         NamedCommands.registerCommand("test command", auto1);
 

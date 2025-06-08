@@ -1,77 +1,97 @@
 package frc.robot.utils.swerve.modules;
 
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.utils.encoder.Encoder;
 import frc.robot.utils.swerve.DrivebaseConfig;
 import frc.robot.utils.swerve.SwerveModuleConstants;
 
 public class SimSwerveModule implements SwerveModuleType{
-
+    private DCMotor driveMotorOutput;
+    private DCMotor angleMotorOutput;
     private DCMotorSim driveMotorSim;
     private DCMotorSim angleMotorSim;
 
+    private Encoder encoder;
+
+    private double driveMotorAmps;
+    private double angleMotorAmps;
+    private PIDController drivePID;
+    private PIDController anglePID;
+
     public SimSwerveModule(SwerveModuleConstants constants){
-        driveMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(constants.driveMotor, getDriveVelocity(), getDrivePosition()));
-        angleMotorSim = new DCMotorSim(null, angleMotor, null);
+        driveMotorOutput = constants.driveMotor.dcMotor;
+        angleMotorOutput = constants.angleMotor.dcMotor;
+
+        driveMotorSim = new DCMotorSim(
+            LinearSystemId.createDCMotorSystem(driveMotorOutput, 0.001, constants.driveMotor.gearRatio), 
+            driveMotorOutput);
+        angleMotorSim = new DCMotorSim(
+            LinearSystemId.createDCMotorSystem(angleMotorOutput, 0.001, constants.angleMotor.gearRatio), 
+            angleMotorOutput);
+
+        encoder = constants.encoder;
+
+        driveMotorAmps = constants.driveMotor.currentLimit; //TODO is there some formula/estimation?
+        angleMotorAmps = constants.angleMotor.currentLimit;
+        anglePID = constants.angleMotor.pid;
+        drivePID = constants.angleMotor.pid;
     }
 
     @Override
     public void setOpenDriveState(SwerveModuleState state) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setOpenDriveState'");
+        
     }
 
     @Override
     public void setClosedDriveState(SwerveModuleState state) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setClosedDriveState'");
+        double torque = driveMotorOutput.getTorque(driveMotorAmps);
+        double speedRadPerSec = Units.rotationsToRadians(state.speedMetersPerSecond / SwerveConstants.wheelDiameter);
+        driveMotorSim.setInputVoltage(driveMotorOutput.getVoltage(torque, speedRadPerSec));
     }
 
     @Override
     public double getDriveVelocity() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getDriveVelocity'");
+        return (driveMotorSim.getAngularVelocityRadPerSec() * SwerveConstants.wheelDiameter);
     }
 
     @Override
     public double getDrivePosition() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getDrivePosition'");
+        return driveMotorSim.getAngularPositionRotations();
     }
 
     @Override
     public Rotation2d getAngle() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAngle'");
+        return Rotation2d.fromRotations(angleMotorSim.getAngularPositionRotations());
     }
 
     @Override
     public void setAngle(Rotation2d rotation) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setAngle'");
+        double speed = anglePID.calculate(getAngle().getRotations(), rotation.getRotations());
+        angleMotorSim.setInputVoltage(angleMotorOutput.getVoltage(angleMotorOutput.getTorque(angleMotorAmps), speed));
     }
 
     @Override
     public Encoder getEncoder() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEncoder'");
+        return encoder;
     }
 
     @Override
     public void zeroWheels() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'zeroWheels'");
+        
     }
 
     @Override
     public void configure() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'configure'");
+        
     }
     
 }

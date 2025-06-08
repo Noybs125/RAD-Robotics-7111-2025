@@ -28,6 +28,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.utils.swerve.SwerveModule;
 import frc.robot.utils.swerve.modules.SparkMaxSwerveModule;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.Supplier;
 import java.util.function.Consumer;
@@ -39,6 +40,7 @@ public class Swerve extends SubsystemBase {
     private final SwerveModule[] modules;
 
     private final SwerveDriveOdometry swerveOdometry;
+    private Field2d field = new Field2d();
 
     private final AHRS gyro;
 
@@ -47,10 +49,10 @@ public class Swerve extends SubsystemBase {
         zeroGyro();
 
         modules = new SwerveModule[] {
-            new SwerveModule(0, new SparkMaxSwerveModule(SwerveConstants.mod0Constants)),
-            new SwerveModule(1, new SparkMaxSwerveModule(SwerveConstants.mod1Constants)),
-            new SwerveModule(2, new SparkMaxSwerveModule(SwerveConstants.mod2Constants)),
-            new SwerveModule(3, new SparkMaxSwerveModule(SwerveConstants.mod3Constants)),
+            new SwerveModule(0, SwerveConstants.drivebaseConfig.moduleTypes[0]),
+            new SwerveModule(1, SwerveConstants.drivebaseConfig.moduleTypes[1]),
+            new SwerveModule(2, SwerveConstants.drivebaseConfig.moduleTypes[2]),
+            new SwerveModule(3, SwerveConstants.drivebaseConfig.moduleTypes[3]),
         };
 
         swerveOdometry = new SwerveDriveOdometry(SwerveConstants.kinematics, getYaw(), getPositions());
@@ -190,6 +192,9 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
         SmartDashboard.putNumber("Gyro Yaw", getYaw().getDegrees());
+
+        field.setRobotPose(getPose());
+        SmartDashboard.putData(field);
     }
 
     @Override

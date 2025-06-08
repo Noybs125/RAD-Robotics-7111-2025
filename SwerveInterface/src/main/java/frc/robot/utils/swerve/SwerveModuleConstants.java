@@ -1,7 +1,5 @@
 package frc.robot.utils.swerve;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.utils.encoder.Encoder;
 
 public class SwerveModuleConstants {
