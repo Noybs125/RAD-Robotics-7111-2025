@@ -32,10 +32,10 @@ public class SimSwerveModule implements SwerveModuleType{
         angleMotorOutput = constants.angleMotor.dcMotor;
 
         driveMotorSim = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(driveMotorOutput, 0.001, constants.driveMotor.gearRatio), 
+            LinearSystemId.createDCMotorSystem(driveMotorOutput, 0.005, constants.driveMotor.gearRatio), 
             driveMotorOutput);
         angleMotorSim = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(angleMotorOutput, 0.001, constants.angleMotor.gearRatio), 
+            LinearSystemId.createDCMotorSystem(angleMotorOutput, 0.002, constants.angleMotor.gearRatio), 
             angleMotorOutput);
 
         encoder = constants.encoder;
@@ -55,21 +55,24 @@ public class SimSwerveModule implements SwerveModuleType{
     public void setClosedDriveState(SwerveModuleState state) {
         double torque = driveMotorOutput.getTorque(driveMotorAmps);
         double speedRadPerSec = Units.rotationsToRadians(state.speedMetersPerSecond / SwerveConstants.wheelDiameter);
-        driveMotorSim.setInputVoltage(driveMotorOutput.getVoltage(torque, speedRadPerSec));
+        driveMotorSim.setInputVoltage(drivePID.calculate(driveMotorSim.getInputVoltage(), driveMotorOutput.getVoltage(torque, speedRadPerSec)));
     }
 
     @Override
     public double getDriveVelocity() {
+        //System.out.println("getting drive velocity");
         return (driveMotorSim.getAngularVelocityRadPerSec() * SwerveConstants.wheelDiameter);
     }
 
     @Override
     public double getDrivePosition() {
+
         return driveMotorSim.getAngularPositionRotations();
     }
 
     @Override
     public Rotation2d getAngle() {
+        System.out.println(angleMotorSim.getAngularPositionRotations());
         return Rotation2d.fromRotations(angleMotorSim.getAngularPositionRotations());
     }
 
@@ -91,7 +94,13 @@ public class SimSwerveModule implements SwerveModuleType{
 
     @Override
     public void configure() {
-        
+
+    }
+
+    @Override
+    public void update(){
+        angleMotorSim.update(0.02);
+        driveMotorSim.update(0.02);
     }
     
 }

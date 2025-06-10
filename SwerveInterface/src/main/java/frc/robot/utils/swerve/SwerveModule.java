@@ -3,6 +3,7 @@ package frc.robot.utils.swerve;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.swerve.modules.SwerveModuleType;
 
 public class SwerveModule {
@@ -40,10 +41,13 @@ public class SwerveModule {
     }
 
     public Rotation2d getAngle() {
-        return module.getAngle();
+        Rotation2d rot = module.getAngle();
+        return rot;
     }
 
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(module.getDrivePosition(), getAngle());
+        SwerveModulePosition pos = new SwerveModulePosition(module.getDrivePosition(), getAngle());
+
+        return pos;
     }
 }

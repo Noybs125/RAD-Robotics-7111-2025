@@ -189,7 +189,7 @@ public class Swerve extends SubsystemBase {
         for(SwerveModule mod : modules){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getEncoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
         }
         SmartDashboard.putNumber("Gyro Yaw", getYaw().getDegrees());
 
@@ -197,28 +197,26 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putData(field);
     }
 
+    public void simulationPeriodic(){
+        for (SwerveModule mod : modules) {
+            mod.module.update();
+        }
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
         for (SwerveModule module : modules) {
-            builder.addStringProperty(
-                String.format("Module %d", module.moduleNumber),
-                () -> {
-                    SwerveModuleState state = module.getState();
-                    return String.format("%6.2fm/s %6.3fdeg", state.speedMetersPerSecond, state.angle.getDegrees());
-                },
-                null);
+            builder.addDoubleProperty(
+            String.format("Drive Pos %d", module.moduleNumber),
+            () -> module.getPosition().distanceMeters,
+            null);
 
-                builder.addDoubleProperty(
-                String.format("Cancoder %d", module.moduleNumber),
-                () -> module.getEncoder().getDegrees(),
-                null);
-
-                
-                builder.addDoubleProperty(
-                String.format("Angle %d", module.moduleNumber),
-                () -> module.getAngle().getDegrees(),
-                null);
+            
+            builder.addDoubleProperty(
+            String.format("Angle %d", module.moduleNumber),
+            () -> module.getAngle().getDegrees(),
+            null);
         }
     }
 }

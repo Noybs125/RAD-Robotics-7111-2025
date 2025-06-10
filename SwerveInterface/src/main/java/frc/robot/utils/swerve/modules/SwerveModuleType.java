@@ -22,4 +22,6 @@ public interface SwerveModuleType {
     public void zeroWheels();
 
     public void configure();
+
+    default public void update(){}
 }
