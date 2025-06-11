@@ -32,10 +32,10 @@ public class SimSwerveModule implements SwerveModuleType{
         angleMotorOutput = constants.angleMotor.dcMotor;
 
         driveMotorSim = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(driveMotorOutput, 0.005, constants.driveMotor.gearRatio), 
+            LinearSystemId.createDCMotorSystem(driveMotorOutput, 0.0257, 1/constants.driveMotor.gearRatio), 
             driveMotorOutput);
         angleMotorSim = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(angleMotorOutput, 0.002, constants.angleMotor.gearRatio), 
+            LinearSystemId.createDCMotorSystem(angleMotorOutput, 0.002, 1/constants.angleMotor.gearRatio), 
             angleMotorOutput);
 
         encoder = constants.encoder;
