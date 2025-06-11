@@ -1,4 +1,4 @@
-package frc.robot.utils.swerve.modules;
+package frc.robot.subsystems.swerve.modules;
 
 
 import edu.wpi.first.math.VecBuilder;
@@ -10,9 +10,9 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.swerve.DrivebaseConfig;
+import frc.robot.subsystems.swerve.SwerveModuleConstants;
 import frc.robot.utils.encoder.Encoder;
-import frc.robot.utils.swerve.DrivebaseConfig;
-import frc.robot.utils.swerve.SwerveModuleConstants;
 
 public class SimSwerveModule implements SwerveModuleType{
     private DCMotor driveMotorOutput;
@@ -55,7 +55,7 @@ public class SimSwerveModule implements SwerveModuleType{
     public void setClosedDriveState(SwerveModuleState state) {
         double torque = driveMotorOutput.getTorque(driveMotorAmps);
         double speedRadPerSec = Units.rotationsToRadians(state.speedMetersPerSecond / SwerveConstants.wheelDiameter);
-        driveMotorSim.setInputVoltage(drivePID.calculate(driveMotorSim.getInputVoltage(), driveMotorOutput.getVoltage(torque, speedRadPerSec)));
+        driveMotorSim.setInputVoltage(drivePID.calculate(getDriveVelocity(), speedRadPerSec));
     }
 
     @Override
@@ -79,7 +79,7 @@ public class SimSwerveModule implements SwerveModuleType{
     @Override
     public void setAngle(Rotation2d rotation) {
         double speed = anglePID.calculate(getAngle().getRotations(), rotation.getRotations());
-        angleMotorSim.setInputVoltage(angleMotorOutput.getVoltage(angleMotorOutput.getTorque(angleMotorAmps), speed));
+        angleMotorSim.setInputVoltage(speed);
     }
 
     @Override

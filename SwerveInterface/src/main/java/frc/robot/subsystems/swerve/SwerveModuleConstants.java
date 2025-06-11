@@ -1,14 +1,14 @@
-package frc.robot.utils.swerve;
+package frc.robot.subsystems.swerve;
 
 import frc.robot.utils.encoder.Encoder;
 
 public class SwerveModuleConstants {
-    public final MotorConstants driveMotor;
-    public final MotorConstants angleMotor;
+    public final SwerveMotorConstants driveMotor;
+    public final SwerveMotorConstants angleMotor;
     public final Encoder encoder;
     public final double canCoderOffsetDegrees;
 
-    public SwerveModuleConstants(MotorConstants driveMotor, MotorConstants angleMotor, Encoder encoder, double canCoderOffsetDegrees) {
+    public SwerveModuleConstants(SwerveMotorConstants driveMotor, SwerveMotorConstants angleMotor, Encoder encoder, double canCoderOffsetDegrees) {
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
         this.encoder = encoder;

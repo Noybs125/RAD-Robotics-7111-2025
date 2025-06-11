@@ -1,13 +1,13 @@
-package frc.robot.utils.swerve;
+package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import frc.robot.DeviceConfigs.SwerveModuleConfigs;
+import frc.robot.subsystems.swerve.modules.SimSwerveModule;
+import frc.robot.subsystems.swerve.modules.SwerveModuleType;
+import frc.robot.subsystems.swerve.modules.TalonFXSwerveModule;
 import frc.robot.utils.encoder.CTREEncoder;
-import frc.robot.utils.swerve.modules.SimSwerveModule;
-import frc.robot.utils.swerve.modules.SwerveModuleType;
-import frc.robot.utils.swerve.modules.TalonFXSwerveModule;
 
 public class DrivebaseConfig {
     
@@ -41,28 +41,28 @@ public class DrivebaseConfig {
         boolean angleInversion = true;
         boolean driveBreakMode = true;
         boolean angleBreakMode = false;
-        PIDController drivePID = new PIDController(0.1, 0.0, 0.0);
-        PIDController anglePID = new PIDController(0.1, 0.0, 0.0);
+        PIDController drivePID = new PIDController(1, 0.0, 0.0);
+        PIDController anglePID = new PIDController(1, 0.0, 0.0);
 
         SwerveModuleConstants[] moduleConstants = new SwerveModuleConstants[]{
             new SwerveModuleConstants(
-                new MotorConstants(DCMotor.getKrakenX60(1), 1, driveInversion, driveBreakMode, driveGearing, driveCurrentLimit, drivePID), 
-                new MotorConstants(DCMotor.getKrakenX60(1), 2, angleInversion, angleBreakMode, angleGearing, angleCurrentLimit, anglePID), 
+                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 1, driveInversion, driveBreakMode, driveGearing, driveCurrentLimit, drivePID), 
+                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 2, angleInversion, angleBreakMode, angleGearing, angleCurrentLimit, anglePID), 
                 new CTREEncoder(0, SwerveModuleConfigs.getCANCoder()), 0),
 
             new SwerveModuleConstants(
-                new MotorConstants(DCMotor.getKrakenX60(1), 3, driveInversion, driveBreakMode, driveGearing, driveCurrentLimit, drivePID), 
-                new MotorConstants(DCMotor.getKrakenX60(1), 4, angleInversion, angleBreakMode, angleGearing, angleCurrentLimit, anglePID), 
+                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 3, driveInversion, driveBreakMode, driveGearing, driveCurrentLimit, drivePID), 
+                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 4, angleInversion, angleBreakMode, angleGearing, angleCurrentLimit, anglePID), 
                 new CTREEncoder(1, SwerveModuleConfigs.getCANCoder()), 0),
 
             new SwerveModuleConstants(
-                new MotorConstants(DCMotor.getKrakenX60(1), 5, driveInversion, driveBreakMode, driveGearing, driveCurrentLimit, drivePID), 
-                new MotorConstants(DCMotor.getKrakenX60(1), 6, angleInversion, angleBreakMode, angleGearing, angleCurrentLimit, anglePID), 
+                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 5, driveInversion, driveBreakMode, driveGearing, driveCurrentLimit, drivePID), 
+                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 6, angleInversion, angleBreakMode, angleGearing, angleCurrentLimit, anglePID), 
                 new CTREEncoder(2, SwerveModuleConfigs.getCANCoder()), 0),
 
             new SwerveModuleConstants(
-                new MotorConstants(DCMotor.getKrakenX60(1), 7, driveInversion, driveBreakMode, driveGearing, driveCurrentLimit, drivePID), 
-                new MotorConstants(DCMotor.getKrakenX60(1), 8, angleInversion, angleBreakMode, angleGearing, angleCurrentLimit, anglePID), 
+                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 7, driveInversion, driveBreakMode, driveGearing, driveCurrentLimit, drivePID), 
+                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 8, angleInversion, angleBreakMode, angleGearing, angleCurrentLimit, anglePID), 
                 new CTREEncoder(3, SwerveModuleConfigs.getCANCoder()), 0),
         };
 

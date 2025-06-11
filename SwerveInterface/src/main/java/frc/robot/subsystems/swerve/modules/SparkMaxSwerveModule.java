@@ -1,4 +1,4 @@
-package frc.robot.utils.swerve.modules;
+package frc.robot.subsystems.swerve.modules;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -14,9 +14,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.swerve.SwerveModuleConstants;
 import frc.robot.DeviceConfigs;
 import frc.robot.utils.encoder.Encoder;
-import frc.robot.utils.swerve.SwerveModuleConstants;
 
 public class SparkMaxSwerveModule implements SwerveModuleType {
 

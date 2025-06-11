@@ -1,9 +1,9 @@
-package frc.robot.utils.swerve;
+package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 
-public class MotorConstants {
+public class SwerveMotorConstants {
     public DCMotor dcMotor;
     public int id;
     public boolean isCCW;
@@ -12,7 +12,7 @@ public class MotorConstants {
     public int currentLimit;
     public PIDController pid;
 
-    public MotorConstants(DCMotor dcMotor, int id, boolean isCCW, boolean isBreakMode, double gearRatio, int currentLimit, PIDController pid){
+    public SwerveMotorConstants(DCMotor dcMotor, int id, boolean isCCW, boolean isBreakMode, double gearRatio, int currentLimit, PIDController pid){
         this.dcMotor = dcMotor;
         this.id = id;
         this.isCCW = isCCW;

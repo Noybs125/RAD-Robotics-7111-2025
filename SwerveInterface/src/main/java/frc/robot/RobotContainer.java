@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -23,11 +23,11 @@ public class RobotContainer {
     public final CommandXboxController driverController = new CommandXboxController(ControllerConstants.driverControllerID);
     public final CommandXboxController operatorController = new CommandXboxController(ControllerConstants.driverControllerID);
     public PathPlannerAuto auto1;
-    public final Swerve swerve;
+    public final SwerveSubsystem swerve;
     public SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        swerve = new Swerve();
+        swerve = new SwerveSubsystem();
 
         autoChooser = AutoBuilder.buildAutoChooser();
 

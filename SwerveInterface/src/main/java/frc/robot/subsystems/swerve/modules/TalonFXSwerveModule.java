@@ -1,4 +1,4 @@
-package frc.robot.utils.swerve.modules;
+package frc.robot.subsystems.swerve.modules;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -12,8 +12,8 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.DeviceConfigs.SwerveModuleConfigs;
+import frc.robot.subsystems.swerve.SwerveModuleConstants;
 import frc.robot.utils.encoder.Encoder;
-import frc.robot.utils.swerve.SwerveModuleConstants;
 
 public class TalonFXSwerveModule implements SwerveModuleType{
 

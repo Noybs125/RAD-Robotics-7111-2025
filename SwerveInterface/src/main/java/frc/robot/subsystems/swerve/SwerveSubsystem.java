@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.swerve;
 
 import java.util.function.DoubleSupplier;
 
@@ -26,8 +26,6 @@ import frc.robot.Constants;
 import frc.robot.DeviceConfigs;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.utils.swerve.SwerveModule;
-import frc.robot.utils.swerve.modules.SparkMaxSwerveModule;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.Supplier;
@@ -36,7 +34,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 
-public class Swerve extends SubsystemBase {
+public class SwerveSubsystem extends SubsystemBase {
     private final SwerveModule[] modules;
 
     private final SwerveDriveOdometry swerveOdometry;
@@ -44,7 +42,7 @@ public class Swerve extends SubsystemBase {
 
     private final AHRS gyro;
 
-    public Swerve() {
+    public SwerveSubsystem() {
         gyro = new AHRS(NavXComType.kMXP_SPI);
         zeroGyro();
 

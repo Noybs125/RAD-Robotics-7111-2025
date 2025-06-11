@@ -12,8 +12,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.utils.swerve.MotorConstants;
-import frc.robot.utils.swerve.SwerveModuleConstants;
+import frc.robot.subsystems.swerve.SwerveMotorConstants;
+import frc.robot.subsystems.swerve.SwerveModuleConstants;
 
 /**
  * This class is for defining the configurations of each device (motors, encoders, etc.)
@@ -29,7 +29,7 @@ public class DeviceConfigs {
             return config;
         }
 
-        public static SparkMaxConfig getSparkMaxDrive(MotorConstants constants){
+        public static SparkMaxConfig getSparkMaxDrive(SwerveMotorConstants constants){
             SparkMaxConfig config = new SparkMaxConfig();
             config.inverted(constants.isCCW);
             SparkBaseConfig idleMode = constants.isBreakMode
@@ -56,7 +56,7 @@ public class DeviceConfigs {
             return config;
         }
 
-        public static SparkMaxConfig getSparkMaxRotation(MotorConstants constants){
+        public static SparkMaxConfig getSparkMaxRotation(SwerveMotorConstants constants){
             SparkMaxConfig config = new SparkMaxConfig();
             // configuration goes here...
 

@@ -8,10 +8,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.swerve.DrivebaseConfig;
+import frc.robot.subsystems.swerve.SwerveModuleConstants;
+import frc.robot.subsystems.swerve.modules.SwerveModuleType;
 import frc.robot.utils.encoder.CTREEncoder;
-import frc.robot.utils.swerve.DrivebaseConfig;
-import frc.robot.utils.swerve.SwerveModuleConstants;
-import frc.robot.utils.swerve.modules.SwerveModuleType;
 
 /**
  * This class contains values that remain constant while the robot is running.
