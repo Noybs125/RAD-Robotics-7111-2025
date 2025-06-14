@@ -41,8 +41,8 @@ public class DrivebaseConfig {
         boolean angleInversion = true;
         boolean driveBreakMode = true;
         boolean angleBreakMode = false;
-        PIDController drivePID = new PIDController(1, 0.0, 0.0);
-        PIDController anglePID = new PIDController(1, 0.0, 0.0);
+        PIDController drivePID = new PIDController(50, 0.0, 0.0);
+        PIDController anglePID = new PIDController(50, 0.0, 0.0);
 
         SwerveModuleConstants[] moduleConstants = new SwerveModuleConstants[]{
             new SwerveModuleConstants(

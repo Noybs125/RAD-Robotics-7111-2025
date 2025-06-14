@@ -12,27 +12,26 @@ public class NavXGyro implements Gyro{
     private AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
     private Rotation3d gyroValues = new Rotation3d();
-    private double yawOffset, pitchOffset, rollOffset = 0;
+    private Rotation2d yawOffset, pitchOffset, rollOffset = Rotation2d.kZero;
 
-    private double invertedValue = 1;
+    private double yawInversion = 1;
+    private double pitchInversion = 1;
+    private double rollInversion = 1;
 
-    private NavXGyro(){
+    public NavXGyro(){
         
     }
 
+    public Rotation2d getYaw(){
+        return gyroValues.toRotation2d();
+    }
 
-    @Override
-    public Rotation2d get(RotationAxis axis) {
-        switch (axis) {
-            case yaw:
-                return Rotation2d.fromDegrees(gyroValues.getZ());
-            case pitch:
-                return Rotation2d.fromDegrees(gyroValues.getY());
-            case roll:
-                return Rotation2d.fromDegrees(gyroValues.getX());
-            default:
-                return new Rotation2d();
-        }
+    public Rotation2d getPitch(){
+        return Rotation2d.fromRadians(gyroValues.getY());
+    }
+
+    public Rotation2d getRoll(){
+        return Rotation2d.fromRadians(gyroValues.getX());
     }
 
     @Override
@@ -40,48 +39,53 @@ public class NavXGyro implements Gyro{
         return gyroValues;
     }
 
-    @Override
-    public void set(Rotation2d value, RotationAxis axis) {
-        switch (axis) {
-            case yaw:
-                yawOffset = value.getDegrees();
-                break;
-            case pitch:
-                pitchOffset = value.getDegrees();
-                break;
-            case roll:
-                rollOffset = value.getDegrees();
-                break;
-            default:
-                break;
-        }
+    public void setYaw(Rotation2d rotation){
+        yawOffset = rotation;
     }
 
-    @Override
-    public void set(Rotation3d value) {
-        yawOffset = value.getZ();
-        pitchOffset = value.getY();
-        rollOffset = value.getX();
+    public void setPitch(Rotation2d rotation){
+        pitchOffset = rotation;
     }
 
-    @Override
-    public void setInverted(boolean isInverted){
-        invertedValue = isInverted
+    public void setRoll(Rotation2d rotation){
+        rollOffset = rotation;
+    }
+
+    public void setRotation3d(Rotation3d rotation){
+        yawOffset = rotation.toRotation2d();
+        pitchOffset = Rotation2d.fromRadians(rotation.getY());
+        rollOffset = Rotation2d.fromRadians(rotation.getX());
+    }
+
+    public void invertYaw(boolean isCCW){
+        yawInversion = isCCW
             ? -1
             : 1;
+    }
+
+    public void invertPitch(boolean isCCW){
+        pitchInversion = isCCW
+            ? 1
+            : -1;
+    }
+
+    public void invertRoll(boolean isCCW){
+        rollInversion = isCCW
+            ? 1
+            : -1;
     }
 
     @Override
     public void update(){
         double yaw, pitch, roll;
 
-        yaw = gyro.getYaw() + yawOffset;
-        pitch = gyro.getPitch() + pitchOffset;
-        roll = gyro.getRoll() + rollOffset;
+        yaw = gyro.getYaw() + yawOffset.getDegrees();
+        pitch = gyro.getPitch() + pitchOffset.getDegrees();
+        roll = gyro.getRoll() + rollOffset.getDegrees();
         yaw = Units.degreesToRadians(limitNumbers(yaw));
         pitch = Units.degreesToRadians(limitNumbers(pitch));
         roll = Units.degreesToRadians(limitNumbers(roll));
-        gyroValues = new Rotation3d(roll * invertedValue, pitch * invertedValue, yaw * invertedValue);
+        gyroValues = new Rotation3d(roll * rollInversion, pitch * pitchInversion, yaw * yawInversion);
     }
 
     private double limitNumbers(double unlimitedValue){

@@ -6,16 +6,26 @@ import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 
 public class SimGyro implements Gyro {
 
-    private AnalogGyroSim gyroSim = new AnalogGyroSim(0);
-
     public SimGyro(){
-        gyroSim.setInitialized(true);
+        
     }
 
     @Override
-    public Rotation2d get(RotationAxis axis) {
+    public Rotation2d getYaw() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'get'");
+        throw new UnsupportedOperationException("Unimplemented method 'getYaw'");
+    }
+
+    @Override
+    public Rotation2d getPitch() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getPitch'");
+    }
+
+    @Override
+    public Rotation2d getRoll() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getRoll'");
     }
 
     @Override
@@ -25,25 +35,47 @@ public class SimGyro implements Gyro {
     }
 
     @Override
-    public void set(Rotation2d value, RotationAxis axis) {
+    public void setYaw(Rotation2d value) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'set'");
+        throw new UnsupportedOperationException("Unimplemented method 'setYaw'");
     }
 
     @Override
-    public void set(Rotation3d value) {
+    public void setPitch(Rotation2d value) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'set'");
+        throw new UnsupportedOperationException("Unimplemented method 'setPitch'");
     }
 
     @Override
-    public void setInverted(boolean isInverted) {
+    public void setRoll(Rotation2d value) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setInverted'");
+        throw new UnsupportedOperationException("Unimplemented method 'setRoll'");
     }
 
-    public void update(){
-
+    @Override
+    public void setRotation3d(Rotation3d value) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setRotation3d'");
     }
+
+    @Override
+    public void invertYaw(boolean isCCW) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'invertYaw'");
+    }
+
+    @Override
+    public void invertPitch(boolean isCCW) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'invertPitch'");
+    }
+
+    @Override
+    public void invertRoll(boolean isCCW) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'invertRoll'");
+    }
+
+    
     
 }

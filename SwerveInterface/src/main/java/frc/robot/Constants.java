@@ -67,8 +67,8 @@ public class Constants {
         public static final double driveKA = 0.46034;
         
         /** Swerve constraints. */
-        public static final double maxDriveVelocity = 2;
-        public static final double maxAngularVelocity = 4;
+        public static final double maxDriveVelocity = 4;
+        public static final double maxAngularVelocity = 8;
         public static final double sensitivity = 1;
 
         /** 

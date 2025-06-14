@@ -19,18 +19,29 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.PubSubOption;
+import edu.wpi.first.networktables.PubSubOptions;
+import edu.wpi.first.networktables.StructArrayEntry;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.struct.Struct;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.DeviceConfigs;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.swerve.swervegyro.GyroSwerveGyro;
+import frc.robot.subsystems.swerve.swervegyro.SimSwerveGyro;
+import frc.robot.subsystems.swerve.swervegyro.SwerveGyro;
+import frc.robot.utils.gyro.NavXGyro;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.Supplier;
 import java.util.function.Consumer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 
@@ -40,18 +51,24 @@ public class SwerveSubsystem extends SubsystemBase {
     private final SwerveDriveOdometry swerveOdometry;
     private Field2d field = new Field2d();
 
-    private final AHRS gyro;
+    private final SwerveGyro gyro;
+
+    private StructArrayPublisher<SwerveModuleState> commandedStatePublisher = NetworkTableInstance.getDefault().getStructArrayTopic("Commanded Swerve States", SwerveModuleState.struct).publish();
+    private StructArrayPublisher<SwerveModuleState> actualStatePublisher = NetworkTableInstance.getDefault().getStructArrayTopic("Actual Swerve States", SwerveModuleState.struct).publish();
 
     public SwerveSubsystem() {
-        gyro = new AHRS(NavXComType.kMXP_SPI);
-        zeroGyro();
-
         modules = new SwerveModule[] {
             new SwerveModule(0, SwerveConstants.drivebaseConfig.moduleTypes[0]),
             new SwerveModule(1, SwerveConstants.drivebaseConfig.moduleTypes[1]),
             new SwerveModule(2, SwerveConstants.drivebaseConfig.moduleTypes[2]),
             new SwerveModule(3, SwerveConstants.drivebaseConfig.moduleTypes[3]),
         };
+
+        gyro = RobotBase.isReal()
+            ? new GyroSwerveGyro(new NavXGyro())
+            : new SimSwerveGyro(this::getStates, SwerveConstants.kinematics);
+        gyro.setInverted(true);
+        zeroGyro();
 
         swerveOdometry = new SwerveDriveOdometry(SwerveConstants.kinematics, getYaw(), getPositions());
         
@@ -128,6 +145,7 @@ public class SwerveSubsystem extends SubsystemBase {
         for (int i = 0; i < modules.length; i++) {
             modules[i].setState(states[modules[i].moduleNumber], isOpenLoop);
         }
+        commandedStatePublisher.set(states);
     }
 
     public SwerveModuleState[] getStates() {
@@ -135,7 +153,6 @@ public class SwerveSubsystem extends SubsystemBase {
         for (int i = 0; i < modules.length; i++) {
             currentStates[i] = modules[i].getState();
         }
-
         return currentStates;
     }
 
@@ -149,7 +166,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getYaw() {
-        return gyro.getRotation2d(); //Rotation2d.fromDegrees(gyro.getYaw());
+        return gyro.getRotation(); //Rotation2d.fromDegrees(gyro.getYaw());
     }
 
     public Command zeroGyroCommand() {
@@ -157,7 +174,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     private void zeroGyro() {
-        gyro.zeroYaw();
+        gyro.setRotation(Rotation2d.kZero);
     }
 
     public Pose2d getPose() {
@@ -182,6 +199,7 @@ public class SwerveSubsystem extends SubsystemBase {
     
     @Override 
     public void periodic() {
+        gyro.update();
         swerveOdometry.update(getYaw(), getPositions());
 
         for(SwerveModule mod : modules){
@@ -193,6 +211,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
         field.setRobotPose(getPose());
         SmartDashboard.putData(field);
+
+        actualStatePublisher.set(getStates());
     }
 
     public void simulationPeriodic(){

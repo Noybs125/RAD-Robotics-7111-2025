@@ -35,7 +35,7 @@ public class SimSwerveModule implements SwerveModuleType{
             LinearSystemId.createDCMotorSystem(driveMotorOutput, 0.0257, 1/constants.driveMotor.gearRatio), 
             driveMotorOutput);
         angleMotorSim = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(angleMotorOutput, 0.002, 1/constants.angleMotor.gearRatio), 
+            LinearSystemId.createDCMotorSystem(angleMotorOutput, 0.001, constants.angleMotor.gearRatio), 
             angleMotorOutput);
 
         encoder = constants.encoder;
@@ -55,7 +55,7 @@ public class SimSwerveModule implements SwerveModuleType{
     public void setClosedDriveState(SwerveModuleState state) {
         double torque = driveMotorOutput.getTorque(driveMotorAmps);
         double speedRadPerSec = Units.rotationsToRadians(state.speedMetersPerSecond / SwerveConstants.wheelDiameter);
-        driveMotorSim.setInputVoltage(drivePID.calculate(getDriveVelocity(), speedRadPerSec));
+        driveMotorSim.setInputVoltage(drivePID.calculate(getDriveVelocity(), state.speedMetersPerSecond));
     }
 
     @Override
@@ -72,7 +72,6 @@ public class SimSwerveModule implements SwerveModuleType{
 
     @Override
     public Rotation2d getAngle() {
-        System.out.println(angleMotorSim.getAngularPositionRotations());
         return Rotation2d.fromRotations(angleMotorSim.getAngularPositionRotations());
     }
 
