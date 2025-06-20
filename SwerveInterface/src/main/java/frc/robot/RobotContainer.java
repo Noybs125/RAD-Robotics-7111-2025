@@ -7,6 +7,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -30,6 +31,8 @@ public class RobotContainer {
         swerve = new SwerveSubsystem();
 
         autoChooser = AutoBuilder.buildAutoChooser();
+
+        SmartDashboard.putData("autoChooser", autoChooser);
 
         NamedCommands.registerCommand("test command", auto1);
 
