@@ -52,6 +52,7 @@ public class SwerveSubsystem extends SubsystemBase {
     private Field2d field = new Field2d();
 
     private final SwerveGyro gyro;
+    private SwerveModuleState[] states = new SwerveModuleState[]{};
 
     private StructArrayPublisher<SwerveModuleState> commandedStatePublisher = NetworkTableInstance.getDefault().getStructArrayTopic("Commanded Swerve States", SwerveModuleState.struct).publish();
     private StructArrayPublisher<SwerveModuleState> actualStatePublisher = NetworkTableInstance.getDefault().getStructArrayTopic("Actual Swerve States", SwerveModuleState.struct).publish();
@@ -141,11 +142,10 @@ public class SwerveSubsystem extends SubsystemBase {
     private void setModuleStates(SwerveModuleState[] states, boolean isOpenLoop) {
         // Makes sure the module states don't exceed the max speed.
         SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveConstants.maxDriveVelocity);
-
+        this.states = states;
         for (int i = 0; i < modules.length; i++) {
             modules[i].setState(states[modules[i].moduleNumber], isOpenLoop);
         }
-        commandedStatePublisher.set(states);
     }
 
     public SwerveModuleState[] getStates() {
@@ -201,6 +201,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public void periodic() {
         gyro.update();
         swerveOdometry.update(getYaw(), getPositions());
+        commandedStatePublisher.set(states);
 
         for(SwerveModule mod : modules){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getEncoder().getDegrees());

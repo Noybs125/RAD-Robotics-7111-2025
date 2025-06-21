@@ -33,6 +33,7 @@ public class SimSwerveModule implements SwerveModuleType{
     private PIDController drivePID;
     private PIDController anglePID;
     private PhoenixPIDController anglePIDAlt;
+    private PhoenixPIDController drivePIDAlt;
 
     private double numRotations = 0;
 
@@ -51,10 +52,18 @@ public class SimSwerveModule implements SwerveModuleType{
 
         driveMotorAmps = constants.driveMotor.currentLimit; //TODO is there some formula/estimation?
         angleMotorAmps = constants.angleMotor.currentLimit;
+        // constructs a new PID controller for each object. 
+        // this avoids the PID from doing too much and trying to compensate for it by causing unwanted behavior
         anglePID = constants.angleMotor.pid;
+        anglePID = new PIDController(anglePID.getP(), anglePID.getI(), anglePID.getD());
         drivePID = constants.angleMotor.pid;
+        drivePID = new PIDController(drivePID.getP(), drivePID.getI(), drivePID.getD());
+
         anglePIDAlt = new PhoenixPIDController(anglePID.getP(), anglePID.getI(), anglePID.getD());
+        drivePIDAlt = new PhoenixPIDController(drivePID.getP(), drivePID.getI(), drivePID.getD());
         anglePID.enableContinuousInput(-0.5, 0.5);
+        drivePID.setTolerance(0.01);
+        //drivePID.enableContinuousInput(-0.38, 0.38);
     }
 
     @Override
@@ -66,7 +75,9 @@ public class SimSwerveModule implements SwerveModuleType{
     public void setClosedDriveState(SwerveModuleState state) {
         SmartDashboard.putNumber("drive amps output", drivePID.calculate(getDriveVelocity(), state.speedMetersPerSecond));
         SmartDashboard.putNumber("setMPS", state.speedMetersPerSecond);
+        SmartDashboard.putBoolean("isAtSetpoint", drivePID.atSetpoint());
         driveMotorSim.setInputVoltage(drivePID.calculate(getDriveVelocity(), state.speedMetersPerSecond));
+        //driveMotorSim.setInputVoltage(drivePIDAlt.calculate(getDriveVelocity(), state.speedMetersPerSecond, Timer.getFPGATimestamp()));
     }
 
     @Override
