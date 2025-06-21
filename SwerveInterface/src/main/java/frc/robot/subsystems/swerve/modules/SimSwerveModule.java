@@ -64,8 +64,8 @@ public class SimSwerveModule implements SwerveModuleType{
 
     @Override
     public void setClosedDriveState(SwerveModuleState state) {
-        double torque = driveMotorOutput.getTorque(driveMotorAmps);
-        double speedRadPerSec = Units.rotationsToRadians(state.speedMetersPerSecond / SwerveConstants.wheelCircumference);
+        SmartDashboard.putNumber("drive amps output", drivePID.calculate(getDriveVelocity(), state.speedMetersPerSecond));
+        SmartDashboard.putNumber("setMPS", state.speedMetersPerSecond);
         driveMotorSim.setInputVoltage(drivePID.calculate(getDriveVelocity(), state.speedMetersPerSecond));
     }
 
