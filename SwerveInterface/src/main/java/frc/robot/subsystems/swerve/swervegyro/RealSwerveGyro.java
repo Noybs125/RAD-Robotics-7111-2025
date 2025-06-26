@@ -1,14 +1,14 @@
 package frc.robot.subsystems.swerve.swervegyro;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.utils.gyro.Gyro;
+import frc.robot.utils.gyro.GenericGyro;
 import frc.robot.utils.gyro.NavXGyro;
 
-public class GyroSwerveGyro implements SwerveGyro{
+public class RealSwerveGyro implements GenericSwerveGyro{
     
-    private Gyro gyro;
+    private GenericGyro gyro;
 
-    public GyroSwerveGyro(Gyro gyro){
+    public RealSwerveGyro(GenericGyro gyro){
         this.gyro = gyro;
     }
 

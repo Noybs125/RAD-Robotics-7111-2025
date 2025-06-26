@@ -16,11 +16,11 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveModuleConstants;
 import frc.robot.DeviceConfigs;
-import frc.robot.utils.encoder.Encoder;
+import frc.robot.utils.encoder.GenericEncoder;
 
 public class SparkMaxSwerveModule implements SwerveModuleType {
 
-    private Encoder encoder;
+    private GenericEncoder encoder;
     private double encoderOffsetDegrees;
 
     private SparkMax driveMotor;
@@ -82,7 +82,7 @@ public class SparkMaxSwerveModule implements SwerveModuleType {
     }
 
     @Override
-    public Encoder getEncoder(){
+    public GenericEncoder getEncoder(){
         return encoder;
     }
 

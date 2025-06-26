@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import frc.robot.utils.gyro.SimGyro;
 
-public class SimSwerveGyro implements SwerveGyro {
+public class SimSwerveGyro implements GenericSwerveGyro {
 
     private SwerveModuleState[] states;
     private Supplier<SwerveModuleState[]> statesSupplier;

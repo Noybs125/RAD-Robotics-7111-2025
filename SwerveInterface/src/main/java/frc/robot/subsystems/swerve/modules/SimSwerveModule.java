@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.swerve.DrivebaseConfig;
 import frc.robot.subsystems.swerve.SwerveModuleConstants;
-import frc.robot.utils.encoder.Encoder;
+import frc.robot.utils.encoder.GenericEncoder;
 
 public class SimSwerveModule implements SwerveModuleType{
     private DCMotor driveMotorOutput;
@@ -26,7 +26,7 @@ public class SimSwerveModule implements SwerveModuleType{
     private DCMotorSim driveMotorSim;
     private DCMotorSim angleMotorSim;
 
-    private Encoder encoder;
+    private GenericEncoder encoder;
 
     private double driveMotorAmps;
     private double angleMotorAmps;
@@ -42,7 +42,7 @@ public class SimSwerveModule implements SwerveModuleType{
         angleMotorOutput = constants.angleMotor.dcMotor;
 
         driveMotorSim = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(driveMotorOutput, 0.0157, 1/constants.driveMotor.gearRatio), 
+            LinearSystemId.createDCMotorSystem(driveMotorOutput, SwerveConstants.moi, 1/constants.driveMotor.gearRatio), 
             driveMotorOutput);
         angleMotorSim = new DCMotorSim(
             LinearSystemId.createDCMotorSystem(angleMotorOutput, 0.001, constants.angleMotor.gearRatio), 
@@ -113,7 +113,7 @@ public class SimSwerveModule implements SwerveModuleType{
     }
 
     @Override
-    public Encoder getEncoder() {
+    public GenericEncoder getEncoder() {
         return encoder;
     }
 

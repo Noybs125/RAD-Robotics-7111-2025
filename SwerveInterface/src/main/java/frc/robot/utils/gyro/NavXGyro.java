@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 
-public class NavXGyro implements Gyro{
+public class NavXGyro implements GenericGyro{
     private AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
     private Rotation3d gyroValues = new Rotation3d();

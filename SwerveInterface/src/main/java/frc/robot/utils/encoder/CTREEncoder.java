@@ -6,7 +6,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants;
 
-public class CTREEncoder implements Encoder{
+public class CTREEncoder implements GenericEncoder{
 
     private CANcoder encoder;
 

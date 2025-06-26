@@ -3,7 +3,7 @@ package frc.robot.utils.gyro;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 
-public interface Gyro {
+public interface GenericGyro {
 
     public Rotation2d getYaw();
 

@@ -31,7 +31,7 @@ public class DrivebaseConfig {
         double width = Units.inchesToMeters(30);
         double length = Units.inchesToMeters(28);
         double wheelDiameter = Units.inchesToMeters(3.75);
-        double moi = 0.001; //TODO figure out real moi
+        double moi = 0.0157; //TODO figure out real moi
 
         double driveGearing = 6.72 / 1.0; 
         double angleGearing = 468.0 / 35.0;

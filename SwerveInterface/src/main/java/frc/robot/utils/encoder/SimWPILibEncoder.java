@@ -3,7 +3,7 @@ package frc.robot.utils.encoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 
-public class SimWPILibEncoder implements Encoder {
+public class SimWPILibEncoder implements GenericEncoder {
 
     private EncoderSim encoderSim;
     private edu.wpi.first.wpilibj.Encoder encoder;

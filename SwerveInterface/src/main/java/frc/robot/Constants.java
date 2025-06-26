@@ -38,6 +38,7 @@ public class Constants {
     /** All swerve constants. */
     public static class SwerveConstants {
         public static final DrivebaseConfig drivebaseConfig = DrivebaseConfig.getStormSurge(true);
+        public static final double moi = 0.0157;
         /** Constants that apply to the whole drive train. */
         public static final double wheelBaseWidth = drivebaseConfig.width; // Width of the drivetrain measured from the middle of the wheels.
         public static final double wheelBaseLength = drivebaseConfig.length; // Length of the drivetrain measured from the middle of the wheels.

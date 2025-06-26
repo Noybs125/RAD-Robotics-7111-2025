@@ -32,9 +32,9 @@ import frc.robot.Constants;
 import frc.robot.DeviceConfigs;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.swerve.swervegyro.GyroSwerveGyro;
+import frc.robot.subsystems.swerve.swervegyro.RealSwerveGyro;
 import frc.robot.subsystems.swerve.swervegyro.SimSwerveGyro;
-import frc.robot.subsystems.swerve.swervegyro.SwerveGyro;
+import frc.robot.subsystems.swerve.swervegyro.GenericSwerveGyro;
 import frc.robot.utils.gyro.NavXGyro;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -51,7 +51,7 @@ public class SwerveSubsystem extends SubsystemBase {
     private final SwerveDriveOdometry swerveOdometry;
     private Field2d field = new Field2d();
 
-    private final SwerveGyro gyro;
+    private final GenericSwerveGyro gyro;
     private SwerveModuleState[] states = new SwerveModuleState[]{};
 
     private StructArrayPublisher<SwerveModuleState> commandedStatePublisher = NetworkTableInstance.getDefault().getStructArrayTopic("Commanded Swerve States", SwerveModuleState.struct).publish();
@@ -66,7 +66,7 @@ public class SwerveSubsystem extends SubsystemBase {
         };
 
         gyro = RobotBase.isReal()
-            ? new GyroSwerveGyro(new NavXGyro())
+            ? new RealSwerveGyro(new NavXGyro())
             : new SimSwerveGyro(this::getStates, SwerveConstants.kinematics);
         gyro.setInverted(true);
         zeroGyro();

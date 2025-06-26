@@ -13,13 +13,13 @@ import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.DeviceConfigs.SwerveModuleConfigs;
 import frc.robot.subsystems.swerve.SwerveModuleConstants;
-import frc.robot.utils.encoder.Encoder;
+import frc.robot.utils.encoder.GenericEncoder;
 
 public class TalonFXSwerveModule implements SwerveModuleType{
 
     private TalonFX driveMotor;
     private TalonFX angleMotor;
-    private Encoder encoder;
+    private GenericEncoder encoder;
 
     private DutyCycleOut driveDutyCycle = new DutyCycleOut(0);
     private VelocityVoltage driveVelocity = new VelocityVoltage(0);
@@ -73,7 +73,7 @@ public class TalonFXSwerveModule implements SwerveModuleType{
     }
 
     @Override
-    public Encoder getEncoder() {
+    public GenericEncoder getEncoder() {
         return encoder;
     }
 

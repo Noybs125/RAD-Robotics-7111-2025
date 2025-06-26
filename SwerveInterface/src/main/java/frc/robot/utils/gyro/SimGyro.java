@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 
-public class SimGyro implements Gyro {
+public class SimGyro implements GenericGyro {
 
     public SimGyro(){
         
