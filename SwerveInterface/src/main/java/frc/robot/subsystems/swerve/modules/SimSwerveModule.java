@@ -5,6 +5,7 @@ import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -20,7 +21,7 @@ import frc.robot.subsystems.swerve.DrivebaseConfig;
 import frc.robot.subsystems.swerve.SwerveModuleConstants;
 import frc.robot.utils.encoder.GenericEncoder;
 
-public class SimSwerveModule implements SwerveModuleType{
+public class SimSwerveModule implements GenericSwerveModule{
     private DCMotor driveMotorOutput;
     private DCMotor angleMotorOutput;
     private DCMotorSim driveMotorSim;
@@ -34,6 +35,7 @@ public class SimSwerveModule implements SwerveModuleType{
     private PIDController anglePID;
     private PhoenixPIDController anglePIDAlt;
     private PhoenixPIDController drivePIDAlt;
+    private SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(0.01, 2.69, 0.19);
 
     private double numRotations = 0;
 
@@ -62,7 +64,7 @@ public class SimSwerveModule implements SwerveModuleType{
         anglePIDAlt = new PhoenixPIDController(anglePID.getP(), anglePID.getI(), anglePID.getD());
         drivePIDAlt = new PhoenixPIDController(drivePID.getP(), drivePID.getI(), drivePID.getD());
         anglePID.enableContinuousInput(-0.5, 0.5);
-        drivePID.setTolerance(0.01);
+        //drivePID.setTolerance(0.01);
         //drivePID.enableContinuousInput(-0.38, 0.38);
     }
 
@@ -73,18 +75,26 @@ public class SimSwerveModule implements SwerveModuleType{
 
     @Override
     public void setClosedDriveState(SwerveModuleState state) {
+        /*if(state.speedMetersPerSecond > SwerveConstants.maxDriveVelocity){
+            state.speedMetersPerSecond = SwerveConstants.maxDriveVelocity;
+        }else if(state.speedMetersPerSecond < -SwerveConstants.maxDriveVelocity){
+            state.speedMetersPerSecond = -SwerveConstants.maxDriveVelocity;
+        }*/
         SmartDashboard.putNumber("drive amps output", drivePID.calculate(getDriveVelocity(), state.speedMetersPerSecond));
         SmartDashboard.putNumber("setMPS", state.speedMetersPerSecond);
         SmartDashboard.putBoolean("isAtSetpoint", drivePID.atSetpoint());
-        driveMotorSim.setInputVoltage(drivePID.calculate(getDriveVelocity(), state.speedMetersPerSecond));
+        double ffCalc = driveFeedforward.calculate(state.speedMetersPerSecond);
+        double input = ffCalc + drivePID.calculate(getDriveVelocity(), state.speedMetersPerSecond);
+        
+        driveMotorSim.setInputVoltage(input);
         //driveMotorSim.setInputVoltage(drivePIDAlt.calculate(getDriveVelocity(), state.speedMetersPerSecond, Timer.getFPGATimestamp()));
     }
 
     @Override
     public double getDriveVelocity() {
         //System.out.println("getting drive velocity");
-        SmartDashboard.putNumber("driveVel", driveMotorSim.getAngularVelocityRadPerSec());
-        return (driveMotorSim.getAngularVelocityRadPerSec() * SwerveConstants.wheelCircumference);
+        SmartDashboard.putNumber("driveVel", ((driveMotorSim.getAngularVelocityRadPerSec() / (2*Math.PI)) * SwerveConstants.wheelCircumference));
+        return ((driveMotorSim.getAngularVelocityRadPerSec() / (2*Math.PI)) * SwerveConstants.wheelCircumference);
     }
 
     @Override
@@ -129,8 +139,6 @@ public class SimSwerveModule implements SwerveModuleType{
 
     @Override
     public void update(){
-        
-
         angleMotorSim.update(0.02);
         driveMotorSim.update(0.02);
     }

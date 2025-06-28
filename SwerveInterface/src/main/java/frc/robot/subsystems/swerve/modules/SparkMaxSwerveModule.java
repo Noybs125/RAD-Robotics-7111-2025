@@ -18,7 +18,7 @@ import frc.robot.subsystems.swerve.SwerveModuleConstants;
 import frc.robot.DeviceConfigs;
 import frc.robot.utils.encoder.GenericEncoder;
 
-public class SparkMaxSwerveModule implements SwerveModuleType {
+public class SparkMaxSwerveModule implements GenericSwerveModule {
 
     private GenericEncoder encoder;
     private double encoderOffsetDegrees;

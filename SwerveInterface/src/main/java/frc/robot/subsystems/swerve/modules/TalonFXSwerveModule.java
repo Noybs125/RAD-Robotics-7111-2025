@@ -15,7 +15,7 @@ import frc.robot.DeviceConfigs.SwerveModuleConfigs;
 import frc.robot.subsystems.swerve.SwerveModuleConstants;
 import frc.robot.utils.encoder.GenericEncoder;
 
-public class TalonFXSwerveModule implements SwerveModuleType{
+public class TalonFXSwerveModule implements GenericSwerveModule{
 
     private TalonFX driveMotor;
     private TalonFX angleMotor;

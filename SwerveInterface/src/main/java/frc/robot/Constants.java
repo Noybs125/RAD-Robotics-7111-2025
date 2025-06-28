@@ -10,7 +10,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.swerve.DrivebaseConfig;
 import frc.robot.subsystems.swerve.SwerveModuleConstants;
-import frc.robot.subsystems.swerve.modules.SwerveModuleType;
+import frc.robot.subsystems.swerve.modules.GenericSwerveModule;
 import frc.robot.utils.encoder.CTREEncoder;
 
 /**
@@ -38,7 +38,7 @@ public class Constants {
     /** All swerve constants. */
     public static class SwerveConstants {
         public static final DrivebaseConfig drivebaseConfig = DrivebaseConfig.getStormSurge(true);
-        public static final double moi = 0.0157;
+        public static final double moi = 0.025;//0.01;
         /** Constants that apply to the whole drive train. */
         public static final double wheelBaseWidth = drivebaseConfig.width; // Width of the drivetrain measured from the middle of the wheels.
         public static final double wheelBaseLength = drivebaseConfig.length; // Length of the drivetrain measured from the middle of the wheels.

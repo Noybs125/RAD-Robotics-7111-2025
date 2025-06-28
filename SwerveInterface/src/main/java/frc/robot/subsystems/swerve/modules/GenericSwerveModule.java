@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.utils.encoder.GenericEncoder;
 
-public interface SwerveModuleType {
+public interface GenericSwerveModule {
     public void setOpenDriveState(SwerveModuleState state);
 
     public void setClosedDriveState(SwerveModuleState state);

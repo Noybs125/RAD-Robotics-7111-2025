@@ -4,14 +4,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.swerve.modules.SwerveModuleType;
+import frc.robot.subsystems.swerve.modules.GenericSwerveModule;
 
 public class SwerveModule {
     public final int moduleNumber;
-    public final SwerveModuleType module;
+    public final GenericSwerveModule module;
     private double timesRotated = 0;
 
-    public SwerveModule(int moduleNumber, SwerveModuleType moduleType) {
+    public SwerveModule(int moduleNumber, GenericSwerveModule moduleType) {
         this.moduleNumber = moduleNumber;
         module = moduleType;
 
