@@ -8,8 +8,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.swerve.DrivebaseConfig;
-import frc.robot.subsystems.swerve.SwerveModuleConstants;
+import frc.robot.subsystems.swerve.config.DrivebaseConfig;
+import frc.robot.subsystems.swerve.config.SwerveModuleConfig;
 import frc.robot.subsystems.swerve.modules.GenericSwerveModule;
 import frc.robot.utils.encoder.CTREEncoder;
 
@@ -24,7 +24,7 @@ public class Constants {
 
     /** All joystick, button, and axis IDs. */
     public static class ControllerConstants {
-        public static final double axisDeadzone = 0.05;
+        public static final double axisDeadzone = 0.0;
 
         public static final int driverControllerID = 0;
         public static final int operatorControllerID = 1;
@@ -38,7 +38,7 @@ public class Constants {
     /** All swerve constants. */
     public static class SwerveConstants {
         public static final DrivebaseConfig drivebaseConfig = DrivebaseConfig.getStormSurge(true);
-        public static final double moi = 0.025;//0.01;
+        public static final double moi = 0.006;//0.01;
         /** Constants that apply to the whole drive train. */
         public static final double wheelBaseWidth = drivebaseConfig.width; // Width of the drivetrain measured from the middle of the wheels.
         public static final double wheelBaseLength = drivebaseConfig.length; // Length of the drivetrain measured from the middle of the wheels.
@@ -77,13 +77,13 @@ public class Constants {
          * CanCoder offset is in DEGREES, not radians like the rest of the repo.
          * This is to make offset slightly more accurate and easier to measure.
          */
-        public static final SwerveModuleConstants mod0Constants = drivebaseConfig.moduleConstants[0];
+        public static final SwerveModuleConfig mod0Constants = drivebaseConfig.moduleConstants[0];
 
-        public static final SwerveModuleConstants mod1Constants = drivebaseConfig.moduleConstants[1];
+        public static final SwerveModuleConfig mod1Constants = drivebaseConfig.moduleConstants[1];
 
-        public static final SwerveModuleConstants mod2Constants = drivebaseConfig.moduleConstants[2];
+        public static final SwerveModuleConfig mod2Constants = drivebaseConfig.moduleConstants[2];
 
-        public static final SwerveModuleConstants mod3Constants = drivebaseConfig.moduleConstants[3];
+        public static final SwerveModuleConfig mod3Constants = drivebaseConfig.moduleConstants[3];
 
         /** Motor direction */
         public static final boolean driveInversion = mod0Constants.driveMotor.isCCW;

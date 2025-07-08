@@ -12,14 +12,57 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.swerve.SwerveMotorConstants;
-import frc.robot.subsystems.swerve.SwerveModuleConstants;
+import frc.robot.subsystems.swerve.config.DrivebaseConfig;
+import frc.robot.subsystems.swerve.config.SwerveModuleConfig;
+import frc.robot.subsystems.swerve.config.SwerveMotorConfig;
 
 /**
  * This class is for defining the configurations of each device (motors, encoders, etc.)
  * Each Subsystem gets its own class to contain configurations for all of its devices
  */
 public class DeviceConfigs {
+
+    public static class StormSurgeConfigs {
+        public static TalonFXConfiguration getSwerveModuleDriveMotor(SwerveMotorConfig motorConfig){
+            TalonFXConfiguration config = new TalonFXConfiguration();
+
+            config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = SwerveConstants.openLoopRamp;
+            config.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = SwerveConstants.closedLoopRamp;
+            
+            config.OpenLoopRamps.VoltageOpenLoopRampPeriod = SwerveConstants.openLoopRamp;
+            config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = SwerveConstants.closedLoopRamp;
+
+            config.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+            config.Slot0.kP = motorConfig.pid.getP();
+            config.Slot0.kI = motorConfig.pid.getI();
+            config.Slot0.kD = motorConfig.pid.getD();
+
+            config.Slot0.kS = 0.11937;
+            config.Slot0.kV = 2.3;
+            config.Slot0.kA = 0.11;
+
+            config.Feedback.SensorToMechanismRatio = motorConfig.gearRatio;
+
+            config.MotorOutput.NeutralMode = motorConfig.isBreakMode
+                ? NeutralModeValue.Brake
+                : NeutralModeValue.Coast;
+            config.MotorOutput.Inverted = motorConfig.isCCW
+                ? InvertedValue.CounterClockwise_Positive
+                : InvertedValue.CounterClockwise_Positive;
+
+            return config;
+        }
+
+        public static TalonFXConfiguration getSwerveModuleAngleMotor(){
+            return null;
+        }
+
+        public static CANcoderConfiguration getSwerveModuleEncoder(){
+            return null;
+        }
+        
+    }
 
     public static class SwerveModuleConfigs {
 
@@ -29,7 +72,7 @@ public class DeviceConfigs {
             return config;
         }
 
-        public static SparkMaxConfig getSparkMaxDrive(SwerveMotorConstants constants){
+        public static SparkMaxConfig getSparkMaxDrive(SwerveMotorConfig constants){
             SparkMaxConfig config = new SparkMaxConfig();
             config.inverted(constants.isCCW);
             SparkBaseConfig idleMode = constants.isBreakMode
@@ -56,7 +99,7 @@ public class DeviceConfigs {
             return config;
         }
 
-        public static SparkMaxConfig getSparkMaxRotation(SwerveMotorConstants constants){
+        public static SparkMaxConfig getSparkMaxRotation(SwerveMotorConfig constants){
             SparkMaxConfig config = new SparkMaxConfig();
             // configuration goes here...
 

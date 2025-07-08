@@ -3,22 +3,19 @@ package frc.robot.subsystems.swerve.modules;
 
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.DutyCycleEncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.swerve.DrivebaseConfig;
-import frc.robot.subsystems.swerve.SwerveModuleConstants;
+import frc.robot.subsystems.swerve.config.DrivebaseConfig;
+import frc.robot.subsystems.swerve.config.SwerveModuleConfig;
 import frc.robot.utils.encoder.GenericEncoder;
 
 public class SimSwerveModule implements GenericSwerveModule{
@@ -33,21 +30,17 @@ public class SimSwerveModule implements GenericSwerveModule{
     private double angleMotorAmps;
     private PIDController drivePID;
     private PIDController anglePID;
-    private PhoenixPIDController anglePIDAlt;
-    private PhoenixPIDController drivePIDAlt;
     private SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(0.01, 2.69, 0.19);
 
-    private double numRotations = 0;
-
-    public SimSwerveModule(SwerveModuleConstants constants){
+    public SimSwerveModule(SwerveModuleConfig constants){
         driveMotorOutput = constants.driveMotor.dcMotor;
         angleMotorOutput = constants.angleMotor.dcMotor;
 
         driveMotorSim = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(driveMotorOutput, SwerveConstants.moi, 1/constants.driveMotor.gearRatio), 
+            LinearSystemId.createDCMotorSystem(driveMotorOutput, constants.driveMotor.momentOfInertia, 1/constants.driveMotor.gearRatio), 
             driveMotorOutput);
         angleMotorSim = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(angleMotorOutput, 0.001, constants.angleMotor.gearRatio), 
+            LinearSystemId.createDCMotorSystem(angleMotorOutput, constants.angleMotor.momentOfInertia, constants.angleMotor.gearRatio), 
             angleMotorOutput);
 
         encoder = constants.encoder;
@@ -61,11 +54,7 @@ public class SimSwerveModule implements GenericSwerveModule{
         drivePID = constants.angleMotor.pid;
         drivePID = new PIDController(drivePID.getP(), drivePID.getI(), drivePID.getD());
 
-        anglePIDAlt = new PhoenixPIDController(anglePID.getP(), anglePID.getI(), anglePID.getD());
-        drivePIDAlt = new PhoenixPIDController(drivePID.getP(), drivePID.getI(), drivePID.getD());
         anglePID.enableContinuousInput(-0.5, 0.5);
-        //drivePID.setTolerance(0.01);
-        //drivePID.enableContinuousInput(-0.38, 0.38);
     }
 
     @Override
@@ -75,11 +64,6 @@ public class SimSwerveModule implements GenericSwerveModule{
 
     @Override
     public void setClosedDriveState(SwerveModuleState state) {
-        /*if(state.speedMetersPerSecond > SwerveConstants.maxDriveVelocity){
-            state.speedMetersPerSecond = SwerveConstants.maxDriveVelocity;
-        }else if(state.speedMetersPerSecond < -SwerveConstants.maxDriveVelocity){
-            state.speedMetersPerSecond = -SwerveConstants.maxDriveVelocity;
-        }*/
         SmartDashboard.putNumber("drive amps output", drivePID.calculate(getDriveVelocity(), state.speedMetersPerSecond));
         SmartDashboard.putNumber("setMPS", state.speedMetersPerSecond);
         SmartDashboard.putBoolean("isAtSetpoint", drivePID.atSetpoint());
@@ -87,19 +71,16 @@ public class SimSwerveModule implements GenericSwerveModule{
         double input = ffCalc + drivePID.calculate(getDriveVelocity(), state.speedMetersPerSecond);
         
         driveMotorSim.setInputVoltage(input);
-        //driveMotorSim.setInputVoltage(drivePIDAlt.calculate(getDriveVelocity(), state.speedMetersPerSecond, Timer.getFPGATimestamp()));
     }
 
     @Override
     public double getDriveVelocity() {
-        //System.out.println("getting drive velocity");
         SmartDashboard.putNumber("driveVel", ((driveMotorSim.getAngularVelocityRadPerSec() / (2*Math.PI)) * SwerveConstants.wheelCircumference));
         return ((driveMotorSim.getAngularVelocityRadPerSec() / (2*Math.PI)) * SwerveConstants.wheelCircumference);
     }
 
     @Override
     public double getDrivePosition() {
-
         return driveMotorSim.getAngularPositionRotations();
     }
 
@@ -114,10 +95,8 @@ public class SimSwerveModule implements GenericSwerveModule{
     public void setAngle(Rotation2d rotation) {
         double speed;
         double setpoint = rotation.getRotations();
-        //setpoint = 0.6;
         anglePID.setSetpoint(setpoint);
         speed = anglePID.calculate(getAngle().getRotations());
-        //speed = anglePIDAlt.calculate(getAngle().getRotations(), setpoint, Timer.getFPGATimestamp());
         SmartDashboard.putNumber("module angle", getAngle().getDegrees());
         angleMotorSim.setInputVoltage(speed);
     }

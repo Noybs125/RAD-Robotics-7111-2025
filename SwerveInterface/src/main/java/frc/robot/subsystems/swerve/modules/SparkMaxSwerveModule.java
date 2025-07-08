@@ -14,7 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.swerve.SwerveModuleConstants;
+import frc.robot.subsystems.swerve.config.SwerveModuleConfig;
 import frc.robot.DeviceConfigs;
 import frc.robot.utils.encoder.GenericEncoder;
 
@@ -34,7 +34,7 @@ public class SparkMaxSwerveModule implements GenericSwerveModule {
     private RelativeEncoder angleEncoder;
     private SparkClosedLoopController anglePID;
 
-    public SparkMaxSwerveModule(SwerveModuleConstants constants){
+    public SparkMaxSwerveModule(SwerveModuleConfig constants){
         driveMotor = new SparkMax(constants.driveMotor.id, MotorType.kBrushless);
         driveEncoder = driveMotor.getEncoder();
         driveFeedforward = new SimpleMotorFeedforward(SwerveConstants.driveKS, SwerveConstants.driveKV, SwerveConstants.driveKA);

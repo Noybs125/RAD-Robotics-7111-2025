@@ -1,8 +1,9 @@
-package frc.robot.subsystems.swerve;
+package frc.robot.subsystems.swerve.config;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import frc.robot.DeviceConfigs;
@@ -15,13 +16,13 @@ import frc.robot.utils.encoder.CTREEncoder;
 public class DrivebaseConfig {
     
     public GenericSwerveModule[] moduleTypes;
-    public SwerveModuleConstants[] moduleConstants;
+    public SwerveModuleConfig[] moduleConstants;
     public double width;
     public double length;
     public double wheelDiameter;
     public double moi;
 
-    public DrivebaseConfig(GenericSwerveModule[] moduleTypes, SwerveModuleConstants[] moduleConstants, double width, double length, double wheelDiameter, double moi){
+    public DrivebaseConfig(GenericSwerveModule[] moduleTypes, SwerveModuleConfig[] moduleConstants, double width, double length, double wheelDiameter, double moi){
         this.moduleTypes = moduleTypes;
         this.moduleConstants = moduleConstants;
         this.width = width;
@@ -31,13 +32,15 @@ public class DrivebaseConfig {
     }
 
     public static DrivebaseConfig getStormSurge(boolean isSim){
-        double width = Units.inchesToMeters(30);
-        double length = Units.inchesToMeters(28);
+        double width = Units.inchesToMeters(21.25);
+        double length = Units.inchesToMeters(23.25);
         double wheelDiameter = Units.inchesToMeters(3.75);
         double moi = 2.9551; //TODO figure out real moi
 
         double driveGearing = 6.72 / 1.0; 
         double angleGearing = 468.0 / 35.0;
+        double driveMOI = 0.01;
+        double angleMOI = 0.001;
         int driveCurrentLimit = 80;
         int angleCurrentLimit = 40;
         boolean driveInversion = false;
@@ -46,28 +49,30 @@ public class DrivebaseConfig {
         boolean angleBreakMode = false;
         PIDController drivePID = new PIDController(50, 0.0, 0.0);
         PIDController anglePID = new PIDController(50, 0.0, 0.0);
+        SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.001, 0.0);
+        SimpleMotorFeedforward angleFF = new SimpleMotorFeedforward(0.001, 0.0);
         TalonFXConfiguration driveConfig = SwerveModuleConfigs.getTalonFXDrive();
         TalonFXConfiguration angleConfig = SwerveModuleConfigs.getTalonFXRotation();
 
-        SwerveModuleConstants[] moduleConstants = new SwerveModuleConstants[]{
-            new SwerveModuleConstants(
-                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 1, driveInversion, driveBreakMode, driveGearing, driveCurrentLimit, drivePID, driveConfig), 
-                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 2, angleInversion, angleBreakMode, angleGearing, angleCurrentLimit, anglePID, angleConfig), 
+        SwerveModuleConfig[] moduleConstants = new SwerveModuleConfig[]{
+            new SwerveModuleConfig(
+                new SwerveMotorConfig(DCMotor.getKrakenX60(1), 1, driveInversion, driveBreakMode, driveGearing, driveMOI, driveCurrentLimit, drivePID, driveFF, driveConfig), 
+                new SwerveMotorConfig(DCMotor.getKrakenX60(1), 2, angleInversion, angleBreakMode, angleGearing, angleMOI, angleCurrentLimit, anglePID, angleFF, angleConfig), 
                 new CTREEncoder(0, SwerveModuleConfigs.getCANCoder()), 0),
 
-            new SwerveModuleConstants(
-                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 3, driveInversion, driveBreakMode, driveGearing, driveCurrentLimit, drivePID, driveConfig), 
-                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 4, angleInversion, angleBreakMode, angleGearing, angleCurrentLimit, anglePID, angleConfig), 
+            new SwerveModuleConfig(
+                new SwerveMotorConfig(DCMotor.getKrakenX60(1), 3, driveInversion, driveBreakMode, driveGearing, driveMOI, driveCurrentLimit, drivePID, driveFF, driveConfig), 
+                new SwerveMotorConfig(DCMotor.getKrakenX60(1), 4, angleInversion, angleBreakMode, angleGearing, angleMOI, angleCurrentLimit, anglePID, angleFF, angleConfig), 
                 new CTREEncoder(1, SwerveModuleConfigs.getCANCoder()), 0),
 
-            new SwerveModuleConstants(
-                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 5, driveInversion, driveBreakMode, driveGearing, driveCurrentLimit, drivePID, driveConfig), 
-                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 6, angleInversion, angleBreakMode, angleGearing, angleCurrentLimit, anglePID, angleConfig), 
+            new SwerveModuleConfig(
+                new SwerveMotorConfig(DCMotor.getKrakenX60(1), 5, driveInversion, driveBreakMode, driveGearing, driveMOI, driveCurrentLimit, drivePID, driveFF, driveConfig), 
+                new SwerveMotorConfig(DCMotor.getKrakenX60(1), 6, angleInversion, angleBreakMode, angleGearing, angleMOI, angleCurrentLimit, anglePID, angleFF, angleConfig), 
                 new CTREEncoder(2, SwerveModuleConfigs.getCANCoder()), 0),
 
-            new SwerveModuleConstants(
-                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 7, driveInversion, driveBreakMode, driveGearing, driveCurrentLimit, drivePID, driveConfig), 
-                new SwerveMotorConstants(DCMotor.getKrakenX60(1), 8, angleInversion, angleBreakMode, angleGearing, angleCurrentLimit, anglePID, angleConfig), 
+            new SwerveModuleConfig(
+                new SwerveMotorConfig(DCMotor.getKrakenX60(1), 7, driveInversion, driveBreakMode, driveGearing, driveMOI, driveCurrentLimit, drivePID, driveFF, driveConfig), 
+                new SwerveMotorConfig(DCMotor.getKrakenX60(1), 8, angleInversion, angleBreakMode, angleGearing, angleMOI, angleCurrentLimit, anglePID, angleFF, angleConfig), 
                 new CTREEncoder(3, SwerveModuleConfigs.getCANCoder()), 0),
         };
 
@@ -95,7 +100,7 @@ public class DrivebaseConfig {
         GenericSwerveModule[] moduleTypes = new GenericSwerveModule[]{
             
         };
-        SwerveModuleConstants[] moduleConstants = new SwerveModuleConstants[]{
+        SwerveModuleConfig[] moduleConstants = new SwerveModuleConfig[]{
 
         };
         double width = 0;

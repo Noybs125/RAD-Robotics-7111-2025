@@ -3,12 +3,12 @@ package frc.robot.utils.encoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 
-public class SimWPILibEncoder implements GenericEncoder {
+public class SimDIOEncoder implements GenericEncoder {
 
     private EncoderSim encoderSim;
     private edu.wpi.first.wpilibj.Encoder encoder;
 
-    private SimWPILibEncoder(int channel){
+    private SimDIOEncoder(int channel){
         encoder = new edu.wpi.first.wpilibj.Encoder(channel, channel + 1);
         encoderSim = new EncoderSim(encoder);
     }

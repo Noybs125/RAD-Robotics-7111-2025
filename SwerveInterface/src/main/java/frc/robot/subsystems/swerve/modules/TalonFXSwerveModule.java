@@ -12,7 +12,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.DeviceConfigs.SwerveModuleConfigs;
-import frc.robot.subsystems.swerve.SwerveModuleConstants;
+import frc.robot.subsystems.swerve.config.SwerveModuleConfig;
 import frc.robot.utils.encoder.GenericEncoder;
 
 public class TalonFXSwerveModule implements GenericSwerveModule{
@@ -29,7 +29,7 @@ public class TalonFXSwerveModule implements GenericSwerveModule{
 
     private double encoderOffsetDegrees;
 
-    public TalonFXSwerveModule(SwerveModuleConstants constants){
+    public TalonFXSwerveModule(SwerveModuleConfig constants){
         driveMotor = new TalonFX(constants.driveMotor.id, Constants.canbus);
         angleMotor = new TalonFX(constants.angleMotor.id, Constants.canbus);
         encoder = constants.encoder;
