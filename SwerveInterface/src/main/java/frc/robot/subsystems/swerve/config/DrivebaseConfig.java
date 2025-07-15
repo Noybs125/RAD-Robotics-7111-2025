@@ -20,26 +20,23 @@ public class DrivebaseConfig {
     public double width;
     public double length;
     public double wheelDiameter;
-    public double moi;
 
-    public DrivebaseConfig(GenericSwerveModule[] moduleTypes, SwerveModuleConfig[] moduleConstants, double width, double length, double wheelDiameter, double moi){
+    public DrivebaseConfig(GenericSwerveModule[] moduleTypes, SwerveModuleConfig[] moduleConstants, double width, double length, double wheelDiameter){
         this.moduleTypes = moduleTypes;
         this.moduleConstants = moduleConstants;
         this.width = width;
         this.length = length;
         this.wheelDiameter = wheelDiameter;
-        this.moi = moi;
     }
 
     public static DrivebaseConfig getStormSurge(boolean isSim){
         double width = Units.inchesToMeters(21.25);
         double length = Units.inchesToMeters(23.25);
         double wheelDiameter = Units.inchesToMeters(3.75);
-        double moi = 2.9551; //TODO figure out real moi
 
         double driveGearing = 6.72 / 1.0; 
         double angleGearing = 468.0 / 35.0;
-        double driveMOI = 0.01;
+        double driveMOI = 0.25;
         double angleMOI = 0.001;
         int driveCurrentLimit = 80;
         int angleCurrentLimit = 40;
@@ -93,7 +90,7 @@ public class DrivebaseConfig {
             };
         }
         
-        return new DrivebaseConfig(moduleTypes, moduleConstants, width, length, wheelDiameter, moi);
+        return new DrivebaseConfig(moduleTypes, moduleConstants, width, length, wheelDiameter);
     }
 
     public static DrivebaseConfig getBoxChassis(){
@@ -108,6 +105,6 @@ public class DrivebaseConfig {
         double wheelDiameter = 4;
         double moi = 0.001;
 
-        return new DrivebaseConfig(moduleTypes, moduleConstants, width, length, wheelDiameter, moi);
+        return new DrivebaseConfig(moduleTypes, moduleConstants, width, length, wheelDiameter);
     }
 }

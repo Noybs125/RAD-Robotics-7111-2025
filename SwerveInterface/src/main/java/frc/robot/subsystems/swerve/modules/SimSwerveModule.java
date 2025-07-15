@@ -37,7 +37,7 @@ public class SimSwerveModule implements GenericSwerveModule{
         angleMotorOutput = constants.angleMotor.dcMotor;
 
         driveMotorSim = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(driveMotorOutput, constants.driveMotor.momentOfInertia, 1/constants.driveMotor.gearRatio), 
+            LinearSystemId.createDCMotorSystem(driveMotorOutput, constants.driveMotor.momentOfInertia, constants.driveMotor.gearRatio), 
             driveMotorOutput);
         angleMotorSim = new DCMotorSim(
             LinearSystemId.createDCMotorSystem(angleMotorOutput, constants.angleMotor.momentOfInertia, constants.angleMotor.gearRatio), 
@@ -64,18 +64,19 @@ public class SimSwerveModule implements GenericSwerveModule{
 
     @Override
     public void setClosedDriveState(SwerveModuleState state) {
-        SmartDashboard.putNumber("drive amps output", drivePID.calculate(getDriveVelocity(), state.speedMetersPerSecond));
         SmartDashboard.putNumber("setMPS", state.speedMetersPerSecond);
         SmartDashboard.putBoolean("isAtSetpoint", drivePID.atSetpoint());
         double ffCalc = driveFeedforward.calculate(state.speedMetersPerSecond);
-        double input = ffCalc + drivePID.calculate(getDriveVelocity(), state.speedMetersPerSecond);
-        
+        double input = drivePID.calculate(getDriveVelocity(), state.speedMetersPerSecond);
+        //input = drivePID.calculate(getDriveVelocity(), 100 * SwerveConstants.wheelCircumference);
+
         driveMotorSim.setInputVoltage(input);
     }
 
     @Override
     public double getDriveVelocity() {
         SmartDashboard.putNumber("driveVel", ((driveMotorSim.getAngularVelocityRadPerSec() / (2*Math.PI)) * SwerveConstants.wheelCircumference));
+        SmartDashboard.putNumber("driveVoltage", driveMotorSim.getInputVoltage());
         return ((driveMotorSim.getAngularVelocityRadPerSec() / (2*Math.PI)) * SwerveConstants.wheelCircumference);
     }
 

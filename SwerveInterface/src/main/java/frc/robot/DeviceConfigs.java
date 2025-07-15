@@ -18,7 +18,6 @@ import frc.robot.subsystems.swerve.config.SwerveMotorConfig;
 
 /**
  * This class is for defining the configurations of each device (motors, encoders, etc.)
- * Each Subsystem gets its own class to contain configurations for all of its devices
  */
 public class DeviceConfigs {
 

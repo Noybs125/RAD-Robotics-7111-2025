@@ -7,6 +7,8 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -15,6 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -45,6 +48,19 @@ public class SwerveSubsystem extends SubsystemBase {
     private final GenericSwerveGyro gyro;
     private SwerveModuleState[] states = new SwerveModuleState[]{};
 
+    public PIDController translationXPID = new PIDController(1, 0, 0);
+    public PIDController translationYPID = translationXPID;
+    public PIDController rotationPID = new PIDController(1, 0, 0);
+
+    private TrapezoidProfile.Constraints xConstraints = new TrapezoidProfile.Constraints(30, 30);
+    public ProfiledPIDController profiledXPID = new ProfiledPIDController(1, 0, 0, xConstraints);
+
+    private TrapezoidProfile.Constraints yConstraints = new TrapezoidProfile.Constraints(30, 30);
+    public ProfiledPIDController profiledYPID = new ProfiledPIDController(1, 0, 0, yConstraints);
+
+    private TrapezoidProfile.Constraints rotationConstraints = new TrapezoidProfile.Constraints(720, 720);
+    public ProfiledPIDController profiledRotationPID = new ProfiledPIDController(1, 0, 0, rotationConstraints);
+
     private StructArrayPublisher<SwerveModuleState> commandedStatePublisher = NetworkTableInstance.getDefault().getStructArrayTopic("Commanded Swerve States", SwerveModuleState.struct).publish();
     private StructArrayPublisher<SwerveModuleState> actualStatePublisher = NetworkTableInstance.getDefault().getStructArrayTopic("Actual Swerve States", SwerveModuleState.struct).publish();
 
@@ -61,6 +77,11 @@ public class SwerveSubsystem extends SubsystemBase {
             : new SimSwerveGyro(this::getStates, SwerveConstants.kinematics);
         gyro.setInverted(true);
         zeroGyro();
+
+        translationXPID.setTolerance(0.05);
+        translationYPID.setTolerance(0.05);
+        rotationPID.setTolerance(1);
+        rotationPID.enableContinuousInput(-180, 180);
 
         swerveOdometry = new SwerveDriveOdometry(SwerveConstants.kinematics, getYaw(), getPositions());
         
@@ -122,7 +143,7 @@ public class SwerveSubsystem extends SubsystemBase {
             SwerveModuleState[] states = SwerveConstants.kinematics.toSwerveModuleStates(chassisSpeeds);
 
             setModuleStates(states, isOpenLoop);
-        }).withName("SwerveDriveCommand");
+        });
     }
 
     /** To be used by auto. Use the drive method during teleop. */
