@@ -5,7 +5,7 @@ package frc.robot.utils;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
@@ -30,19 +30,19 @@ public class SwerveModule {
   public final int moduleNumber;
 
   private SparkMax driveMotor;
-  private SparkBaseConfig driveMotorConfig;
+  private SparkMaxConfig driveMotorConfig = new SparkMaxConfig();
   private RelativeEncoder driveEncoder;
   private SparkAbsoluteEncoderSim driveEncoderConversion;
   private SparkClosedLoopController drivePID;
-  private ClosedLoopConfig drivePIDConfig;
+  private ClosedLoopConfig drivePIDConfig = new ClosedLoopConfig();
   private SimpleMotorFeedforward driveFeedforward;
 
   private SparkMax angleMotor;
-  private SparkBaseConfig angleMotorConfig;
+  private SparkMaxConfig angleMotorConfig = new SparkMaxConfig();
   private RelativeEncoder angleEncoder;
   private SparkAbsoluteEncoderSim angleEncoderConversion;
   private SparkClosedLoopController anglePID;
-  private ClosedLoopConfig anglePIDConfig;
+  private ClosedLoopConfig anglePIDConfig = new ClosedLoopConfig();
   
   private final CANcoder canCoder;
   private final double canCoderOffsetDegrees;
@@ -169,7 +169,7 @@ public class SwerveModule {
 
     angleMotorConfig.closedLoop.apply(anglePIDConfig);
     angleMotorConfig.absoluteEncoder.apply(angleEncoderConfig);
-    angleMotor.configure(angleMotorConfig, null, null);
+    angleMotor.configure(angleMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
     angleEncoder.setPosition(Units.degreesToRadians((canCoder.getAbsolutePosition().getValueAsDouble() * 360) - canCoderOffsetDegrees)); // added ".getValue..."
   }

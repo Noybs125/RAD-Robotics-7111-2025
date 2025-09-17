@@ -61,7 +61,6 @@ public class RobotContainer {
   public RobotContainer() {
     operatorController = new CommandXboxController(1);
     driverController = new CommandXboxController(0);
-    
 
     sensors = new Sensors();
     vision = new Vision(gyro);
@@ -190,7 +189,7 @@ public class RobotContainer {
     climbDown.onTrue(new InstantCommand(() -> deepClimb.setSpeed(-.5)));
     climbDown.negate().and(climbUp.negate()).onTrue(new InstantCommand(() -> deepClimb.setSpeed(0)));
 
-    algaeNet.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.StartButton));
+    //algaeNet.onTrue(superStructure.setRobotStateCommand(SuperStructure.ControlState.StartButton));
     
 
     l1.onTrue(superStructure.setRobotStateCommand(ControlState.XButton));

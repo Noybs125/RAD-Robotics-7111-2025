@@ -278,7 +278,7 @@ public class Mechanisms extends SubsystemBase {
                 break;
 
             case ReefL4:
-                moveElevThenArm(1.035, 0.40822, 0.2); 
+                moveElevThenArm(1.00, 0.3905, 0.2); 
                 if(elevator.isAtSetpoint(0.3)){
                     elevatorMaxSpeed = 5;
                 }else{

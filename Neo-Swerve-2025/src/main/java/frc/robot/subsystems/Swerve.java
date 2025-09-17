@@ -7,6 +7,7 @@ import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -49,15 +50,15 @@ public class Swerve extends SubsystemBase {
 
     swerveOdometry = new SwerveDriveOdometry(Constants.kSwerve.KINEMATICS, getYaw(), getPositions());
      
-     RobotConfig config = null;
-    try{
+     //RobotConfig config = new RobotConfig(0, 0, null, 0);
+    /*try{
       config = RobotConfig.fromGUISettings();
     } catch (Exception e) {
       // Handle exception as needed
       e.printStackTrace();
-    }
+    }*/
 
-    AutoBuilder.configure(
+    /*AutoBuilder.configure(
       this::getPose, // Robot pose supplier
       this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
       this::getRelSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
@@ -69,7 +70,7 @@ public class Swerve extends SubsystemBase {
       config,
       () -> false,
       this // Reference to this subsystem to set requirements
-    );
+    );*/
 }
 
   
